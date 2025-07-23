@@ -16,7 +16,7 @@ const navigateTo = (path) => {
   <q-layout view="lHh Lpr lFf" class="bg-dark-page">
     <q-header elevated class="bg-dark-header text-white">
       <q-toolbar>
-        <q-btn flat round dense icon="arrow_back" @click="navigateTo('/dashboard')" />
+        <q-btn flat round dense icon="arrow_back" @click="navigateTo('/mainview')" />
         <q-toolbar-title>
           核查管理
         </q-toolbar-title>

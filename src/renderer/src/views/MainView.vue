@@ -28,7 +28,7 @@ const modules = ref([
   {
     title: '核查管理',
     image: 'https://img95.699pic.com/photo/50028/1075.jpg_wh860.jpg',
-    route: '/check-management'
+    route: '/manageCheck'
   },
   {
     title: '策略管理',
