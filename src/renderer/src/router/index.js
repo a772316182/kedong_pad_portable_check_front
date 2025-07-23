@@ -5,6 +5,7 @@ import ExecuteCheck from '../views/ExecuteCheck.vue'
 import ManageCheck from '../views/ManageCheck.vue'
 import ManageStrategy from '../views/ManageStrategy.vue'
 import MainView from '../views/MainView.vue'
+import MustCheck from '../views/MustCheck.vue'
 
 const routes = [
   {
@@ -36,6 +37,12 @@ const routes = [
     path: '/manageStrategy',
     name: 'manageStrategy',
     component: ManageStrategy
+  }
+  ,
+  {
+    path: '/mustcheck',
+    name: 'mustcheck',
+    component: MustCheck
   }
 ]
 

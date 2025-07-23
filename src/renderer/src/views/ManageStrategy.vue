@@ -10,7 +10,6 @@ const navigateTo = (path) => {
   router.push(path)
 }
 // 定义组件可以触发的事件
-const emit = defineEmits(['navigate']);
 
 // --- 响应式数据 ---
 const policies = reactive([
@@ -32,7 +31,7 @@ const alertMessage = ref('');
 // --- 方法 ---
 const handleCardClick = (policy) => {
   if (policy.link) {
-    emit('navigate', policy.link);
+    navigateTo('/mustcheck');//此处是整个策略窗格的按钮响应
   } else {
     alertMessage.value = '需要新增策略请选择新增功能！';
     isAlertDialogVisible.value = true;
@@ -89,7 +88,12 @@ const handleAddNewPolicy = () => {
               </q-card-section>
               <q-separator dark />
               <q-card-actions align="right">
-                <q-btn flat color="primary">查看</q-btn>
+                <q-btn
+                  flat color="primary"
+                  label="查看"
+                  @click="navigateTo('/mustcheck')"
+                  ></q-btn>
+
               </q-card-actions>
             </q-card>
           </div>
