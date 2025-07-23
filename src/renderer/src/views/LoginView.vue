@@ -9,7 +9,7 @@ const password = ref('')
 
 const login = () => {
   console.log(username.value, password.value)
-  router.push('/dashboard')
+  router.push('/mainview')
 }
 </script>
 
