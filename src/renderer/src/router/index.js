@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import MainView from '../views/MainView.vue'
 import LoginView from '../views/LoginView.vue'
 import ExecuteCheck from '../views/ExecuteCheck.vue'
 import ManageCheck from '../views/ManageCheck.vue'
@@ -12,9 +12,9 @@ const routes = [
     component: LoginView
   },
   {
-    path: '/dashboard',
-    name: 'dashboard',
-    component: HomeView
+    path: '/mainview',
+    name: 'mainview',
+    component: MainView
   },
   {
     path: '/executeCheck',
