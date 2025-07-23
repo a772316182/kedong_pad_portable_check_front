@@ -75,7 +75,7 @@ const handleAddNewPolicy = () => {
   <q-layout view="lHh Lpr lFf" class="bg-teal-10">
     <q-header elevated class="bg-teal-9 text-white">
       <q-toolbar>
-        <q-btn label="返回" color="primary" @click="navigateTo('/dashboard')" />
+        <q-btn label="返回" color="primary" @click="navigateTo('/mainview')" />
         <q-toolbar-title>
           策略管理
         </q-toolbar-title>
