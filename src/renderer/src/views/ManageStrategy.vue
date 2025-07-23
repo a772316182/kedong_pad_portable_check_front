@@ -2,6 +2,7 @@
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router'
 
+// 定义组件可以触发的事件
 const router = useRouter()
 
 const navigateTo = (path) => {
@@ -35,6 +36,13 @@ const isAddDialogVisible = ref(false);
 const isAlertDialogVisible = ref(false);
 const alertMessage = ref('');
 
+// 新增策略表单的数据模型
+const newPolicy = reactive({
+  name: '',
+  object: '',
+  items: null
+});
+
 // --- 方法 ---
 const handleCardClick = (policy) => {
   if (policy.link) {
@@ -46,48 +54,46 @@ const handleCardClick = (policy) => {
 };
 
 const handleAddNewPolicy = () => {
+  // 简单的表单验证
+  if (!newPolicy.name || !newPolicy.object || !newPolicy.items) {
+    alertMessage.value = '请填写所有字段！';
+    isAlertDialogVisible.value = true;
+    return;
+  }
   // 在这里添加新增策略的逻辑
+  policies.push({ ...newPolicy, updated: new Date().toISOString().split('T')[0] });
+  // 重置表单并关闭对话框
+  newPolicy.name = '';
+  newPolicy.object = '';
+  newPolicy.items = null;
   isAddDialogVisible.value = false;
 };
 </script>
 
 <template>
-  <!-- 使用 QLayout 作为页面根布局 -->
+  <!-- 使用 QLayout 作为页面根布局，并应用深青色背景 -->
   <q-layout view="lHh Lpr lFf" class="bg-teal-10">
-    <q-header elevated class="bg-grey-9 text-white">
+    <q-header elevated class="bg-teal-9 text-white">
       <q-toolbar>
-        <q-btn label = "返回" @click="navigateTo('/dashboard')" color="primary"/>
-        <q-toolbar-title class="center">
+        <q-btn label="返回" color="primary" @click="navigateTo('/dashboard')" />
+        <q-toolbar-title>
           策略管理
         </q-toolbar-title>
         <q-space />
         <q-btn flat dense label="导入" icon="file_upload" class="q-mr-sm" />
         <q-btn flat dense label="导出" icon="file_download" class="q-mr-sm" />
         <q-btn flat dense label="筛选" icon="filter_alt" @click="isFilterDrawerVisible = true" />
-        <q-btn color="green-10" label="新增" icon="add" @click="isAddDialogVisible = true" class="q-ml-md" />
+        <q-btn color="light-blue-6" label="新增" icon="add" @click="isAddDialogVisible = true" class="q-ml-md" />
       </q-toolbar>
     </q-header>
 
     <!-- 右侧筛选抽屉 -->
-    <q-drawer
-      v-model="isFilterDrawerVisible"
-      side="right"
-      overlay
-      behavior="mobile"
-      bordered
-      :width="300"
-      class="bg-grey-9"
-    >
+    <q-drawer v-model="isFilterDrawerVisible" side="right" overlay behavior="mobile" bordered :width="300" class="bg-teal-9 text-white">
       <q-scroll-area class="fit">
         <div class="q-pa-md">
           <h5 class="q-mt-none q-mb-md">筛选</h5>
           <!-- 筛选表单内容可以放在这里 -->
-          <q-btn
-            color="primary"
-            label="应用筛选"
-            class="full-width q-mt-md"
-            @click="isFilterDrawerVisible = false"
-          />
+          <q-btn color="light-blue-6" label="应用筛选" class="full-width q-mt-md" @click="isFilterDrawerVisible = false" />
         </div>
       </q-scroll-area>
     </q-drawer>
@@ -96,29 +102,20 @@ const handleAddNewPolicy = () => {
       <q-page class="q-pa-md">
         <!-- 策略卡片网格 -->
         <div class="row q-col-gutter-md">
-          <div
-            v-for="policy in policies"
-            :key="policy.name"
-            class="col-12 col-sm-6 col-md-4 col-lg-3"
-          >
-            <q-card
-              @click="handleCardClick(policy)"
-              class="cursor-pointer full-height bg-grey-9 text-white"
-              flat
-              bordered
-              v-ripple
-            >
+          <div v-for="policy in policies" :key="policy.name" class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <q-card @click="handleCardClick(policy)" class="cursor-pointer full-height bg-white text-black" flat bordered v-ripple>
               <q-card-section>
-                <div class="text-h6">{{ policy.name }}</div>
-                <div class="text-subtitle2 text-grey-5">更新时间: {{ policy.updated }}</div>
+                <div class="text-h6 text-teal-9">{{ policy.name }}</div>
+                <div class="text-subtitle2 text-grey-7">更新时间: {{ policy.updated }}</div>
               </q-card-section>
-              <q-card-section class="q-pt-none">
+              <q-card-section class="q-pt-none text-grey-8">
                 <div>检查项数: {{ policy.items }}</div>
                 <div>使用对象: {{ policy.object }}</div>
               </q-card-section>
-              <q-separator dark />
+              <q-separator />
               <q-card-actions align="right">
-                <q-btn flat color="primary">查看</q-btn>
+                <q-btn flat color="blue-6" label="查看"
+                       @click="navigateTo('/mustcheck')"></q-btn>
               </q-card-actions>
             </q-card>
           </div>
@@ -128,7 +125,7 @@ const handleAddNewPolicy = () => {
 
     <!-- 新增策略对话框 -->
     <q-dialog v-model="isAddDialogVisible">
-      <q-card class="bg-grey-9 text-white" style="width: 500px;">
+      <q-card class="bg-white text-black" style="width: 500px;">
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6">新增策略</div>
           <q-space />
@@ -136,14 +133,14 @@ const handleAddNewPolicy = () => {
         </q-card-section>
 
         <q-card-section>
-          <q-form @submit="handleAddNewPolicy" class="q-gutter-md">
-            <q-input dark filled v-model="name" label="策略名称" />
-            <q-input dark filled v-model="object" label="适用对象" />
-            <q-input dark filled v-model.number="items" type="number" label="检查项数" />
+          <q-form @submit.prevent="handleAddNewPolicy" class="q-gutter-md">
+            <q-input outlined v-model="newPolicy.name" label="策略名称" />
+            <q-input outlined v-model="newPolicy.object" label="适用对象" />
+            <q-input outlined v-model.number="newPolicy.items" type="number" label="检查项数" />
 
             <div class="row justify-end q-mt-lg">
               <q-btn label="取消" type="reset" color="grey-6" flat class="q-mr-sm" v-close-popup />
-              <q-btn label="确认新增" type="submit" color="primary"/>
+              <q-btn label="确认新增" type="submit" color="teal-6"/>
             </div>
           </q-form>
         </q-card-section>
@@ -171,5 +168,12 @@ const handleAddNewPolicy = () => {
 <style scoped>
 .full-height {
   height: 100%;
+}
+/* 使用 Quasar 的颜色变量来覆盖默认样式 */
+.bg-teal-10 {
+  background-color: #2d3a3a; /* 一个自定义的深青色 */
+}
+.bg-teal-9 {
+  background-color: #1d2b2b; /* 一个更深的青色 */
 }
 </style>
