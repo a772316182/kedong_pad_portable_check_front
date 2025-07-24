@@ -21,8 +21,8 @@ const routes = [
     component: LoginView
   },
   {
-    path: '/executeCheck',
-    name: 'executeCheck',
+    path: '/executecheck',
+    name: 'executecheck',
     component: ExecuteCheck
   },
   {

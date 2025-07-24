@@ -47,10 +47,10 @@ const loginCheckCredentials = ref([
 const httpsConfig = ref({ ip: '10.105.71.233', subnet: '255.255.255.0', gateway: '', port: '28081' });
 const sshInfo = ref({ ip: '10.105.71.233', subnet: '255.255.255.0', gateway: '10.105.71.1' });
 const deviceType = ref('主机设备');
-
+const goBack = () => router.go(-1);
 
 // --- Methods ---
-const goBack = () => router.go(-1);
+
 const toggleSelection = (row) => { row.selected = !row.selected; };
 const addNewCredential = () => {
   loginCheckCredentials.value.push({ id: Date.now(), ip: '', port: '', username: '', password: '', authUser: '', authPass: '' });
@@ -89,7 +89,9 @@ const confirmLoginCredentials = () => {
 
     <!-- Main Header -->
     <div class="main-header row items-center q-px-md">
-      <q-btn unelevated label="上一步" @click="goBack" class="back-button"/>
+      <div>
+        <q-btn class="back-button" unelevated label="上一步" @click="goBack" />
+      </div>
       <div class="text-h4 text-weight-bolder q-ml-lg">正在核查</div>
       <q-space/>
       <span class="text-body1">连接方式: 网络连接</span>
@@ -285,7 +287,7 @@ const confirmLoginCredentials = () => {
 .top-bar, .main-header { color: white; padding-top: 8px; padding-bottom: 8px; }
 .back-button { background-color: #00796b; color: white; border-radius: 6px; }
 .header-action-btn { font-size: 0.9rem; }
-.main-content-area { padding: 100px 24px 24px; position: relative; top: -50px; }
+.main-content-area { padding: 10px 24px 24px; position: relative; top: -8px; }
 .info-panel { background-color: #3d4a58; color: #e0e0e0; border-radius: 8px; }
 .table-container { border-radius: 8px; overflow: hidden; }
 

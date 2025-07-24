@@ -74,7 +74,7 @@ const confirmConnection = () => {
   if (selectedConnection.value) {
     connectionDialog.value = false;
     // 导航到“正在核查”页面
-    navigateTo("/#");
+    navigateTo("/checking");
   }
 };
 
