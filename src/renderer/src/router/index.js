@@ -13,6 +13,7 @@ import CheckInProgress from '../views/CheckInProgress.vue'
 import TaskCheck from '../views/TaskCheck.vue'
 import MultiAsset from '../views/MultiAsset.vue'
 import Checking from '../views/Checking.vue'
+import CheckResult from '../views/CheckResult.vue'
 
 const routes = [
   {
@@ -91,6 +92,11 @@ const routes = [
     path:'/checking',
     name:'checking',
     component:Checking
+  },
+  {
+    path:'/checkresult',
+    name:'checkresult',
+    component:CheckResult
   }
 ]
 
