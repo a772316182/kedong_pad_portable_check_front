@@ -32,7 +32,7 @@ const navigateTo = (path) => {
       <q-page class="flex flex-center">
         <div class="q-pa-md" style="width: 100%; max-width: 600px;">
           <q-list separator>
-            <q-item clickable v-ripple class="q-py-lg" @click="emit('navigate', 'AssetEntry')">
+            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/stationview")'>
               <q-item-section avatar>
                 <q-icon color="blue-4" name="desktop_windows" />
               </q-item-section>
@@ -44,7 +44,7 @@ const navigateTo = (path) => {
               </q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple class="q-py-lg" @click="emit('navigate', 'TaskManagement')">
+            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/inprogress")'>
               <q-item-section avatar>
                 <q-icon color="blue-4" name="folder_open" />
               </q-item-section>
