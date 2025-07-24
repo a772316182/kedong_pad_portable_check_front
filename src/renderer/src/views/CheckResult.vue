@@ -63,7 +63,11 @@ const statusCounts = computed(() => {
 });
 
 // --- Methods ---
-const goBack = () => router.go(-2);
+const navigateTo = (path) => {
+  console.log(`正在跳转到: ${path}`)
+  // 使用 router.push 进行页面跳转
+  router.push(path)
+}
 const getStatusInfo = (status) => {
   const map = {
     passed: { text: '通过', color: 'green-6' },
@@ -101,7 +105,7 @@ const hideDetailView = () => {
 
     <!-- Main Header -->
     <div class="main-header row items-center q-px-md">
-      <q-btn unelevated label="返回" @click="goBack" class="back-button"/>
+      <q-btn unelevated label="返回" @click="navigateTo('/checking')" class="back-button"/>
       <div class="text-h4 text-weight-bolder q-ml-lg">核查结果</div>
     </div>
 

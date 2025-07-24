@@ -15,6 +15,7 @@ import MultiAsset from '../views/MultiAsset.vue'
 import Checking from '../views/Checking.vue'
 import CheckResult from '../views/CheckResult.vue'
 import LoginCheckInProgress from '../views/LoginCheckInProgress.vue'
+import HistoryLog from '../views/HistoryLog.vue'
 
 const routes = [
   {
@@ -103,6 +104,10 @@ const routes = [
     path:'/checkresult',
     name:'checkresult',
     component:CheckResult
+  },{
+    path:'/historylog',
+    name:'historylog',
+    component:HistoryLog
   }
 ]
 

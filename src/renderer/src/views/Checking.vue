@@ -12,6 +12,7 @@ const dialogs = reactive({
   httpsConfig: false,
   sshInfo: false,
   loginCheck: false,
+  mentionCheck: false,
 });
 
 // --- Data Models ---
@@ -147,7 +148,7 @@ const navigateTo = (path) => {
                 dense unelevated @click="toggleSelection(props.row)"
               />
               <q-btn color="teal" label="资产详情" dense unelevated/>
-              <q-btn color="teal" label="核查记录" dense unelevated/>
+              <q-btn color="teal" label="核查记录" class="sub-action-btn" unelevated @click="dialogs.mentionCheck=true;"/>
             </q-td>
           </template>
         </q-table>
@@ -281,6 +282,19 @@ const navigateTo = (path) => {
           <q-btn label="上一步" color="grey" @click="dialogs.sshInfo = false; dialogs.loginCheck = true;"/>
           <q-btn label="确定" color="teal" unelevated @click="navigateTo('/logincheckinprogress')"/>
         </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="dialogs.mentionCheck">
+      <q-card class="form-dialog">
+        <q-card-section class="row items-center">
+          <div class="text-h6">提示</div><q-space/><q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <p>本设备未在最近一次核查时核查，仅支持查看历史核查记录</p>
+        </q-card-section>
+        <q-btn  label="退出" color="grey" @click="dialogs.mentionCheck = false;"padding="12px 151px"/>
+        <q-btn  label="历史记录" color="green" unelevated @click="navigateTo('/historylog')"padding="12px 151px"/>
       </q-card>
     </q-dialog>
 
