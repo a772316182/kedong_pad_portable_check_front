@@ -50,7 +50,6 @@ const modules = ref([
             unelevated
             padding="10px 20px"
             class="exit-button"
-            icon="o_logout"
             label="退出"
             @click="navigateTo('/')"
           />
@@ -66,11 +65,9 @@ const modules = ref([
         <!-- 右侧区域 -->
         <div class="row items-center q-gutter-x-lg">
           <div class="row items-center q-gutter-x-sm cursor-pointer">
-            <q-icon name="o_cloud_upload" size="2em" />
             <span class="text-h6">数据上传</span>
           </div>
           <div class="row items-center q-gutter-x-sm cursor-pointer">
-            <q-icon name="o_notifications" size="2em" />
             <span class="text-h6">消息</span>
           </div>
           <div class="row items-center q-gutter-x-sm">

@@ -76,7 +76,7 @@ const resetFilters = () => {
         <q-btn flat dense round label="返回" icon="arrow_back_ios" @click="goBack" class="back-button" />
         <q-toolbar-title class="text-center text-weight-bolder">必选项检查</q-toolbar-title>
         <q-btn flat dense @click="filterDrawerOpen = true">
-          <q-icon name="o_filter_alt" size="sm" />
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L16 11.414V16l-4 2v-6.586L3.293 6.707A1 1 0 013 6V4z"></path></svg>
           <span class="q-ml-xs text-subtitle1">筛选</span>
         </q-btn>
       </q-toolbar>
