@@ -20,6 +20,11 @@ const routes = [
     component: LoginView
   },
   {
+    path: '/executeCheck',
+    name: 'executeCheck',
+    component: ExecuteCheck
+  },
+  {
     path: '/mainview',
     name: 'mainview',
     component: MainView
