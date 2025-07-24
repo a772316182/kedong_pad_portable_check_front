@@ -1,8 +1,13 @@
 <script setup>
 import { ref, reactive, computed } from 'vue';
+import { useRouter } from 'vue-router'
+const router = useRouter();
 
-const emit = defineEmits(['navigate']);
-
+const navigateTo = (path) => {
+  console.log(`正在跳转到: ${path}`)
+  // 使用 router.push 进行页面跳转
+  router.push(path)
+}
 // --- 响应式数据 ---
 
 // 当前步骤
@@ -43,7 +48,7 @@ const nextStep = (stepName) => {
 // 处理返回/上一步的逻辑
 const goBack = () => {
   if (currentStep.value === 'qualitative') {
-    emit('navigate', 'MainDashboard');
+    router.go(-1);
   } else if (currentStep.value === 'site') {
     currentStep.value = 'qualitative';
   } else if (currentStep.value === 'task') {
@@ -69,7 +74,7 @@ const confirmConnection = () => {
   if (selectedConnection.value) {
     connectionDialog.value = false;
     // 导航到“正在核查”页面
-    emit('navigate', 'InProgressCheck');
+    navigateTo("/#");
   }
 };
 
