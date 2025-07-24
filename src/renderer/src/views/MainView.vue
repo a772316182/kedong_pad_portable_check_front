@@ -22,7 +22,7 @@ const modules = ref([
   {
     title: '执行核查',
     // 注意：请将这里的图片地址替换为您自己的图片资源
-    image: 'https://images.unsplash.com/photo-1581092921462-237503126529?q=80&w=1974&auto=format&fit=crop',
+    image: 'https://img95.699pic.com/photo/60007/2211.jpg_wh300.jpg',
     route: '/executeCheck'
   },
   {

@@ -158,7 +158,12 @@ onUnmounted(() => {
             <div class="text-center q-mt-lg q-gutter-md">
               <q-btn v-if="checkStatus !== '已完成'" color="red" label="终止" />
               <q-btn v-if="checkStatus === '已完成'" color="grey-6" label="关闭" />
-              <q-btn v-if="checkStatus === '已完成'" color="primary" label="下一步" @click="navigateTo('/checkresult')" />
+              <q-btn
+                v-if="checkStatus === '已完成'"
+                color="primary"
+                label="下一步"
+                @click="navigateTo('/checkresult')"
+              />
             </div>
           </q-card-section>
 
