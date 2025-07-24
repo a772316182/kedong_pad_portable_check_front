@@ -72,6 +72,12 @@ const confirmLoginCredentials = () => {
   dialogs.sshInfo = true;     // 打开最终的 IP 信息弹窗
 };
 
+const navigateTo = (path) => {
+  console.log(`正在跳转到: ${path}`)
+  // 使用 router.push 进行页面跳转
+  router.push(path)
+}
+
 </script>
 
 <template>
@@ -256,7 +262,7 @@ const confirmLoginCredentials = () => {
         </q-card-section>
         <q-card-actions align="center" class="q-gutter-x-lg q-pa-md">
           <q-btn label="关闭" color="grey" style="width: 150px"/>
-          <q-btn label="开启HTTPS连接" color="teal" unelevated style="width: 150px"/>
+          <q-btn label="开启HTTPS连接" color="teal" unelevated style="width: 150px" @click="navigateTo('/logincheckinprogress')"/>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -273,7 +279,7 @@ const confirmLoginCredentials = () => {
         </q-card-section>
         <q-card-actions align="center" class="q-gutter-x-lg q-pa-md">
           <q-btn label="上一步" color="grey" @click="dialogs.sshInfo = false; dialogs.loginCheck = true;"/>
-          <q-btn label="确定" color="teal" unelevated/>
+          <q-btn label="确定" color="teal" unelevated @click="navigateTo('/logincheckinprogress')"/>
         </q-card-actions>
       </q-card>
     </q-dialog>
