@@ -12,6 +12,7 @@ import ManageAsset from '../views/ManageAsset.vue'
 import CheckInProgress from '../views/CheckInProgress.vue'
 import TaskCheck from '../views/TaskCheck.vue'
 import MultiAsset from '../views/MultiAsset.vue'
+import Checking from '../views/Checking.vue'
 
 const routes = [
   {
@@ -85,6 +86,11 @@ const routes = [
     path:'/multiasset',
     name:'multiasset',
     component:MultiAsset
+  },
+  {
+    path:'/checking',
+    name:'checking',
+    component:Checking
   }
 ]
 
