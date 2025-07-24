@@ -7,6 +7,11 @@ import MainView from '../views/MainView.vue'
 import MustCheck from '../views/MustCheck.vue'
 import CheckReports from '../views/CheckReports.vue'
 import ReportView from '../views/ReportView.vue'
+import StationView from '../views/StationView.vue'
+import ManageAsset from '../views/ManageAsset.vue'
+import CheckInProgress from '../views/CheckInProgress.vue'
+import TaskCheck from '../views/TaskCheck.vue'
+import MultiAsset from '../views/MultiAsset.vue'
 
 const routes = [
   {
@@ -49,6 +54,32 @@ const routes = [
     path: '/mustcheck',
     name: 'mustcheck',
     component: MustCheck
+  },
+  {
+    path: '/stationview',
+    name: 'stationview',
+    component: StationView
+  },
+  {
+    path: '/manageasset',
+    name: 'manageasset',
+    component: ManageAsset
+  }
+  ,
+  {
+    path: '/inprogress',
+    name: 'inprogress',
+    component: CheckInProgress
+  },
+  {
+    path: '/taskcheck',
+    name: 'taskcheck',
+    component: TaskCheck
+  },
+  {
+    path:'/multiasset',
+    name:'multiasset',
+    component:MultiAsset
   }
 ]
 
