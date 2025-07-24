@@ -2,7 +2,11 @@
 import { ref, reactive, onUnmounted } from 'vue';
 import router from '../router'
 
-const emit = defineEmits(['navigate']);
+const navigateTo = (path) => {
+  console.log(`正在跳转到: ${path}`)
+  // 使用 router.push 进行页面跳转
+  router.push(path)
+}
 
 // --- 响应式数据 ---
 
@@ -154,7 +158,7 @@ onUnmounted(() => {
             <div class="text-center q-mt-lg q-gutter-md">
               <q-btn v-if="checkStatus !== '已完成'" color="red" label="终止" />
               <q-btn v-if="checkStatus === '已完成'" color="grey-6" label="关闭" />
-              <q-btn v-if="checkStatus === '已完成'" color="primary" label="下一步" @click="emit('navigate', 'CheckResults')" />
+              <q-btn v-if="checkStatus === '已完成'" color="primary" label="下一步" @click="navigateTo('/checkresult')" />
             </div>
           </q-card-section>
 

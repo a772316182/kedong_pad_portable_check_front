@@ -13,6 +13,7 @@ import CheckInProgress from '../views/CheckInProgress.vue'
 import TaskCheck from '../views/TaskCheck.vue'
 import MultiAsset from '../views/MultiAsset.vue'
 import Checking from '../views/Checking.vue'
+import LoginCheckInProgress from '../views/LoginCheckInProgress.vue'
 import CheckResult from '../views/CheckResult.vue'
 
 const routes = [
@@ -30,6 +31,11 @@ const routes = [
     path: '/mainview',
     name: 'mainview',
     component: MainView
+  },
+  {
+    path: '/logincheckinprogress',
+    name: 'logincheckinprogress',
+    component: LoginCheckInProgress
   },
   {
     path: '/reportview',
