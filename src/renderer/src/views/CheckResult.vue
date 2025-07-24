@@ -4,13 +4,14 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
+
 // --- State & Control ---
 const dialogs = reactive({
   viewEvidence: false,
   selectEvidenceMethod: false,
 });
-const activeCategory = ref('intrusion_prevention');
-const activeFilterTab = ref('all');
+const activeCategory = ref('intrusion_prevention'); // 左侧当前选中的分类
+const activeFilterTab = ref('all'); // 顶部当前选中的过滤标签
 
 // 新增：控制主/从视图切换的状态
 const isDetailViewActive = ref(false);
@@ -18,13 +19,16 @@ const activeDetailItem = ref(null);
 
 
 // --- Data Models ---
+// 左侧分类列表
 const categories = ref([
   { id: 'intrusion_prevention', label: '入侵防范', status: null },
   { id: 'identity_auth', label: '身份鉴别', status: 'error' },
   { id: 'access_control', label: '访问控制', status: 'error' },
 ]);
 
+// 右侧核查项列表
 const checkItems = ref([
+  // `category` 字段用于关联左侧列表
   { id: 1, category: 'intrusion_prevention', name: '关闭不必要的服务 (自动核查)', status: 'passed', requirement: '应遵循最小安装的原则,主机安装和开启必要的服务，禁止与监控系统无关的应用服务。例如关闭或关闭无关或关闭无关的E-Mail、Web、FTP、telnet、rlogin、NetBIOS、DHCP、SNMPV3以下版本、SMB等服务或功能', evidence: '已取证', basis: '《信息安全技术网络安全等级保护基本要求》8.1.4.3 a)应保证操作系统...', supplementaryNote: '--' },
   { id: 2, category: 'intrusion_prevention', name: '关闭不必要的系统端口 (自动核查)', status: 'passed', requirement: '...', evidence: '已取证', basis: '...', supplementaryNote: '--' },
   { id: 3, category: 'intrusion_prevention', name: '禁止使用TELNET远程管理 (自动核查)', status: 'not_passed', requirement: '要求: 禁止使用TELNET远程管理', evidence: '已取证', basis: '...', supplementaryNote: '--' },
@@ -33,6 +37,7 @@ const checkItems = ref([
 ]);
 
 // --- Computed Properties ---
+// 根据分类和过滤标签动态计算要显示的核查项
 const filteredItems = computed(() => {
   return checkItems.value.filter(item => {
     const categoryMatch = item.category === activeCategory.value;
@@ -58,7 +63,7 @@ const statusCounts = computed(() => {
 });
 
 // --- Methods ---
-const goBack = () => router.go(-1);
+const goBack = () => router.go(-2);
 const getStatusInfo = (status) => {
   const map = {
     passed: { text: '通过', color: 'green-6' },
@@ -193,7 +198,7 @@ const hideDetailView = () => {
                 <div class="detail-row"><span class="detail-label">备注补充:</span><span>{{ activeDetailItem.supplementaryNote }}</span> <q-btn flat dense label="添加备注" color="primary" class="q-ml-sm"/></div>
                 <div class="detail-row"><span class="detail-label">核查依据:</span><span class="text-grey-7">{{ activeDetailItem.basis }}</span></div>
                 <div class="row items-center justify-end q-mt-lg">
-                  <q-btn color="teal" unelevated label="确认核查结果"/>
+                  <q-btn color="teal" unelevated label="确认核查结果" @click="openViewEvidenceDialog"/>
                 </div>
               </div>
 
@@ -205,7 +210,7 @@ const hideDetailView = () => {
                 <div class="detail-row"><span class="detail-label">备注补充:</span><span>{{ activeDetailItem.supplementaryNote }}</span> <q-btn flat dense label="添加备注" color="primary" class="q-ml-sm"/></div>
                 <div class="detail-row"><span class="detail-label">加固建议:</span><span>(1) 建议启用...</span></div>
                 <div class="row items-center justify-end q-mt-lg">
-                  <q-btn color="orange" unelevated label="收起"/>
+                  <q-btn color="orange" unelevated label="收起" @click="hideDetailView"/>
                 </div>
               </div>
 
@@ -213,7 +218,7 @@ const hideDetailView = () => {
               <div v-if="activeDetailItem.status === 'to_confirm'">
                 <div class="detail-row"><span class="detail-label">核查要求:</span><span>{{ activeDetailItem.requirement }}</span></div>
                 <div class="detail-row"><span class="detail-label">核查结果:</span><span class="status-to_confirm">{{ getStatusInfo(activeDetailItem.status).text }}</span></div>
-                <div class="detail-row"><span class="detail-label">取证结果:</span><span>{{ activeDetailItem.evidence }}</span> <q-btn flat dense label="查看" color="primary" class="q-ml-sm"/></div>
+                <div class="detail-row"><span class="detail-label">取证结果:</span><span>{{ activeDetailItem.evidence }}</span><q-btn flat dense label="查看" color="primary" class="q-ml-sm"/></div>
                 <div class="detail-row"><span class="detail-label">备注补充:</span><span>--</span> <q-btn flat dense label="添加备注" color="primary" class="q-ml-sm"/></div>
                 <div class="row items-center justify-end q-mt-lg">
                   <q-btn color="orange" unelevated label="结果补充"/>
@@ -225,7 +230,7 @@ const hideDetailView = () => {
       </template>
     </q-page>
 
-    <!-- === DIALOGS (No Changes Needed Here) === -->
+    <!-- === DIALOGS === -->
     <q-dialog v-model="dialogs.viewEvidence">
       <q-card style="width: 700px; max-width: 80vw;">
         <q-card-section class="row items-center"><div class="text-h6">查看取证</div><q-space/><q-btn icon="close" flat round dense v-close-popup /></q-card-section>
@@ -271,7 +276,7 @@ const hideDetailView = () => {
 .page-background { background-color: #313942; }
 .top-bar, .main-header { color: white; padding: 8px 16px; }
 .back-button { background-color: #00796b; color: white; border-radius: 6px; }
-.main-content-area { padding: 90px 24px 24px; position: relative; top: -50px; }
+.main-content-area { padding: 10px 24px 24px; position: relative; top: -8px; }
 .info-panel { background-color: #3d4a58; color: #e0e0e0; border-radius: 8px; }
 .info-btn { color: white; background-color: rgba(255,255,255,0.1); border-radius: 16px; padding: 4px 16px; }
 
