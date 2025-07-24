@@ -16,7 +16,7 @@ const navigateTo = (path) => {
   <q-layout view="lHh Lpr lFf" class="bg-dark-page">
     <q-header elevated class="bg-dark-header text-white">
       <q-toolbar>
-        <q-btn flat round dense icon="arrow_back" @click="navigateTo('/mainview')" />
+        <q-btn label="返回" color="primary" @click="navigateTo('/mainview')" />
         <q-toolbar-title>
           核查管理
         </q-toolbar-title>
@@ -56,7 +56,7 @@ const navigateTo = (path) => {
               </q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple class="q-py-lg" @click="emit('navigate', 'ReportManagement')">
+            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/checkreports")'>
               <q-item-section avatar>
                 <q-icon color="blue-4" name="assignment" />
               </q-item-section>

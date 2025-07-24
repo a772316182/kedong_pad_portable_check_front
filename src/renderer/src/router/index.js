@@ -5,6 +5,8 @@ import ManageCheck from '../views/ManageCheck.vue'
 import ManageStrategy from '../views/ManageStrategy.vue'
 import MainView from '../views/MainView.vue'
 import MustCheck from '../views/MustCheck.vue'
+import CheckReports from '../views/CheckReports.vue'
+import ReportView from '../views/ReportView.vue'
 
 const routes = [
   {
@@ -16,6 +18,16 @@ const routes = [
     path: '/mainview',
     name: 'mainview',
     component: MainView
+  },
+  {
+    path: '/reportview',
+    name: 'reportview',
+    component: ReportView
+  },
+  {
+    path: '/checkreports',
+    name: 'checkreports',
+    component: CheckReports
   },
   {
     path: '/executeCheck',

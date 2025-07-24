@@ -10,8 +10,6 @@ const navigateTo = (path) => {
   // 使用 router.push 进行页面跳转
   router.push(path)
 }
-// 定义组件可以触发的事件
-const emit = defineEmits(['navigate']);
 
 // --- 响应式数据 ---
 const policies = reactive([
@@ -44,13 +42,9 @@ const newPolicy = reactive({
 });
 
 // --- 方法 ---
-const handleCardClick = (policy) => {
-  if (policy.link) {
-    emit('navigate', policy.link);
-  } else {
-    alertMessage.value = '需要新增策略请选择新增功能！';
-    isAlertDialogVisible.value = true;
-  }
+const handleCardClick = () => {
+  alertMessage.value = '需要新增策略请联系厂家'
+  isAlertDialogVisible.value = true;
 };
 
 const handleAddNewPolicy = () => {
@@ -83,7 +77,7 @@ const handleAddNewPolicy = () => {
         <q-btn flat dense label="导入" icon="file_upload" class="q-mr-sm" />
         <q-btn flat dense label="导出" icon="file_download" class="q-mr-sm" />
         <q-btn flat dense label="筛选" icon="filter_alt" @click="isFilterDrawerVisible = true" />
-        <q-btn color="light-blue-6" label="新增" icon="add" @click="isAddDialogVisible = true" class="q-ml-md" />
+        <q-btn color="light-blue-6" label="新增" icon="add" @click="handleCardClick()" class="q-ml-md" />
       </q-toolbar>
     </q-header>
 
@@ -103,7 +97,7 @@ const handleAddNewPolicy = () => {
         <!-- 策略卡片网格 -->
         <div class="row q-col-gutter-md">
           <div v-for="policy in policies" :key="policy.name" class="col-12 col-sm-6 col-md-4 col-lg-3">
-            <q-card @click="handleCardClick(policy)" class="cursor-pointer full-height bg-white text-black" flat bordered v-ripple>
+            <q-card class="cursor-pointer full-height bg-white text-black" flat bordered v-ripple>
               <q-card-section>
                 <div class="text-h6 text-teal-9">{{ policy.name }}</div>
                 <div class="text-subtitle2 text-grey-7">更新时间: {{ policy.updated }}</div>
