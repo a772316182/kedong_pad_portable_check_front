@@ -37,6 +37,14 @@ const nextStep = (stepName) => {
   currentStep.value = stepName;
 };
 
+const goBack = () => {
+  if (currentStep.value === 'site') {
+    navigateTo('/executeCheck')
+  } else if (currentStep.value === 'task') {
+    currentStep.value = 'site';
+  }
+};
+
 // 当在站点列表中选择一个站点时
 const selectSite = (site) => {
   selectedSite.value = site;
@@ -63,7 +71,7 @@ const confirmConnection = () => {
   <q-layout view="lHh Lpr lFf" class="bg-dark-page text-white">
     <q-header class="bg-dark-page q-pa-sm">
       <q-toolbar>
-        <q-btn unelevated color="teal-6" label="上一步" @click="emit('navigate', 'MainDashboard')" />
+        <q-btn unelevated color="teal-6" label="上一步" @click="goBack" />
         <q-space />
         <q-toolbar-title class="text-center text-h5 text-weight-bold">
           启动核查
