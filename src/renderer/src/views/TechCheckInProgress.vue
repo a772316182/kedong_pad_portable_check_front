@@ -112,17 +112,18 @@
       <q-page class="q-pa-sm bg-grey-3">
         <!-- 第一层功能按钮 -->
         <q-toolbar class="bg-white q-mb-sm rounded-borders shadow-2">
-          <q-btn flat color="primary" label="资产列表" />
           <q-btn flat color="dark" label="资产导入" />
           <q-btn flat color="dark" label="资产导出" />
           <q-space />
+          连接方式：网络连接
           <q-btn color="primary" label="切换连接" />
         </q-toolbar>
 
         <!-- 第二层功能按钮 (根据图片和您的描述更新) -->
         <q-toolbar class="bg-white q-mb-sm rounded-borders shadow-2 row items-center">
           <q-btn-group flat>
-            <q-btn label="全部核查" @click="showAllAssets" />
+            <q-btn label="站点检查" @click="showAllAssets" />
+            <q-btn label="资产探查" />
             <q-btn label="免登录检查" />
             <q-btn label="登录检查" />
             <q-btn label="登录异常" @click="handleLoginAnomalyClick"/>
