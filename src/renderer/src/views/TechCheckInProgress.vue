@@ -10,7 +10,7 @@
           label="上一步"
           @click="navigateTo('/techcheck')"
         />
-        <q-toolbar-title class="text-center">
+        <q-toolbar-title class="bg-dark-content text-center">
           正在核查
         </q-toolbar-title>
         <q-btn flat round dense icon="sync_alt" label="切换" @click="toggleView" />
@@ -111,16 +111,16 @@
     <q-page-container>
       <q-page class="q-pa-sm bg-dark-page">
         <!-- 第一层功能按钮 -->
-        <q-toolbar class="bg-white q-mb-sm rounded-borders shadow-2">
-          <q-btn flat color="dark" label="资产导入" />
-          <q-btn flat color="dark" label="资产导出" />
+        <q-toolbar class="bg-dark-content text-white q-mb-sm rounded-borders shadow-2">
+          <q-btn flat color="text-white " label="资产导入" />
+          <q-btn flat color="text-white " label="资产导出" />
           <q-space />
           连接方式：网络连接
-          <q-btn color="primary" label="切换连接" />
+          <q-btn color="bg-dark-content" label="切换连接" />
         </q-toolbar>
 
         <!-- 第二层功能按钮 (根据图片和您的描述更新) -->
-        <q-toolbar class="bg-white q-mb-sm rounded-borders shadow-2 row items-center">
+        <q-toolbar class="bg-dark-content text-white q-mb-sm rounded-borders shadow-2 row items-center">
           <q-btn-group flat>
             <q-btn label="站点检查" @click="showAllAssets" />
             <q-btn label="资产探查" />
@@ -379,13 +379,7 @@ const handleLoginAnomalyClick = () => {
 
 // 点击工具栏“全部核查”按钮，显示所有资产
 const showAllAssets = () => {
-  activeFilters.value = {};
-  selectedRow.value = []; // 清空选择
-  $q.notify({
-    message: '已显示全部资产',
-    color: 'info',
-    position: 'top',
-  });
+  navigateTo('/sitecheck')
 }
 
 // 根据资产状态返回不同的颜色
