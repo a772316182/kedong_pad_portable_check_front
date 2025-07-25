@@ -1,7 +1,5 @@
 {
-  "name": "kedong_pad_portable_check_front",
   "version": "0.0.1",
-  "description": "kedong_pad_portable_check_front.",
   "main": "./out/main/index.js",
   "author": "haoran li",
   "homepage": "https://electron-vite.org",

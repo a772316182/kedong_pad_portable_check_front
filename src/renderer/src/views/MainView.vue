@@ -71,12 +71,6 @@ const modules = ref([
             <span class="text-h6">消息</span>
           </div>
           <div class="row items-center q-gutter-x-sm">
-            <!-- 注意：请将这里的 logo 图片地址替换为您自己的 -->
-            <q-img src="https://i.imgur.com/your-logo-placeholder.png" width="40px" height="40px" />
-            <div>
-              <div class="text-h6">盾源科技</div>
-              <div class="text-caption">DUNYUAN TECHNOLOGY</div>
-            </div>
           </div>
         </div>
       </q-toolbar>
