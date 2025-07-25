@@ -9,6 +9,7 @@ const router = useRouter();
 const dialogs = reactive({
   viewEvidence: false,
   selectEvidenceMethod: false,
+  badCodeResult:false
 });
 const activeCategory = ref('intrusion_prevention'); // 左侧当前选中的分类
 const activeFilterTab = ref('all'); // 顶部当前选中的过滤标签
@@ -35,6 +36,52 @@ const checkItems = ref([
   { id: 4, category: 'intrusion_prevention', name: '关闭多余网络接口 (自动核查)', status: 'to_confirm', requirement: '要求: 禁用或删除多余的网络接口，以免私接网卡进行违规操作。', evidence: '已取证', basis: '...', supplementaryNote: '--' },
   { id: 5, category: 'identity_auth', name: '用户口令应有复杂度要求', status: 'not_passed', requirement: '...', evidence: '已取证', basis: '...', supplementaryNote: '--' },
 ]);
+
+// START: 为恶意代码弹窗新增的数据和方法
+// ===============================================
+
+// 用于存储扫描概要信息的数据
+const scanSummary = ref({
+  scanTime: 'N/A',
+  scanCount: 0,
+  timeElapsed: 'N/A',
+  virusCount: 0,
+});
+
+// 用于存储扫描结果列表的数据
+const scanResults = ref([]);
+
+// 定义 QTable 所需的列
+const malwareTableColumns = ref([
+  { name: 'file', required: true, label: '文件', align: 'left', field: 'file', style: 'max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' },
+  { name: 'type', align: 'left', label: '病毒类型', field: 'type' },
+  { name: 'time', align: 'center', label: '发现时间', field: 'time' },
+]);
+
+// 当点击“恶意代码结果”按钮时，准备数据并显示弹窗
+const showBadCodeResult = () => {
+  // 在实际应用中，这里会调用API获取数据
+  // 此处我们用图片中的数据来模拟
+  scanSummary.value = {
+    scanTime: '',
+    scanCount: 0,
+    timeElapsed: '',
+    virusCount: 0,
+  };
+  scanResults.value = []; // 图片中结果为空
+
+  // 打开弹窗
+  dialogs.badCodeResult = true;
+};
+
+// “导入”按钮的点击事件处理函数
+const onImportClick = () => {
+  console.log("导入按钮被点击了");
+  // 在这里添加您的导入逻辑
+}
+// ===============================================
+// END: 为恶意代码弹窗新增的数据和方法
+
 
 // --- Computed Properties ---
 // 根据分类和过滤标签动态计算要显示的核查项
@@ -105,8 +152,16 @@ const hideDetailView = () => {
 
     <!-- Main Header -->
     <div class="main-header row items-center q-px-md">
-      <q-btn unelevated label="返回" @click="navigateTo('/checking')" class="back-button"/>
+      <div>
+        <q-btn unelevated label="返回" @click="navigateTo('/checking')" class="back-button"/>
+      </div>
+      <q-space />
       <div class="text-h4 text-weight-bolder q-ml-lg">核查结果</div>
+      <q-space />
+      <div>
+        <!-- 修改此处的点击事件，调用我们准备数据的方法 -->
+        <q-btn unelevated label="恶意代码结果" @click="showBadCodeResult" class="back-button"/>
+      </div>
     </div>
 
     <q-page class="main-content-area">
@@ -145,7 +200,6 @@ const hideDetailView = () => {
                   <q-item-section>核查项</q-item-section>
                   <q-item-section>{{ cat.label }}</q-item-section>
                   <q-item-section side v-if="cat.status === 'error'">
-                    <q-icon name="o_cancel" color="red"/>
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -273,6 +327,68 @@ const hideDetailView = () => {
         </q-card-section>
       </q-card>
     </q-dialog>
+
+    <!-- START: 新增的恶意代码结果弹窗 -->
+    <!-- =============================================== -->
+    <q-dialog v-model="dialogs.badCodeResult">
+      <q-card style="min-width: 65vw; max-width: 80vw;">
+
+        <!-- 弹窗标题 -->
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">恶意代码信息</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <!-- 扫描概要信息 -->
+        <q-card-section class="q-pt-md">
+          <div class="row items-start q-col-gutter-xl">
+            <div class="col-auto">
+              <!-- 导入按钮 -->
+              <q-btn icon="file_download" color="primary" label="导入" unelevated @click="onImportClick" />
+            </div>
+            <div class="col">
+              <!-- 扫描详情 -->
+              <div class="row text-body1 q-col-gutter-y-sm">
+                <div class="col-sm-6 col-12">扫描时间：{{ scanSummary.scanTime }}</div>
+                <div class="col-sm-6 col-12">扫描耗时：{{ scanSummary.timeElapsed }}</div>
+                <div class="col-sm-6 col-12">扫描数量：{{ scanSummary.scanCount }}</div>
+                <div class="col-sm-6 col-12">病毒数量：{{ scanSummary.virusCount }}</div>
+              </div>
+            </div>
+          </div>
+        </q-card-section>
+
+        <!-- 结果表格 -->
+        <q-card-section>
+          <q-table
+            :rows="scanResults"
+            :columns="malwareTableColumns"
+            row-key="file"
+            flat
+            bordered
+            hide-bottom
+          >
+            <!-- 当没有数据时显示的自定义内容 -->
+            <template v-slot:no-data>
+              <div class="full-width row flex-center text-grey-7 q-gutter-sm q-py-lg">
+                <q-icon name="check_circle_outline" size="2em" />
+                <span>未发现恶意代码项</span>
+              </div>
+            </template>
+          </q-table>
+        </q-card-section>
+
+        <!-- 底部操作按钮 -->
+        <q-card-actions align="right">
+          <q-btn flat label="关闭" color="primary" v-close-popup />
+        </q-card-actions>
+
+      </q-card>
+    </q-dialog>
+    <!-- =============================================== -->
+    <!-- END: 新增的恶意代码结果弹窗 -->
+
   </q-layout>
 </template>
 

@@ -4,6 +4,87 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
+// START: 为筛选侧拉窗口新增的状态和数据
+// ===============================================
+const isFilterDrawerOpen = ref(false);
+
+const filters = reactive({
+  deviceType: 'all',
+  checkStatus: 'all',
+  securityZone: 'all',
+  probeStatus: 'all',
+});
+
+const filterOptions = ref([
+  {
+    title: '设备类型',
+    key: 'deviceType',
+    options: [
+      { id: 'all', label: '全部类型' },
+      { id: 'unknown', label: '未知' },
+      { id: 'host', label: '主机设备' },
+      { id: 'network', label: '网络设备' },
+      { id: 'security', label: '安防设备' },
+      { id: 'isolation', label: '间隔层设备' },
+      { id: 'suspected_isolation', label: '疑似间隔层设备' },
+      { id: 'other', label: '其他' },
+    ]
+  },
+  {
+    title: '核查状态',
+    key: 'checkStatus',
+    options: [
+      { id: 'all', label: '全部状态' },
+      { id: 'passed', label: '通过' },
+      { id: 'not_passed', label: '未通过' },
+      { id: 'not_checked', label: '未核查' },
+      { id: 'to_confirm', label: '待确认' },
+    ]
+  },
+  {
+    title: '安全分区',
+    key: 'securityZone',
+    options: [
+      { id: 'all', label: '全部' },
+      { id: 'unknown', label: '未知' },
+      { id: 'zone1', label: '安全一区' },
+      { id: 'zone2', label: '安全二区' },
+    ]
+  },
+  {
+    title: '资产探查状态',
+    key: 'probeStatus',
+    options: [
+      { id: 'all', label: '全部' },
+      { id: 'alive', label: '存活' },
+      { id: 'not_alive', label: '不存活' },
+    ]
+  },
+  {
+    title: '高危端口',
+    key: 'probeStatus',
+    options: [
+      { id: 'all', label: '全部' },
+      { id: 'alive', label: '存活' },
+      { id: 'not_alive', label: '不存活' },
+    ]
+  }
+]);
+
+const resetFilters = () => {
+  for (const key in filters) {
+    filters[key] = 'all';
+  }
+};
+
+const applyFilters = () => {
+  console.log('应用筛选:', JSON.parse(JSON.stringify(filters)));
+  // 在这里可以添加实际的筛选逻辑
+  isFilterDrawerOpen.value = false;
+};
+// ===============================================
+// END: 为筛选侧拉窗口新增的状态和数据
+
 // --- Dialogs & State Control ---
 const dialogs = reactive({
   assetProbe: false,
@@ -48,7 +129,7 @@ const loginCheckCredentials = ref([
 const httpsConfig = ref({ ip: '10.105.71.233', subnet: '255.255.255.0', gateway: '', port: '28081' });
 const sshInfo = ref({ ip: '10.105.71.233', subnet: '255.255.255.0', gateway: '10.105.71.1' });
 const deviceType = ref('主机设备');
-const goBack = () => router.go(-1);
+//const goBack = () => router.go(-1);
 
 // --- Methods ---
 
@@ -87,22 +168,35 @@ const navigateTo = (path) => {
     <div class="top-bar row items-center justify-between q-px-md">
       <span>2025-06-20 15:50:24</span>
       <div>
-        <q-btn flat dense no-caps class="header-action-btn" icon="o_sync_alt" label="切换"/>
-        <q-btn flat dense no-caps class="header-action-btn" icon="o_filter_alt" label="筛选"/>
-        <q-btn flat dense no-caps class="header-action-btn" icon="o_bar_chart" label="查看统计图"/>
-        <span class="q-ml-md">当前电量: 14% <q-icon name="o_battery_1_bar"/></span>
+        <q-btn flat dense no-caps class="header-action-btn" icon="o" label="切换"/>
+        <!-- START: 修改筛选按钮的功能 -->
+        <q-btn flat dense no-caps class="header-action-btn" icon="o" label="筛选" @click="isFilterDrawerOpen = true"/>
+        <!-- END: 修改筛选按钮的功能 -->
+        <q-btn flat dense no-caps class="header-action-btn" icon="o" label="查看统计图"/>
+        <span class="q-ml-md">当前电量: 14% <q-icon name="o"/></span>
       </div>
     </div>
-
-    <!-- Main Header -->
+    <!-- “正在核查 标题” -->
     <div class="main-header row items-center q-px-md">
+      <!-- 左侧部分 -->
       <div>
         <q-btn class="back-button" unelevated label="上一步" @click="navigateTo('/executeCheck')" />
       </div>
-      <div class="text-h4 text-weight-bolder q-ml-lg">正在核查</div>
-      <q-space/>
-      <span class="text-body1">连接方式: 网络连接</span>
-      <q-btn color="primary" label="切换连接" unelevated class="q-ml-md"/>
+
+      <!-- 第一个 Spacer -->
+      <q-space />
+
+      <!-- 中间部分 -->
+      <div class="text-h4 text-weight-bolder">正在核查</div>
+
+      <!-- 第二个 Spacer -->
+      <q-space />
+
+      <!-- 右侧部分 (将元素分组) -->
+      <div class="row items-center no-wrap">
+        <span class="text-body1">连接方式: 网络连接</span>
+        <q-btn color="primary" label="切换连接" unelevated class="q-ml-md"/>
+      </div>
     </div>
 
     <q-page class="main-content-area">
@@ -154,6 +248,88 @@ const navigateTo = (path) => {
         </q-table>
       </q-card>
     </q-page>
+
+    <!-- START: 新增的筛选侧拉窗口 -->
+    <!-- =============================================== -->
+    <q-drawer
+      v-model="isFilterDrawerOpen"
+      side="right"
+      bordered
+      :width="350"
+      class="filter-drawer"
+    >
+      <div class="column full-height">
+        <!-- Drawer Header -->
+        <div class="q-pa-md filter-drawer-header">
+          <div class="text-h6">筛选</div>
+        </div>
+        <q-separator />
+
+        <!-- Drawer Content -->
+        <q-scroll-area class="col">
+          <q-list class="q-pa-md">
+            <q-item class="q-pa-none column items-start q-mb-md">
+              <q-item-label header class="text-weight-bold">设备IP查询</q-item-label>
+              <q-input
+                v-model="filters.ipAddress"
+                outlined
+                dense
+                clearable
+                class="full-width"
+                placeholder="请输入IP地址或关键词"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="search" />
+                </template>
+              </q-input>
+            </q-item>
+            <q-separator class="q-mb-lg" />
+            <q-item
+              v-for="category in filterOptions"
+              :key="category.key"
+              class="q-pa-none column items-start"
+            >
+              <q-item-label header class="text-weight-bold">{{ category.title }}</q-item-label>
+              <div class="q-gutter-sm q-mb-lg">
+                <q-btn
+                  v-for="option in category.options"
+                  :key="option.id"
+                  unelevated
+                  dense
+                  no-caps
+                  :class="{ 'active-filter': filters[category.key] === option.id }"
+                  class="filter-option-btn"
+                  :label="option.label"
+                  @click="filters[category.key] = option.id"
+                />
+              </div>
+            </q-item>
+          </q-list>
+        </q-scroll-area>
+        <q-separator />
+
+        <!-- Drawer Footer -->
+        <div class="q-pa-md row q-gutter-md">
+          <q-btn
+            label="重置"
+            color="grey-6"
+            outline
+            class="col"
+            @click="resetFilters"
+          />
+          <q-btn
+            label="筛选"
+            color="primary"
+            unelevated
+            class="col"
+            @click="applyFilters"
+          />
+        </div>
+      </div>
+    </q-drawer>
+    <!-- =============================================== -->
+    <!-- END: 新增的筛选侧拉窗口 -->
+
 
     <!-- === DIALOGS === -->
 
@@ -349,4 +525,24 @@ const navigateTo = (path) => {
 }
 .cred-table-header { font-weight: bold; background-color: #f5f5f5; border-radius: 4px; }
 .cred-table-row { border-bottom: 1px solid #eee; }
+
+/* START: 新增的筛选侧拉窗口样式 */
+.filter-drawer-header {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.filter-option-btn {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 4px 12px;
+}
+
+.active-filter {
+  background-color: var(--q-primary) !important;
+  color: white !important;
+  border-color: var(--q-primary) !important;
+}
+/* END: 新增的筛选侧拉窗口样式 */
 </style>

@@ -8,12 +8,7 @@ function refreshEverything() {
 <template>
   <q-layout view="hHh lpR fFf">
     <q-header elevated class="bg-primary text-white" height-hint="80">
-      <q-toolbar class="text-white">
-        <q-toolbar-title>
-          <span class="text-h5">kedong_pad_portable_check_front</span>
-        </q-toolbar-title>
-        <q-space />
-      </q-toolbar>
+
     </q-header>
 
     <q-page-container>
