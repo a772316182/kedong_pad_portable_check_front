@@ -97,7 +97,7 @@ const navigateTo = (path) => {
     <!-- Main Header -->
     <div class="main-header row items-center q-px-md">
       <div>
-        <q-btn class="back-button" unelevated label="上一步" @click="goBack" />
+        <q-btn class="back-button" unelevated label="上一步" @click="navigateTo('/executeCheck')" />
       </div>
       <div class="text-h4 text-weight-bolder q-ml-lg">正在核查</div>
       <q-space/>

@@ -48,7 +48,7 @@ const nextStep = (stepName) => {
 // 处理返回/上一步的逻辑
 const goBack = () => {
   if (currentStep.value === 'qualitative') {
-    router.go(-1);
+    navigateTo('/mainview')
   } else if (currentStep.value === 'site') {
     currentStep.value = 'qualitative';
   } else if (currentStep.value === 'task') {
