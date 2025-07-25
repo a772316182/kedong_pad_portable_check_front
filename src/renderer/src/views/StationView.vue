@@ -49,35 +49,26 @@ const closeCard = () => {
     <!-- 顶部的状态栏 (时间 & 返回按钮) -->
     <div class="status-bar row items-center justify-between q-px-md">
       <span>2025-06-20 15:48:51</span>
-      <q-space />
+      <div class="text-h4 text-white text-weight-bolder">站点管理</div>
       <span class="text-white">当前电量: 15% <q-icon name="o6" /></span>
-      <q-btn
-        unelevated
-        label="返回"
-        @click="navigateTo('/managecheck')"
-        class="back-button"
-      />
-    </div>
-
+      </div>
     <q-page padding>
       <!-- 主内容区域 -->
       <div class="main-content-area">
         <!-- 标题和操作按钮栏 -->
         <div class="row items-center no-wrap q-mb-xl">
-
           <div class="row items-center q-gutter-x-lg q-ml-xl">
+            <q-btn unelevated label="返回" @click="navigateTo('/managecheck')" class="back-button" />
             <q-btn flat dense no-caps class="action-btn" icon="o1" label="切换" @click="navigateTo('/multiasset')" />
             <q-btn flat dense no-caps class="action-btn" icon="o2" label="导入" @click="importData" />
             <q-btn flat dense no-caps class="action-btn" icon="o3" label="导出" @click="exportData" />
           </div>
           <q-space />
           <div class="row items-center q-gutter-x-lg">
-            <div class="text-h4 text-white text-weight-bolder">站点管理</div>
-
-            <q-btn flat dense no-caps class="ation-btnc" icon="o4" label="筛选" @click="filterData" />
+            <q-btn flat dense no-caps class="action-btn" icon="o4" label="筛选" @click="filterData" />
             <q-btn flat dense no-caps class="action-btn" icon="o5" label="添加" @click="addData" />
-          </div>
         </div>
+      </div>
 
         <!-- 浮动信息卡片 -->
         <q-card v-if="isSiteCardVisible" class="floating-card" flat>
@@ -101,8 +92,8 @@ const closeCard = () => {
 
           <!-- 卡片底部：操作按钮 -->
           <q-card-actions align="right" class="q-pa-md">
-            <q-btn flat label="查看" color="grey-8" @click="viewDetails(siteData.id)" />
-            <q-btn flat label="编辑" class="edit-button" @click="navigateTo('/manageasset')" />
+            <q-btn flat label="查看" color="grey-8" @click="navigateTo('/manageasset')" />
+            <q-btn flat label="编辑" class="edit-button" @click="viewDetails(siteData.id)" />
           </q-card-actions>
         </q-card>
       </div>
@@ -135,9 +126,6 @@ const closeCard = () => {
   font-weight: bold;
   border-radius: 6px;
   padding: 4px 16px;
-  position: relative;      /* 1. 开启相对定位 */
-  left: -1450px;             /* 2. 从原始位置向左移动 10px */
-  top: 50px;               /* 3. 从原始位置向下移动 15px */
 }
 
 /* 主内容区域，增加上边距以避开状态栏 */

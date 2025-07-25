@@ -38,7 +38,7 @@ const compareRecords = () => {
           历史记录
         </q-toolbar-title>
         <div class="text-right" style="min-width: 100px;">
-          <span>当前电量: 21% <q-icon name="o_battery_1_bar"/></span>
+          <span>当前电量: 21% <q-icon name="o_"/></span>
         </div>
       </q-toolbar>
     </q-header>
@@ -88,7 +88,7 @@ const compareRecords = () => {
       <!-- 空白状态占位符 -->
       <q-space />
       <div class="column flex-center text-center no-data-container">
-        <q-icon name="o_inventory_2" class="no-data-icon" />
+        <q-icon name="o" class="no-data-icon" />
         <span class="text-h6 q-mt-md">暂无数据</span>
       </div>
       <q-space />

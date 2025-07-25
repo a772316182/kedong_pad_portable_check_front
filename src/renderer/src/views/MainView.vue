@@ -1,27 +1,40 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 
-// 1. 初始化路由
 const router = useRouter()
 
-// 2. 准备动态数据 (为将来扩展做准备)
-const currentTime = ref('2023-08-20 15:46:55') // 实际项目中可以替换为动态时间
+// START: 为弹窗和侧拉窗口新增/修改的状态
+// ===============================================
+// 数据上传弹窗的状态
+const uploadDialog = ref(false);
+// 消息侧拉窗口的状态
+const messagesDrawer = ref(false);
+
+// 数据上传弹窗的表单数据
+const uploadConfig = ref({
+  channelIp: '',
+  gateway: ''
+});
+
+// 连通性测试的方法 (占位)
+const testConnectivity = () => {
+  console.log("正在测试连通性...");
+};
+// ===============================================
+// END: 为弹窗和侧拉窗口新增/修改的状态
+
+const currentTime = ref('2023-08-20 15:46:55')
 const currentUser = ref('业务操作员')
 
-// 3. 统一的导航函数
-//    为四个主要操作（退出、执行核查、核查管理、策略管理）准备了跳转逻辑
 const navigateTo = (path) => {
   console.log(`正在跳转到: ${path}`)
-  // 使用 router.push 进行页面跳转
   router.push(path)
 }
 
-// 4. 定义主功能模块
 const modules = ref([
   {
     title: '执行核查',
-    // 注意：请将这里的图片地址替换为您自己的图片资源
     image: 'https://img95.699pic.com/photo/60007/2211.jpg_wh300.jpg',
     route: '/executeCheck'
   },
@@ -39,12 +52,9 @@ const modules = ref([
 </script>
 
 <template>
-  <!-- 根布局，使用自定义的深色背景 -->
   <q-layout view="lHh Lpr lFf" class="main-background">
-    <!-- 顶栏 -->
     <q-header class="main-background text-white" height-hint="98">
       <q-toolbar class="q-py-md q-px-lg">
-        <!-- 左侧区域 -->
         <div class="row items-center">
           <q-btn
             unelevated
@@ -58,25 +68,21 @@ const modules = ref([
             <div class="text-subtitle1 text-grey-5">当前登录身份：{{ currentUser }}</div>
           </div>
         </div>
-
-        <!-- 弹簧，将左右内容推开 -->
         <q-space />
-
-        <!-- 右侧区域 -->
         <div class="row items-center q-gutter-x-lg">
+          <!-- START: 修改按钮点击事件以打开对应的弹窗/侧拉窗口 -->
           <div class="row items-center q-gutter-x-sm cursor-pointer">
-            <span class="text-h6">数据上传</span>
+            <q-btn unelevated label="数据上传" @click="uploadDialog = true"/>
           </div>
           <div class="row items-center q-gutter-x-sm cursor-pointer">
-            <span class="text-h6">消息</span>
+            <q-btn unelevated label="消息" @click="messagesDrawer = true"/>
           </div>
-          <div class="row items-center q-gutter-x-sm">
-          </div>
+          <!-- END: 修改按钮点击事件 -->
+          <div class="row items-center q-gutter-x-sm"></div>
         </div>
       </q-toolbar>
     </q-header>
 
-    <!-- 顶栏之上的状态栏 (时间、电量) -->
     <q-header class="main-background text-grey-5" style="top: 0; position: fixed;">
       <div class="row justify-between q-px-sm q-py-xs text-caption">
         <span>{{ currentTime }}</span>
@@ -84,10 +90,8 @@ const modules = ref([
       </div>
     </q-header>
 
-    <!-- 页面主体内容 -->
     <q-page-container>
       <q-page padding class="page-content">
-        <!-- 功能模块卡片 -->
         <div class="row q-col-gutter-xl justify-center">
           <div
             v-for="mod in modules"
@@ -95,7 +99,6 @@ const modules = ref([
             class="col-12 col-md-4"
             style="max-width: 400px;"
           >
-            <!-- 为每个卡片添加点击事件 -->
             <q-card
               class="action-card"
               flat
@@ -111,52 +114,146 @@ const modules = ref([
         </div>
       </q-page>
     </q-page-container>
+
+    <!-- START: 新增/修改的弹窗与侧拉窗口 -->
+    <!-- =============================================== -->
+
+    <!-- 弹窗1: 数据上传准备 (保持不变) -->
+    <q-dialog v-model="uploadDialog">
+      <q-card class="dialog-card" style="width: 600px;">
+        <q-card-section><div class="text-h6">数据上传准备</div></q-card-section>
+        <q-card-section class="q-pt-none">
+          <div class="dialog-form-row">
+            <span class="dialog-form-label">网传通道 IP:</span>
+            <q-input dense outlined v-model="uploadConfig.channelIp" placeholder="请输入网传通道 IP" class="col" />
+          </div>
+          <div class="dialog-form-row">
+            <span class="dialog-form-label"><span class="text-red">*</span> 当前终端 IP:</span>
+            <span>10.105.71.233</span>
+          </div>
+          <div class="dialog-form-row">
+            <span class="dialog-form-label"><span class="text-red">*</span> 子网掩码:</span>
+            <span>255.255.255.0</span>
+            <q-space />
+            <q-btn label="连通性测试" color="primary" unelevated dense @click="testConnectivity" />
+          </div>
+          <div class="dialog-form-row">
+            <span class="dialog-form-label">网关:</span>
+            <q-input dense outlined v-model="uploadConfig.gateway" placeholder="请输入" class="col" />
+          </div>
+        </q-card-section>
+        <q-card-actions class="dialog-actions-bar">
+          <q-btn flat label="退出" v-close-popup />
+          <q-btn unelevated label="直接回传" color="primary" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <!-- 侧拉窗口2: 消息提示 (从 q-dialog 修改为 q-drawer) -->
+    <q-drawer
+      v-model="messagesDrawer"
+      side="right"
+      bordered
+      :width="400"
+      class="messages-drawer"
+    >
+      <div class="column full-height">
+        <!-- 侧拉窗口的头部 -->
+        <div class="row items-center q-pa-md messages-drawer-header">
+          <div class="text-h6">消息提示</div>
+          <q-space />
+          <q-btn icon="close" flat round dense @click="messagesDrawer = false" />
+        </div>
+        <q-separator />
+
+        <!-- 侧拉窗口的内容区 -->
+        <q-scroll-area class="col">
+          <div class="column items-center justify-center full-height text-center">
+            <q-icon name="o" color="grey-5" size="7em" />
+            <div class="text-h6 text-grey-6 q-mt-md">暂无消息</div>
+          </div>
+        </q-scroll-area>
+        <q-separator />
+
+        <!-- 侧拉窗口的脚部 -->
+        <div class="q-pa-md">
+          <q-btn class="full-width" unelevated label="我知道了" color="primary" @click="messagesDrawer = false" />
+        </div>
+      </div>
+    </q-drawer>
+
+    <!-- =============================================== -->
+    <!-- END: 新增/修改的弹窗与侧拉窗口 -->
   </q-layout>
 </template>
 
 <style scoped>
 /* 定义与原型一致的颜色和样式 */
-
-/* 主背景色 */
 .main-background {
   background-color: #313942;
   border-bottom: 1px solid #4a5562;
 }
-
-/* 页面内容区域，有一个额外的上边距以避开顶栏 */
 .page-content {
-  padding-top: 120px; /* 调整此值以确保内容不被顶栏遮挡 */
+  padding-top: 120px;
 }
-
-/* 退出按钮样式 */
 .exit-button {
-  background-color: #00796b; /* 从原型图中提取的青色 */
+  background-color: #00796b;
   color: white;
   font-size: 1.1rem;
   font-weight: bold;
   border-radius: 8px;
 }
-
-/* 功能卡片样式 */
 .action-card {
-  background-color: #313942; /* 与主背景色一致 */
+  background-color: #313942;
   border-radius: 12px;
-  overflow: hidden; /* 确保圆角生效 */
+  overflow: hidden;
   cursor: pointer;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   border: 1px solid #4a5562;
 }
-
-/* 卡片悬停效果 */
 .action-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
 }
-
-/* 卡片底部的文字区域样式 */
 .action-card .q-card__section {
-  background-color: #e0e0e0; /* 浅灰色背景 */
-  color: #313942; /* 深色文字 */
+  background-color: #e0e0e0;
+  color: #313942;
   padding: 20px;
 }
+
+/* START: 新增/修改的弹窗和侧拉窗口样式 */
+/* =============================================== */
+.dialog-card {
+  border-radius: 8px;
+}
+.dialog-form-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  min-height: 40px;
+}
+.dialog-form-label {
+  width: 120px;
+  text-align: right;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.dialog-actions-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* 消息侧拉窗口的特定样式 */
+.messages-drawer {
+  background-color: #fff; /* 通常侧拉窗口是白色背景 */
+}
+.messages-drawer-header {
+  border-bottom: 1px solid #e0e0e0;
+}
+/* =============================================== */
+/* END: 新增/修改的弹窗和侧拉窗口样式 */
 </style>
