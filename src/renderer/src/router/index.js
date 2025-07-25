@@ -16,6 +16,8 @@ import Checking from '../views/Checking.vue'
 import CheckResult from '../views/CheckResult.vue'
 import LoginCheckInProgress from '../views/LoginCheckInProgress.vue'
 import HistoryLog from '../views/HistoryLog.vue'
+import TechCheck from '../views/Techcheck.vue'
+import TechCheckInProgress from '../views/TechCheckInProgress.vue'
 
 const routes = [
   {
@@ -104,10 +106,21 @@ const routes = [
     path:'/checkresult',
     name:'checkresult',
     component:CheckResult
-  },{
+  },
+  {
     path:'/historylog',
     name:'historylog',
     component:HistoryLog
+  },
+  {
+    path:'/techcheck',
+    name:'techcheck',
+    component:TechCheck
+  },
+  {
+    path: '/techcheckinprogress',
+    name: 'techcheckinprogress',
+    component: TechCheckInProgress
   }
 ]
 
