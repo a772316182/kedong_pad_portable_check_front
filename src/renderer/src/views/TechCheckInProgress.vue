@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <!-- 顶部主工具栏 -->
-    <q-header elevated class="bg-grey-9 text-white">
+    <q-header elevated class="bg-dark-page text-white">
       <q-toolbar>
         <q-btn
           unelevated
@@ -109,7 +109,7 @@
 
     <!-- 页面主要内容 -->
     <q-page-container>
-      <q-page class="q-pa-sm bg-grey-3">
+      <q-page class="q-pa-sm bg-dark-page">
         <!-- 第一层功能按钮 -->
         <q-toolbar class="bg-white q-mb-sm rounded-borders shadow-2">
           <q-btn flat color="dark" label="资产导入" />
@@ -398,6 +398,8 @@ const getChipColor = (status) => {
 </script>
 
 <style lang="sass">
+.q-layout
+  background: #2c3a45
 .q-table__container
   border-radius: 8px
 
