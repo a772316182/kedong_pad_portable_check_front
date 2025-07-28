@@ -147,7 +147,7 @@ const hideDetailView = () => {
     <!-- Top Bar -->
     <div class="top-bar row items-center justify-between q-px-md">
       <span>2025-06-20 15:25:23</span>
-      <span>当前电量: 22% <q-icon name="o_battery_2_bar"/></span>
+      <span>当前电量: 22% <q-icon name="o"/></span>
     </div>
 
     <!-- Main Header -->

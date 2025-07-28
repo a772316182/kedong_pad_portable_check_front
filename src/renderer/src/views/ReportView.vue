@@ -14,7 +14,7 @@ const navigateTo = (path) => {
   <q-layout view="lHh Lpr lFf" class="bg-dark-page">
     <q-header elevated class="bg-dark-header text-white">
       <q-toolbar>
-        <q-btn flat round dense icon="arrow_back" @click="navigateTo('/checkreports')" />
+        <q-btn label="返回" color="primary" @click="navigateTo('/checkreports')" />
         <q-toolbar-title>
           省调1安全核查总报告
         </q-toolbar-title>

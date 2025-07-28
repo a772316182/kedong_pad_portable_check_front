@@ -26,18 +26,13 @@ const tasks = reactive([
     details: "这是一个正在进行任务的描述信息，可以查看实时进度。",
   },
 ]);
-
-const handleViewDetails = () => {
-  // 导航到“正在核查”页面
-  emit('navigate', 'InProgressCheck');
-};
 </script>
 
 <template>
   <q-layout view="lHh Lpr lFf" class="bg-dark-page">
     <q-header elevated class="bg-dark-header text-white">
       <q-toolbar>
-        <q-btn flat round dense icon="arrow_back" @click="emit('navigate', 'CheckManagement')" />
+        <q-btn color="primary" unelevated label="上一步" @click="navigateTo('/managecheck')"  />
         <q-toolbar-title>
           任务管理
         </q-toolbar-title>

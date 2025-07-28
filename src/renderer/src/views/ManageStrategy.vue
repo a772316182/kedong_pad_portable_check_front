@@ -66,7 +66,7 @@ const handleAddNewPolicy = () => {
 
 <template>
   <!-- 使用 QLayout 作为页面根布局，并应用深青色背景 -->
-  <q-layout view="lHh Lpr lFf" class="bg-teal-10">
+  <q-layout view="lHh Lpr lFf">
     <q-header elevated class="bg-teal-9 text-white">
       <q-toolbar>
         <q-btn label="返回" color="primary" @click="navigateTo('/mainview')" />

@@ -54,6 +54,10 @@ const modules = ref([
 <template>
   <q-layout view="lHh Lpr lFf" class="main-background">
     <q-header class="main-background text-white" height-hint="98">
+      <div class="row justify-between q-px-sm q-py-xs text-caption">
+        <span>{{ currentTime }}</span>
+        <span>当前电量: 15% <q-icon name="o" /></span>
+      </div>
       <q-toolbar class="q-py-md q-px-lg">
         <div class="row items-center">
           <q-btn
@@ -81,13 +85,6 @@ const modules = ref([
           <div class="row items-center q-gutter-x-sm"></div>
         </div>
       </q-toolbar>
-    </q-header>
-
-    <q-header class="main-background text-grey-5" style="top: 0; position: fixed;">
-      <div class="row justify-between q-px-sm q-py-xs text-caption">
-        <span>{{ currentTime }}</span>
-        <span>当前电量: 15% <q-icon name="o_battery_2_bar" /></span>
-      </div>
     </q-header>
 
     <q-page-container>

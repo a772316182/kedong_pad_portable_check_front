@@ -72,11 +72,11 @@ const selectAsset = (id) => { selectedAssetId.value = id; };
         <div class="text-h4 text-white text-weight-bolder">资产管理</div>
         <q-space />
         <div class="row items-center q-gutter-x-lg">
-          <q-btn flat dense no-caps class="action-btn" icon="o_sync_alt" label="切换"/>
-          <q-btn flat dense no-caps class="action-btn" icon="o_sort" label="排序"/>
-          <q-btn flat dense no-caps class="action-btn" icon="o_filter_alt" label="筛选"/>
-          <span class="text-white">当前电量: 15% <q-icon name="o_battery_2_bar"/></span>
-          <q-btn flat dense no-caps class="action-btn" icon="o_add" label="添加"/>
+          <q-btn flat dense no-caps class="action-btn" icon="o" label="切换"/>
+          <q-btn flat dense no-caps class="action-btn" icon="o" label="排序"/>
+          <q-btn flat dense no-caps class="action-btn" icon="o" label="筛选"/>
+          <span class="text-white">当前电量: 15% <q-icon name="o"/></span>
+          <q-btn flat dense no-caps class="action-btn" icon="o" label="添加"/>
         </div>
       </div>
 
@@ -122,7 +122,7 @@ const selectAsset = (id) => { selectedAssetId.value = id; };
           <div class="panel-header">
             <div>
               <span>资产详情</span>
-              <q-btn round flat dense icon="o_edit" class="q-ml-sm"/>
+              <q-btn round flat dense icon="o" class="q-ml-sm"/>
             </div>
           </div>
           <div class="detail-grid">

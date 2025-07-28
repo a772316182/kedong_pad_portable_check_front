@@ -44,7 +44,7 @@ const navigateTo = (path) => {
               </q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/inprogress")'>
+            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/taskcheck")'>
               <q-item-section avatar>
                 <q-icon color="blue-4" name="folder_open" />
               </q-item-section>
