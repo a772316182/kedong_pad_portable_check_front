@@ -19,9 +19,10 @@ import HistoryLog from '../views/HistoryLog.vue'
 import TechCheck from '../views/Techcheck.vue'
 import TechCheckInProgress from '../views/TechCheckInProgress.vue'
 import SiteCheck from '../views/SiteCheck.vue'
-import FactoryView from '../views/FactoryView.vue'
-import SecurityStrategy from '../views/SecurityStrategy.vue'
-import SecurityAlert from '../views/SecurityAlert.vue'
+import BaseSafeCheck from '../views/BaseSafeCheck.vue'
+import NetMachineCheck from '../views/NetMachineCheck.vue'
+import FactorySafeCheck from '../views/FactorySafeCheck.vue'
+
 
 const routes = [
   {
@@ -130,21 +131,18 @@ const routes = [
     path: '/sitecheck',
     name: 'sitecheck',
     component: SiteCheck
-  },
-  {
-    path: '/factoryview',
-    name: 'factoryview',
-    component: FactoryView
-  },
-  {
-    path: '/securityview',
-    name: 'securityview',
-    component: SecurityStrategy
-  },
-  {
-    path: '/securityalert',
-    name: 'securityalert',
-    component: SecurityAlert
+  },{
+    path:'/basesafecheck',
+    name:'/basesafecheck',
+    component: BaseSafeCheck
+  },{
+    path:'/netmachinecheck',
+    name:'netmachinecheck',
+    component: NetMachineCheck
+  },{
+    path:'/factorysafecheck',
+    name:'factorysafecheck',
+    component: FactorySafeCheck
   }
 ]
 

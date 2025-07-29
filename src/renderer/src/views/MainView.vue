@@ -51,7 +51,7 @@ const modules = ref([
   {
     title: '厂站安全检查',
     image: 'https://img95.699pic.com/photo/60040/1943.jpg_wh860.jpg',
-    route: '/manageStrategy'
+    route: '/factorysafecheck'
   },
   {
     title: '用户管理',
