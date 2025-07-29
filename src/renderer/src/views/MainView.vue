@@ -56,12 +56,12 @@ const modules = ref([
   {
     title: '用户管理',
     image: 'https://image.woshipm.com/wp-files/2019/12/HQxmWILTRNWkyPJs06JE.jpg',
-    route: '/manageStrategy'
+    route: '/managecustomer'
   },
   {
     title: '系统管理',
     image: 'https://img95.699pic.com/photo/60000/1104.jpg_wh860.jpg',
-    route: '/manageStrategy'
+    route: '/managesystem'
   }
 ])
 </script>

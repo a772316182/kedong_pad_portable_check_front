@@ -25,6 +25,8 @@ import FactorySafeCheck from '../views/FactorySafeCheck.vue'
 import FactoryView from '../views/FactoryView.vue'
 import SecurityStrategy from '../views/SecurityStrategy.vue'
 import SecurityAlert from '../views/SecurityAlert.vue'
+import ManageCustomer from '../views/ManageCustomer.vue'
+import ManageSystem from '../views/ManageSystem.vue'
 
 const routes = [
   {
@@ -160,6 +162,14 @@ const routes = [
     path:'/securityalert',
     name:'securityalert',
     component: SecurityAlert
+  },{
+    path:'/managecustomer',
+    name:'managecustomer',
+    component: ManageCustomer
+  },{
+    path:'/managesystem',
+    name:'managesystem',
+    component: ManageSystem
   }
 ]
 
