@@ -1,33 +1,31 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="lHh Lpr lFf" class="bg-page">
     <!-- 顶部主工具栏 -->
-    <q-header elevated class="bg-teal-7 text-white">
+    <q-header elevated class="bg-teal-8 text-grey-8">
       <q-toolbar>
-        <q-btn flat dense icon="home" label="Home" />
-        <q-breadcrumbs-separator />
-        <q-toolbar-title>
-          安全告警验证
-        </q-toolbar-title>
+        <q-breadcrumbs class="text-white">
+          <template v-slot:separator>
+            <q-icon size="1.2em" name="chevron_right" />
+          </template>
+          <div class="col-auto"><q-btn color="teal-6" unelevated icon="home" label="返回" @click="navigateTo('/factorysafecheck')" /></div>
+          <div class="col"><div class="text-h6">安全告警验证</div></div>
+        </q-breadcrumbs>
       </q-toolbar>
     </q-header>
 
     <!-- 页面主要内容 -->
     <q-page-container>
-      <q-page class="bg-grey-10">
+      <q-page class="bg-page q-pa-lg">
 
         <!-- 步骤指示器 -->
-        <q-toolbar class="bg-grey-9 text-white shadow-2">
-          <div class="step-item-new" :class="{ 'active': currentStep === 1 }" @click="goToStep(1)">
-            <q-icon name="edit_note" />
-            <span>创建任务</span>
-          </div>
-          <div class="step-item-new" :class="{ 'active': currentStep === 2 }" @click="goToStep(2)">
-            <q-icon name="verified_user" />
-            <span>告警验证</span>
-          </div>
-          <div class="step-item-new" :class="{ 'active': currentStep === 3 }" @click="goToStep(3)">
-            <q-icon name="task_alt" />
-            <span>验证结果</span>
+        <q-toolbar class="column no-wrap" style="height: 100%; align-items: flex-start">
+          <div class="col-auto text-white">
+            <q-tabs>
+              <q-tab name="create_task" icon="edit_note" label="创建任务" class = "step-item-new" :class="{ 'active': currentStep === 1 }" @click="goToStep(1)"/>
+              <q-tab name="draft_check" icon="hourglass_empty" label="告警验证" class = "step-item-new"  :class="{ 'active': currentStep === 2 }" @click="goToStep(2)"/>
+              <q-tab name="check_result" icon="checklist" label="检查结果"  class = "step-item-new"  :class="{ 'active': currentStep === 3 }" @click="goToStep(3)"/>
+            </q-tabs>
+            <q-separator />
           </div>
         </q-toolbar>
 
@@ -208,6 +206,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router'
 
 const $q = useQuasar();
 const currentStep = ref(1);
@@ -308,6 +307,13 @@ const saveNewTask = () => {
   });
   createTaskDialog.value = false;
   newTask.value = { name: '富国站及核查任务', station: '富国站', ip1: '', ip2: '', scope: [], selectedItems: [] };
+}
+
+const router = useRouter()
+const navigateTo = (path) => {
+  console.log(`正在跳转到: ${path}`)
+  // 使用 router.push 进行页面跳转
+  router.push(path)
 }
 
 </script>

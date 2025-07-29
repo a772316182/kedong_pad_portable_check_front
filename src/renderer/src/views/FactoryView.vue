@@ -3,7 +3,7 @@
     <!-- 顶部主工具栏 -->
     <q-header elevated class="text-white bg-light-blue-grey">
       <q-toolbar>
-        <q-btn label="返回" class="bg-primary" />
+        <q-btn label="返回" class="bg-primary" @click = "navigateTo('manageCheck')"/>
         <q-toolbar-title>
           站点列表
         </q-toolbar-title>
@@ -58,6 +58,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router'
 
 const $q = useQuasar();
 
@@ -157,6 +158,13 @@ const bulkDelete = () => {
       icon: 'check'
     });
   });
+}
+
+const router = useRouter()
+const navigateTo = (path) => {
+  console.log(`正在跳转到: ${path}`)
+  // 使用 router.push 进行页面跳转
+  router.push(path)
 }
 
 </script>

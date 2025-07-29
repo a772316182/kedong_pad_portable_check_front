@@ -57,7 +57,7 @@ const navigateTo = (path) => {
               </q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/inprogress")'>
+            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/securitystrategy")'>
               <q-item-section avatar>
                 <q-icon color="primary" name="folder_open" />
               </q-item-section>
@@ -69,7 +69,7 @@ const navigateTo = (path) => {
               </q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/checkreports")'>
+            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/securityalert")'>
               <q-item-section avatar>
                 <q-icon color="primary" name="assignment" />
               </q-item-section>

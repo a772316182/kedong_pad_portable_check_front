@@ -8,7 +8,7 @@
             <q-icon size="1.2em" name="chevron_right" />
           </template>
         <div class="col-auto"><q-btn color="teal-6" unelevated icon="home" label="返回" @click="navigateTo('/factorysafecheck')" /></div>
-        <div class="col"><div class="text-h6">任务列表</div></div>
+        <div class="col"><div class="text-h6">安全策略检查</div></div>
         </q-breadcrumbs>
       </q-toolbar>
     </q-header>
@@ -19,7 +19,7 @@
 
         <!-- 步骤指示器 (新样式) -->
         <q-toolbar class="column no-wrap" style="height: 100%; align-items: flex-start">
-          <div class="col-auto">
+          <div class="col-auto text-white">
             <q-tabs>
               <q-tab name="create_task" icon="edit_note" label="创建任务" class = "step-item-new" :class="{ 'active': currentStep === 1 }" @click="goToStep(1)"/>
               <q-tab name="draft_check" icon="hourglass_empty" label="策略检查" class = "step-item-new"  :class="{ 'active': currentStep === 2 }" @click="goToStep(2)"/>
@@ -249,6 +249,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router'
 
 const $q = useQuasar();
 const currentStep = ref(1);
@@ -386,6 +387,13 @@ const saveNewTask = () => {
     selectedIsolations: [],
     selectedFirewalls: [],
   };
+}
+
+const router = useRouter()
+const navigateTo = (path) => {
+  console.log(`正在跳转到: ${path}`)
+  // 使用 router.push 进行页面跳转
+  router.push(path)
 }
 
 </script>

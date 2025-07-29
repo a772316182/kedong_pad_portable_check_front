@@ -22,7 +22,9 @@ import SiteCheck from '../views/SiteCheck.vue'
 import BaseSafeCheck from '../views/BaseSafeCheck.vue'
 import NetMachineCheck from '../views/NetMachineCheck.vue'
 import FactorySafeCheck from '../views/FactorySafeCheck.vue'
-
+import FactoryView from '../views/FactoryView.vue'
+import SecurityStrategy from '../views/SecurityStrategy.vue'
+import SecurityAlert from '../views/SecurityAlert.vue'
 
 const routes = [
   {
@@ -143,6 +145,21 @@ const routes = [
     path:'/factorysafecheck',
     name:'factorysafecheck',
     component: FactorySafeCheck
+  },
+  {
+    path:'/factoryview',
+    name:'factoryview',
+    component: FactoryView
+  },
+  {
+    path:'/securitystrategy',
+    name:'securitystrategy',
+    component: SecurityStrategy
+  },
+  {
+    path:'/securityalert',
+    name:'securityalert',
+    component: SecurityAlert
   }
 ]
 
