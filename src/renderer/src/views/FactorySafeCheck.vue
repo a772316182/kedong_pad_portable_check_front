@@ -18,7 +18,7 @@ const navigateTo = (path) => {
       <q-toolbar>
         <q-btn label="返回" color="primary" @click="navigateTo('/mainview')" />
         <q-toolbar-title>
-          核查管理
+          厂站安全检查
         </q-toolbar-title>
         <q-space />
         <div class="text-caption text-grey-5">
@@ -33,24 +33,24 @@ const navigateTo = (path) => {
         <div class="q-pa-md" style="width: 100%; max-width: 600px;">
           <q-list separator>
 
-            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/stationview")'>
+            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/basesafecheck")'>
               <q-item-section avatar>
                 <q-icon color="primary" name="home" />
               </q-item-section>
               <q-item-section>
-                <q-item-label class="text-h6">厂站列表管理</q-item-label>
+                <q-item-label class="text-h6">安全基础检查</q-item-label>
               </q-item-section>
               <q-item-section side>
                 <q-icon name="chevron_right" />
               </q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/stationview")'>
+            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/netmachinecheck")'>
               <q-item-section avatar>
                 <q-icon color="primary" name="desktop_windows" />
               </q-item-section>
               <q-item-section>
-                <q-item-label class="text-h6">核查对象管理</q-item-label>
+                <q-item-label class="text-h6">网络设备检查</q-item-label>
               </q-item-section>
               <q-item-section side>
                 <q-icon name="chevron_right" />
@@ -62,7 +62,7 @@ const navigateTo = (path) => {
                 <q-icon color="primary" name="folder_open" />
               </q-item-section>
               <q-item-section>
-                <q-item-label class="text-h6">核查任务管理</q-item-label>
+                <q-item-label class="text-h6">安全策略检查</q-item-label>
               </q-item-section>
               <q-item-section side>
                 <q-icon name="chevron_right" />
@@ -74,7 +74,7 @@ const navigateTo = (path) => {
                 <q-icon color="primary" name="assignment" />
               </q-item-section>
               <q-item-section>
-                <q-item-label class="text-h6">核查结果管理</q-item-label>
+                <q-item-label class="text-h6">安全告警验证</q-item-label>
               </q-item-section>
               <q-item-section side>
                 <q-icon name="chevron_right" />
