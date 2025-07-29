@@ -33,7 +33,7 @@ const navigateTo = (path) => {
         <div class="q-pa-md" style="width: 100%; max-width: 600px;">
           <q-list separator>
 
-            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/stationview")'>
+            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/factoryview")'>
               <q-item-section avatar>
                 <q-icon color="primary" name="home" />
               </q-item-section>
