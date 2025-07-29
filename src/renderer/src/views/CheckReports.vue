@@ -44,7 +44,7 @@ const handleViewClick = () => {
   <q-layout view="lHh Lpr lFf" class="bg-dark-page">
     <q-header elevated class="bg-dark-header text-white">
       <q-toolbar>
-        <q-btn label="返回" color="primary" @click="navigateTo('/mainview')" />
+        <q-btn label="返回" color="primary" @click="navigateTo('/manageCheck')" />
         <q-toolbar-title>
           报告管理
         </q-toolbar-title>

@@ -91,8 +91,8 @@ const confirmConnection = () => {
         </q-toolbar-title>
         <q-space />
         <!-- 动态头部按钮 -->
-        <q-btn v-if="currentStep === 'site'" color="green-6" unelevated label="选定站点" @click="nextStep('task')" />
-        <q-btn v-if="currentStep === 'task' && selectedTask" color="green-6" unelevated label="选定任务" @click="connectionDialog = true" />
+        <q-btn v-if="currentStep === 'site'" color="teal-6" unelevated label="选定站点" @click="nextStep('task')" />
+        <q-btn v-if="currentStep === 'task' && selectedTask" color="teal-6" unelevated label="选定任务" @click="connectionDialog = true" />
       </q-toolbar>
     </q-header>
 
@@ -150,7 +150,7 @@ const confirmConnection = () => {
             <q-card-section>
               <div class="row items-center">
                 <p class="col text-grey-4">已确认站点为: <span class="text-weight-bold text-white">{{ selectedSite.name }}</span>, 请先确认本次核查对应任务</p>
-                <q-btn color="light-blue-6" label="新增任务" @click="addTaskDialog = true" />
+                <q-btn color="teal-9" label="新增任务" @click="addTaskDialog = true" />
               </div>
               <q-table
                 :rows="tasks"

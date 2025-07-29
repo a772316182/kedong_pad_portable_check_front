@@ -47,6 +47,21 @@ const modules = ref([
     title: '策略管理',
     image: 'https://img95.699pic.com/photo/60031/0952.jpg_wh860.jpg',
     route: '/manageStrategy'
+  },
+  {
+    title: '厂站安全检查',
+    image: 'https://img95.699pic.com/photo/60040/1943.jpg_wh860.jpg',
+    route: '/manageStrategy'
+  },
+  {
+    title: '用户管理',
+    image: 'https://image.woshipm.com/wp-files/2019/12/HQxmWILTRNWkyPJs06JE.jpg',
+    route: '/manageStrategy'
+  },
+  {
+    title: '系统管理',
+    image: 'https://img95.699pic.com/photo/60000/1104.jpg_wh860.jpg',
+    route: '/manageStrategy'
   }
 ])
 </script>

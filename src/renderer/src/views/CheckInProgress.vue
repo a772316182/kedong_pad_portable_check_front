@@ -82,18 +82,18 @@ const confirmExport = () => {
       style="border-bottom: 1px solid #dce3ec"
     >
       <q-toolbar>
-        <q-btn color="primary" unelevated label="上一步" @click="navigateTo('/taskcheck')"  />
+        <q-btn color="teal-6" unelevated label="上一步" @click="navigateTo('/managecheck')"  />
         <q-space />
         <q-toolbar-title class="text-center text-h5 text-white text-weight-bold">正在核查</q-toolbar-title>
         <q-space />
-        <q-btn flat dense icon="swap_horiz" label="切换" class="q-mr-sm text-white" />
-        <q-btn flat dense icon="filter_list" label="筛选" class="text-white" />
+        <q-btn flat dense icon="swap_horiz" label="切换" class="q-mr-sm text-grey-4" />
+        <q-btn flat dense icon="filter_list" label="筛选" class="text-grey-4" />
       </q-toolbar>
       <q-toolbar class="q-px-md q-gutter-sm">
         <q-btn-toggle
           model-value="discover"
           unelevated
-          toggle-color="primary"
+          toggle-color="teal-6"
           text-color="white"
           :options="[
             {label: '识别设备', value: 'discover'},
@@ -101,12 +101,12 @@ const confirmExport = () => {
           ]"
         />
         <q-space />
-        <q-btn color="primary" unelevated label="资产探测" />
-        <q-btn color="primary" unelevated label="资产导入" />
-        <q-btn color="primary" unelevated label="资产导出" @click="openModal('noUsb')" />
-        <q-btn color="primary" unelevated label="登录检查" @click="openModal('noConnection')" />
-        <q-btn color="primary" unelevated label="登录异常" @click="openModal('loginException')" />
-        <q-btn color="primary" unelevated label="报告导出" @click="openModal('exportReportChoice')" />
+        <q-btn color="teal-6" unelevated label="资产探测" />
+        <q-btn color="teal-6" unelevated label="资产导入" />
+        <q-btn color="teal-6" unelevated label="资产导出" @click="openModal('noUsb')" />
+        <q-btn color="teal-6" unelevated label="登录检查" @click="openModal('noConnection')" />
+        <q-btn color="teal-6" unelevated label="登录异常" @click="openModal('loginException')" />
+        <q-btn color="teal-6" unelevated label="报告导出" @click="openModal('exportReportChoice')" />
       </q-toolbar>
     </q-header>
 
@@ -126,9 +126,9 @@ const confirmExport = () => {
           <template v-slot:body-cell-actions="props">
             <q-td :props="props">
               <div class="q-gutter-sm">
-                <q-btn :color="props.row.selected ? 'green-6' : 'grey-6'" size="sm" dense unelevated>{{ props.row.selected ? '取消选定' : '选定' }}</q-btn>
-                <q-btn color="primary" size="sm" dense unelevated>资产详情</q-btn>
-                <q-btn color="teal-6" size="sm" dense unelevated>核查记录</q-btn>
+                <q-btn :color="props.row.selected ? 'green-6' : 'grey-6'" size="md" dense unelevated>{{ props.row.selected ? '取消选定' : '选定' }}</q-btn>
+                <q-btn color="teal-5" size="md" dense unelevated>资产详情</q-btn>
+                <q-btn color="teal-7" size="md" dense unelevated>核查记录</q-btn>
               </div>
             </q-td>
           </template>
@@ -221,8 +221,8 @@ const confirmExport = () => {
 
 <style scoped>
 .bg-light-blue-grey {
-  background-color: #313942;
-  border-bottom: 1px solid #4a5562;
+  background-color: #1d2b2b; /* 图片中的浅蓝灰色背景 */
+  color: #333;
 }
 .bg-table-theme {
   background-color: #ffffff; /* 表格背景为白色 */

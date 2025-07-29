@@ -58,14 +58,16 @@ const resetFilters = () => {
     <!-- 顶部状态栏 -->
     <div class="status-bar row items-center justify-between q-px-md">
       <span>2025-06-20 15:48:53</span>
-      <q-btn unelevated label="返回" @click="navigateTo('/stationview')" class="back-button"/>
+      <div class="text-h4 text-white text-weight-bolder text-center">资产管理</div>
+      <span>电量：100%</span>
     </div>
 
     <!-- 主内容区 -->
     <q-page class="main-content-area">
       <!-- 顶部操作栏 -->
       <div class="row items-center no-wrap top-bar q-mb-md">
-        <div class="text-h4 text-white text-weight-bolder">资产管理</div>
+        <q-btn unelevated label="返回" @click="navigateTo('/stationview')" class="back-button"/>
+
         <div class="row items-center q-gutter-x-lg q-ml-xl">
           <q-btn flat dense no-caps class="action-btn" icon="o1" label="切换"/>
           <!-- 排序按钮与下拉菜单 -->

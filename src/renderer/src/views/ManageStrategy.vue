@@ -66,8 +66,8 @@ const handleAddNewPolicy = () => {
 
 <template>
   <!-- 使用 QLayout 作为页面根布局，并应用深青色背景 -->
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated class="bg-teal-9 text-white">
+  <q-layout view="lHh Lpr lFf" class="bg-teal-8">
+    <q-header elevated class="bg-teal-6 text-white">
       <q-toolbar>
         <q-btn label="返回" color="primary" @click="navigateTo('/mainview')" />
         <q-toolbar-title>
@@ -165,9 +165,9 @@ const handleAddNewPolicy = () => {
 }
 /* 使用 Quasar 的颜色变量来覆盖默认样式 */
 .bg-teal-10 {
-  background-color: #2d3a3a; /* 一个自定义的深青色 */
+  background-color: #2c3a45; /* 一个自定义的深青色 */
 }
 .bg-teal-9 {
-  background-color: #1d2b2b; /* 一个更深的青色 */
+  background-color: #00796b; /* 一个更深的青色 */
 }
 </style>
