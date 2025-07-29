@@ -1,5 +1,5 @@
 appId: com.electron.adv-paper-reader-local
-productName: 对抗攻击论文阅读助手
+productName: kedong
 directories:
   buildResources: build
 files:
