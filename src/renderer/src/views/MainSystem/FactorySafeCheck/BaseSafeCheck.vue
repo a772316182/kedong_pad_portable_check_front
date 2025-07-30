@@ -96,7 +96,7 @@ function handleSave() {
 
 <template>
   <q-layout view="lHh Lpr lFf" class="bg-page">
-    <q-header elevated class="bg-teal-8" height-hint="64">
+    <q-header elevated class="bg-dark-header" height-hint="64">
       <q-toolbar>
         <q-breadcrumbs class="text-white">
           <template v-slot:separator><q-icon size="1.2em" name="chevron_right" /></template>
@@ -144,7 +144,7 @@ function handleSave() {
               <!-- 面板二: 基础检查 -->
               <q-tab-panel name="draft_check" class="q-pa-none">
                 <div class="row q-col-gutter-md full-height">
-                  <div class="col-12 col-md-3"><q-card flat class="full-height"><q-list dense><q-item tag="label" v-ripple><q-item-section avatar><q-checkbox color="theme-primary" dense v-model="zoneSelection.zoneB.main" /></q-item-section><q-item-section><q-item-label class="text-white">全选 B区</q-item-label></q-item-section></q-item><q-list dense class="q-pl-lg"><q-item v-for="(value, key) in zoneSelection.zoneB.children" :key="key" tag="label" v-ripple><q-item-section avatar><q-checkbox color="theme-primary" dense v-model="zoneSelection.zoneB.children[key]" /></q-item-section><q-item-section><q-item-label class="text-white">{{ key }}</q-item-label></q-item-section></q-item></q-list><q-separator spaced dark /><q-item tag="label" v-ripple><q-item-section avatar><q-checkbox color="theme-primary" dense v-model="zoneSelection.zoneA.main" /></q-item-section><q-item-section><q-item-label class="text-white">全选 A区</q-item-label></q-item-section></q-item><q-list dense class="q-pl-lg"><q-item v-for="(value, key) in zoneSelection.zoneA.children" :key="key" tag="label" v-ripple><q-item-section avatar><q-checkbox color="theme-primary" dense v-model="zoneSelection.zoneA.children[key]" /></q-item-section><q-item-section><q-item-label class="text-white">{{ key }}</q-item-label></q-item-section></q-item></q-list></q-list></q-card></div>
+                  <div class="col-12 col-md-3 bg-dark-header"><q-card flat class="full-height"><q-list dense><q-item tag="label" v-ripple><q-item-section avatar><q-checkbox color="theme-primary" dense v-model="zoneSelection.zoneB.main" /></q-item-section><q-item-section><q-item-label class="text-white">全选 B区</q-item-label></q-item-section></q-item><q-list dense class="q-pl-lg"><q-item v-for="(value, key) in zoneSelection.zoneB.children" :key="key" tag="label" v-ripple><q-item-section avatar><q-checkbox color="theme-primary" dense v-model="zoneSelection.zoneB.children[key]" /></q-item-section><q-item-section><q-item-label class="text-white">{{ key }}</q-item-label></q-item-section></q-item></q-list><q-separator spaced dark /><q-item tag="label" v-ripple><q-item-section avatar><q-checkbox color="theme-primary" dense v-model="zoneSelection.zoneA.main" /></q-item-section><q-item-section><q-item-label class="text-white">全选 A区</q-item-label></q-item-section></q-item><q-list dense class="q-pl-lg"><q-item v-for="(value, key) in zoneSelection.zoneA.children" :key="key" tag="label" v-ripple><q-item-section avatar><q-checkbox color="theme-primary" dense v-model="zoneSelection.zoneA.children[key]" /></q-item-section><q-item-section><q-item-label class="text-white">{{ key }}</q-item-label></q-item-section></q-item></q-list></q-list></q-card></div>
                   <div class="col-12 col-md-9"><q-card flat class="full-height"><q-card-section class="row items-center q-pb-none"><div class="text-h6">基础检查表</div><q-space /><q-btn unelevated color="theme-primary" label="批量检查" /><q-btn unelevated color="theme-orange" label="取消检查" class="q-ml-sm" /></q-card-section><q-card-section><q-table :rows="checkTableRows" :columns="checkTableColumns" row-key="id" selection="multiple" v-model:selected="checkTableSelection" flat class="full-width-table" hide-bottom><template v-slot:body-cell-progress="props"><q-td :props="props" class="progress-cell"><div v-if="props.row.progress.status === 'in_progress'" class="progress-container"><q-linear-progress :value="props.row.progress.value / 100" color="theme-primary" class="q-mr-sm" /><span class="text-grey-7">{{ props.row.progress.value }}%</span></div><div v-else-if="props.row.progress.status === 'completed'" class="text-positive text-weight-medium">已完成</div><div v-else-if="props.row.progress.status === 'not_started'" class="text-grey-6">未开始</div><div v-else-if="props.row.progress.status === 'error'"><q-badge color="negative">{{ props.row.progress.message }}</q-badge></div></q-td></template></q-table></q-card-section><q-separator /><q-card-section class="row items-center"><div class="text-grey-7">第 1-4 条, 共 4 条</div><q-space /><q-btn unelevated label="上一步" color="grey-5" text-color="black" @click="tab = 'create_task'" /><q-btn unelevated label="下一步" color="grey-5" text-color="black" class="q-ml-sm" @click="tab = 'check_result'" /></q-card-section></q-card></div>
                 </div>
               </q-tab-panel>
@@ -203,9 +203,11 @@ function handleSave() {
   --theme-fail-color: #f44336; /* 不合格-红色 */
   --theme-unknown-color: #9e9e9e; /* 未核查-灰色 */
 }
-
+.bg-dark-header{
+  background: #414853;
+}
 /* 主框架样式 */
-.bg-page { background-color: #2c3e4a; }
+.bg-page { background-color: #292a2d; }
 .custom-table { border: 1px solid #e0e0e0; }
 .custom-table :deep(thead) { background-color: #fafafa; }
 .custom-table :deep(th) { font-weight: 600; color: #333; }

@@ -1,13 +1,13 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="bg-page">
     <!-- 顶部主工具栏 -->
-    <q-header elevated class="bg-teal-8 text-grey-8">
+    <q-header elevated class="bg-dark-header text-grey-8">
       <q-toolbar>
         <q-breadcrumbs class="text-white">
           <template v-slot:separator>
             <q-icon size="1.2em" name="chevron_right" />
           </template>
-        <div class="col-auto"><q-btn color="teal-6" unelevated icon="home" label="返回" @click="navigateTo('/factorysafecheck')" /></div>
+        <div class="col-auto"><q-btn color="primary" unelevated icon="home" label="返回" @click="navigateTo('/factorysafecheck')" /></div>
         <div class="col"><div class="text-h6">安全策略检查</div></div>
         </q-breadcrumbs>
       </q-toolbar>
@@ -418,5 +418,8 @@ const navigateTo = (path) => {
   text-transform: none
 
 .bg-page
-  background-color: #263238
+  background-color: #292a2d
+
+.bg-dark-header
+  background-color: #414853
 </style>

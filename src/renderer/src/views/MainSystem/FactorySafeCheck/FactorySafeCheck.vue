@@ -90,7 +90,7 @@ const navigateTo = (path) => {
 <style scoped>
 /* 自定义深色主题 */
 .bg-dark-page {
-  background-color: #313942; /* 一个较深的灰色作为页面背景 */
+  background-color: #292a2d; /* 一个较深的灰色作为页面背景 */
 }
 .bg-dark-header {
   background-color: #414853; /* 一个更深的灰色作为头部背景 */
