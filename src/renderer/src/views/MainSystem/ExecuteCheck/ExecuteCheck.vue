@@ -84,15 +84,15 @@ const confirmConnection = () => {
   <q-layout view="lHh Lpr lFf" class="bg-dark-page text-white">
     <q-header class="bg-dark-page q-pa-sm">
       <q-toolbar>
-        <q-btn unelevated color="teal-6" :label="backButtonLabel" @click="goBack" />
+        <q-btn unelevated color="primary" :label="backButtonLabel" @click="goBack" />
         <q-space />
         <q-toolbar-title class="text-center text-h5 text-weight-bold">
           启动核查
         </q-toolbar-title>
         <q-space />
         <!-- 动态头部按钮 -->
-        <q-btn v-if="currentStep === 'site'" color="teal-6" unelevated label="选定站点" @click="nextStep('task')" />
-        <q-btn v-if="currentStep === 'task' && selectedTask" color="teal-6" unelevated label="选定任务" @click="connectionDialog = true" />
+        <q-btn v-if="currentStep === 'site'" color="primary" unelevated label="选定站点" @click="nextStep('task')" />
+        <q-btn v-if="currentStep === 'task' && selectedTask" color="primary" unelevated label="选定任务" @click="connectionDialog = true" />
       </q-toolbar>
     </q-header>
 
@@ -124,7 +124,7 @@ const confirmConnection = () => {
                 <div class="col-4 q-pa-sm">
                   <q-list bordered separator>
                     <q-item-label header class="bg-grey-2">站点列表</q-item-label>
-                    <q-item v-for="site in sites" :key="site.name" clickable v-ripple :active="selectedSite && selectedSite.name === site.name" @click="selectSite(site)" active-class="bg-teal-5 text-white">
+                    <q-item v-for="site in sites" :key="site.name" clickable v-ripple :active="selectedSite && selectedSite.name === site.name" @click="selectSite(site)" active-class="bg-primary text-white">
                       <q-item-section>{{ site.name }}</q-item-section>
                     </q-item>
                   </q-list>
@@ -150,7 +150,7 @@ const confirmConnection = () => {
             <q-card-section>
               <div class="row items-center">
                 <p class="col text-grey-4">已确认站点为: <span class="text-weight-bold text-white">{{ selectedSite.name }}</span>, 请先确认本次核查对应任务</p>
-                <q-btn color="teal-9" label="新增任务" @click="addTaskDialog = true" />
+                <q-btn color="primary" label="新增任务" @click="addTaskDialog = true" />
               </div>
               <q-table
                 :rows="tasks"
@@ -163,7 +163,7 @@ const confirmConnection = () => {
                 @row-click="(evt, row) => selectTask(row)"
               >
                 <template v-slot:body-cell="props">
-                  <q-td :props="props" :class="{'bg-teal-7': selectedTask && selectedTask.name === props.row.name}">
+                  <q-td :props="props" :class="{'bg-primary': selectedTask && selectedTask.name === props.row.name}">
                     {{ props.value }}
                   </q-td>
                 </template>
@@ -224,13 +224,13 @@ const confirmConnection = () => {
 
 <style scoped>
 .bg-dark-page {
-  background-color: #2e3c41;
+  background-color: #292a2d;
 }
 .bg-dark-header {
   background-color: #2e3c41;
 }
 .bg-dark-content {
-  background-color: #3a4c52;
+  background-color: #3a3c52;
 }
 .stepper-container {
   background-color: #fff;
@@ -244,7 +244,7 @@ const confirmConnection = () => {
   color: #888;
 }
 .stepper-item.active {
-  background-color: #009688; /* teal-6 */
+  background-color: #4c6afc; /* teal-6 */
   color: white;
 }
 .stepper-item:first-child.active {

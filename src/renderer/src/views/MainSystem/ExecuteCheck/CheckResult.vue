@@ -205,7 +205,7 @@ const hideDetailView = () => {
               </q-list>
               <q-separator/>
               <q-card-actions class="q-pa-md">
-                <q-btn label="确认核查结果" color="teal" unelevated class="full-width"/>
+                <q-btn label="确认核查结果" color="primary" unelevated class="full-width"/>
               </q-card-actions>
             </q-card>
           </div>
@@ -393,16 +393,16 @@ const hideDetailView = () => {
 </template>
 
 <style scoped>
-.page-background { background-color: #313942; }
+.page-background { background-color: #292a2d; }
 .top-bar, .main-header { color: white; padding: 8px 16px; }
-.back-button { background-color: #00796b; color: white; border-radius: 6px; }
+.back-button { background-color: #4c6afc; color: white; border-radius: 6px; }
 .main-content-area { padding: 10px 24px 24px; position: relative; top: -8px; }
 .info-panel { background-color: #3d4a58; color: #e0e0e0; border-radius: 8px; }
 .info-btn { color: white; background-color: rgba(255,255,255,0.1); border-radius: 16px; padding: 4px 16px; }
 
 .category-item { font-size: 1rem; color: #333; }
 .active-category-item {
-  background-color: #00796b !important;
+  background-color: #2287da !important;
   color: white !important;
 }
 

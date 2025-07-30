@@ -94,7 +94,6 @@ const resultsTableRows = reactive([
   { id: 3, deviceName: '文件存储服务器', deviceType: '存储设备', ip1: '192.168.1.103', ip2: '10.0.0.103', result: '合格' },
   { id: 4, deviceName: '防火墙网关', deviceType: '网络安全', ip1: '192.168.1.1', ip2: '10.0.0.1', result: '合格' },
 ]);
-const resultsPagination = ref({ page: 1, rowsPerPage: 10, rowsNumber: 4 });
 
 
 // --- 方法 ---
@@ -122,13 +121,13 @@ function handleSave() {
 
 <template>
   <q-layout view="lHh Lpr lFf" class="bg-page">
-    <q-header elevated class="bg-teal-8" height-hint="64">
+    <q-header elevated class="bg-dark-header" height-hint="64">
       <q-toolbar>
         <q-breadcrumbs class="text-white">
           <template v-slot:separator>
             <q-icon size="1.2em" name="chevron_right" />
           </template>
-          <div class="col-auto"><q-btn color="teal-6" unelevated icon="home" label="返回" @click="navigateTo('/factorysafecheck')" /></div>
+          <div class="col-auto"><q-btn color="primary" unelevated icon="home" label="返回" @click="navigateTo('/factorysafecheck')" /></div>
           <div class="col"><div class="text-h6">网络设备检查</div></div>
         </q-breadcrumbs>
       </q-toolbar>
@@ -136,33 +135,37 @@ function handleSave() {
 
     <q-page-container>
       <q-page class="q-pa-lg">
-        <div class="column no-wrap" style="height: 100%;">
-          <div class="col-auto">
-            <q-tabs v-model="tab" dense align="left" class="text-grey-4" active-color="white" indicator-color="white" no-caps>
-              <q-tab name="create_task" icon="edit_note" label="创建任务" />
-              <q-tab name="draft_check" icon="hourglass_empty" label="基础检查" />
-              <q-tab name="check_result" icon="checklist" label="检查结果"  />
-            </q-tabs>
-            <q-separator color="grey-7" />
-          </div>
 
-          <div class="col q-pt-md">
+        <q-toolbar class="column no-wrap" style="height: 100%; align-items: flex-start">
+          <div class="col-auto text-white">
+            <q-tabs v-model="tab" dense align="left" class="text-grey-4" active-color="white" indicator-color="white" no-caps >
+              <q-tab name="create_task" icon="edit_note" label="创建任务" class = "step-item-new"/>
+              <q-tab name="draft_check" icon="hourglass_empty" label="策略检查" class = "step-item-new"/>
+              <q-tab name="check_result" icon="checklist" label="检查结果"  class = "step-item-new"/>
+            </q-tabs>
+            <q-separator />
+          </div>
+        </q-toolbar>
+
+        <div class="column no-wrap" style="height: 100%;">
+
+          <div class="q-pa-md">
             <q-tab-panels v-model="tab" animated class="bg-transparent full-height">
 
               <!-- 面板一: 创建任务 -->
               <q-tab-panel name="create_task" class="q-pa-none">
-                <q-card flat class="full-height-card">
+                <q-card flat class="full-height-card bg-white">
                   <q-card-section>
                     <div class="row items-center no-wrap">
-                      <div class="col"><div class="text-h6">任务列表</div></div>
-                      <div class="col-auto"><q-btn color="teal-6" unelevated icon="add" label="创建核查任务" @click="openCreateDialog" /></div>
+                      <div class="col"><div class="text-h6 text-black">任务列表</div></div>
+                      <div class="col-auto"><q-btn color="primary" unelevated icon="add" label="创建核查任务" @click="openCreateDialog" /></div>
                     </div>
                   </q-card-section>
                   <q-card-section class="q-pt-none">
                     <q-table :rows="taskTableRows" :columns="taskTableColumns" row-key="id" flat :pagination="taskPagination" class="dark-theme-table">
                       <template v-slot:header-cell-name="props"><q-th :props="props">{{ props.col.label }} <q-icon name="search" size="1.2em" class="q-ml-xs" /></q-th></template>
                       <template v-slot:header-cell-time="props"><q-th :props="props">{{ props.col.label }} <q-icon name="search" size="1.2em" class="q-ml-xs" /></q-th></template>
-                      <template v-slot:body-cell-items="props"><q-td :props="props"><q-chip v-for="item in props.value" :key="item" dense outline color="teal-5" :label="item" class="q-mr-xs" /></q-td></template>
+                      <template v-slot:body-cell-items="props"><q-td :props="props"><q-chip v-for="item in props.value" :key="item" dense outline color="primary" :label="item" class="q-mr-xs" /></q-td></template>
                       <template v-slot:body-cell-status="props"><q-td :props="props"><q-chip :color="props.value === '进行中' ? 'orange-5' : 'green-5'" text-color="white" dense :label="props.value" class="status-chip"/></q-td></template>
                       <template v-slot:body-cell-actions="props"><q-td :props="props"><q-btn v-if="props.row.status === '已完成'" flat dense no-caps label="查看" class="action-btn" /><q-btn v-if="props.row.status === '进行中'" flat dense no-caps label="暂停" class="action-btn" /><q-btn flat dense no-caps label="下载" class="action-btn" /><q-btn flat dense no-caps label="删除" class="action-btn text-negative" /></q-td></template>
                     </q-table>
@@ -172,12 +175,12 @@ function handleSave() {
 
               <!-- 面板二: 基础检查 -->
               <q-tab-panel name="draft_check" class="q-pa-none">
-                <q-card flat class="full-height-card">
+                <q-card flat class="full-height-card bg-white">
                   <q-card-section>
                     <div class="row items-center no-wrap">
                       <div class="col"><div class="text-h6">基础检查表</div></div>
                       <div class="col-auto">
-                        <q-btn color="teal-6" unelevated label="核查" />
+                        <q-btn color="primary" unelevated label="核查" />
                         <q-btn color="orange" unelevated label="取消" class="q-ml-sm"/>
                       </div>
                     </div>
@@ -188,7 +191,7 @@ function handleSave() {
                       <template v-slot:body-cell-progress="props">
                         <q-td :props="props">
                           <div v-if="props.row.progress.status === 'in_progress'" class="row items-center no-wrap justify-center">
-                            <q-linear-progress :value="props.row.progress.value / 100" color="teal-4" style="width: 100px" class="q-mr-sm" rounded/>
+                            <q-linear-progress :value="props.row.progress.value / 100" color="primary" style="width: 100px" class="q-mr-sm" rounded/>
                             <span class="text-grey-4">进行中 ({{ props.row.progress.value }}%)</span>
                           </div>
                           <div v-else-if="props.row.progress.status === 'completed'"><q-chip dense outline color="green-4" text-color="green-4" label="已完成" /></div>
@@ -201,14 +204,14 @@ function handleSave() {
                   <q-space />
                   <q-card-actions align="center" class="q-pa-md">
                     <q-btn label="上一步" color="grey-6" outline @click="tab = 'create_task'" />
-                    <q-btn label="下一步" color="teal-6" unelevated class="q-ml-md" @click="tab = 'check_result'" />
+                    <q-btn label="下一步" color="primary" unelevated class="q-ml-md" @click="tab = 'check_result'" />
                   </q-card-actions>
                 </q-card>
               </q-tab-panel>
 
               <!-- 面板三: 检查结果 -->
               <q-tab-panel name="check_result" class="q-pa-none">
-                <q-card flat class="full-height-card">
+                <q-card flat class="full-height-card bg-white">
                   <q-card-section><div class="text-h6">检查结果表</div></q-card-section>
                   <q-card-section class="q-pt-none">
                     <q-table :rows="resultsTableRows" :columns="resultsTableColumns" row-key="id" flat hide-bottom class="dark-theme-table">
@@ -223,7 +226,7 @@ function handleSave() {
                   <q-space />
                   <q-card-actions align="center" class="q-pa-md">
                     <q-btn label="上一步" color="grey-6" outline @click="tab = 'draft_check'" />
-                    <q-btn label="完成" color="teal-6" unelevated class="q-ml-md" @click="tab = 'create_task'" />
+                    <q-btn label="完成" color="primary" unelevated class="q-ml-md" @click="tab = 'create_task'" />
                   </q-card-actions>
                 </q-card>
               </q-tab-panel>
@@ -246,7 +249,7 @@ function handleSave() {
         <q-card-section class="q-pt-none bg-grey-2 q-ma-md" style="border-radius: 4px;"><div class="text-subtitle2 q-mb-sm">核查项目</div><div class="row q-col-gutter-sm"><div class="col-4"><q-checkbox dense v-model="createForm.checkItems.baseline" label="基线核查" /></div><div class="col-4"><q-checkbox dense v-model="createForm.checkItems.weakPassword" label="高危端口" /></div><div class="col-4"><q-checkbox dense v-model="createForm.checkItems.bruteForce" label="漏洞扫描" /></div><div class="col-4"><q-checkbox dense v-model="createForm.checkItems.portScan" label="端口令扫描" /></div><div class="col-4"><q-checkbox dense v-model="createForm.checkItems.externalScan" label="违规外联" /></div><div class="col-4"><q-checkbox dense v-model="createForm.checkItems.internalScan" label="违规内联" /></div><div class="col-4"><q-checkbox dense v-model="createForm.checkItems.legacyProtocol" label="恶意代码告警情况" /></div></div></q-card-section>
         <q-card-section class="q-pt-none"><div class="text-subtitle2 q-mb-sm">核查范围</div><q-table :rows="scopeTableRows" :columns="scopeTableColumns" row-key="id" selection="multiple" v-model:selected="createForm.selectedScope" flat bordered hide-pagination class="scope-table"></q-table></q-card-section>
         <q-card-actions align="center" class="q-pa-md">
-          <q-btn label="保存并下一步" color="teal-8" unelevated class="dialog-btn" @click="handleSave" />
+          <q-btn label="保存并下一步" color="primary" unelevated class="dialog-btn" @click="handleSave" />
           <q-btn label="取消" color="grey-7" flat class="dialog-btn q-ml-md" v-close-popup />
         </q-card-actions>
       </q-card>
@@ -258,8 +261,13 @@ function handleSave() {
 <style scoped>
 /* 主题样式 */
 .bg-page {
-  background-color: #263238;
+  background-color: #292a2d;
 }
+
+.bg-dark-header {
+  background-color: #414853; /* 一个更深的灰色作为头部背景 */
+}
+
 .full-height-card {
   height: 100%;
   display: flex;
@@ -275,7 +283,6 @@ function handleSave() {
 /* 表格样式 (适配深色主题) */
 .dark-theme-table {
   background: transparent;
-  color: white;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 .dark-theme-table :deep(thead) {
@@ -283,18 +290,11 @@ function handleSave() {
 }
 .dark-theme-table :deep(th) {
   font-weight: 600;
-  color: #e0e0e0;
 }
-.dark-theme-table :deep(tbody tr) {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
+
 .dark-theme-table :deep(tbody td) {
-  color: #bdbdbd;
 }
-.dark-theme-table :deep(.q-table__bottom),
-.dark-theme-table :deep(.q-table__separator) {
-  border-top-color: rgba(255, 255, 255, 0.2);
-}
+
 .dark-theme-table :deep(.q-table__control .q-select),
 .dark-theme-table :deep(.q-table__control .q-btn) {
   color: white;
