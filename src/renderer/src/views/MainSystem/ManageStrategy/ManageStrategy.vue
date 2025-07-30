@@ -66,8 +66,8 @@ const handleAddNewPolicy = () => {
 
 <template>
   <!-- 使用 QLayout 作为页面根布局，并应用深青色背景 -->
-  <q-layout view="lHh Lpr lFf" class="bg-teal-8">
-    <q-header elevated class="bg-teal-6 text-white">
+  <q-layout view="lHh Lpr lFf" class="bg-secondary">
+    <q-header elevated class="bg-secondary text-white">
       <q-toolbar>
         <q-btn label="返回" color="primary" @click="navigateTo('/mainview')" />
         <q-toolbar-title>
@@ -82,7 +82,7 @@ const handleAddNewPolicy = () => {
     </q-header>
 
     <!-- 右侧筛选抽屉 -->
-    <q-drawer v-model="isFilterDrawerVisible" side="right" overlay behavior="mobile" bordered :width="300" class="bg-teal-9 text-white">
+    <q-drawer v-model="isFilterDrawerVisible" side="right" overlay behavior="mobile" bordered :width="300" class="bg-secondary text-white">
       <q-scroll-area class="fit">
         <div class="q-pa-md">
           <h5 class="q-mt-none q-mb-md">筛选</h5>
@@ -99,7 +99,7 @@ const handleAddNewPolicy = () => {
           <div v-for="policy in policies" :key="policy.name" class="col-12 col-sm-6 col-md-4 col-lg-3">
             <q-card class="cursor-pointer full-height bg-white text-black" flat bordered v-ripple>
               <q-card-section>
-                <div class="text-h6 text-teal-9">{{ policy.name }}</div>
+                <div class="text-h6 text-primary">{{ policy.name }}</div>
                 <div class="text-subtitle2 text-grey-7">更新时间: {{ policy.updated }}</div>
               </q-card-section>
               <q-card-section class="q-pt-none text-grey-8">
@@ -134,7 +134,7 @@ const handleAddNewPolicy = () => {
 
             <div class="row justify-end q-mt-lg">
               <q-btn label="取消" type="reset" color="grey-6" flat class="q-mr-sm" v-close-popup />
-              <q-btn label="确认新增" type="submit" color="teal-6"/>
+              <q-btn label="确认新增" type="submit" color="primary"/>
             </div>
           </q-form>
         </q-card-section>
@@ -165,9 +165,9 @@ const handleAddNewPolicy = () => {
 }
 /* 使用 Quasar 的颜色变量来覆盖默认样式 */
 .bg-teal-10 {
-  background-color: #2c3a45; /* 一个自定义的深青色 */
+  background-color: #292a2d; /* 一个自定义的深青色 */
 }
 .bg-teal-9 {
-  background-color: #00796b; /* 一个更深的青色 */
+  background-color: #212327; /* 一个更深的青色 */
 }
 </style>

@@ -82,7 +82,7 @@ const confirmExport = () => {
       style="border-bottom: 1px solid #dce3ec"
     >
       <q-toolbar>
-        <q-btn color="teal-6" unelevated label="上一步" @click="navigateTo('/managecheck')"  />
+        <q-btn color="primary" unelevated label="上一步" @click="navigateTo('/managecheck')"  />
         <q-space />
         <q-toolbar-title class="text-center text-h5 text-white text-weight-bold">正在核查</q-toolbar-title>
         <q-space />
@@ -93,7 +93,7 @@ const confirmExport = () => {
         <q-btn-toggle
           model-value="discover"
           unelevated
-          toggle-color="teal-6"
+          toggle-color="primary"
           text-color="white"
           :options="[
             {label: '识别设备', value: 'discover'},
@@ -101,12 +101,12 @@ const confirmExport = () => {
           ]"
         />
         <q-space />
-        <q-btn color="teal-6" unelevated label="资产探测" />
-        <q-btn color="teal-6" unelevated label="资产导入" />
-        <q-btn color="teal-6" unelevated label="资产导出" @click="openModal('noUsb')" />
-        <q-btn color="teal-6" unelevated label="登录检查" @click="openModal('noConnection')" />
-        <q-btn color="teal-6" unelevated label="登录异常" @click="openModal('loginException')" />
-        <q-btn color="teal-6" unelevated label="报告导出" @click="openModal('exportReportChoice')" />
+        <q-btn color="primary" unelevated label="资产探测" />
+        <q-btn color="light-blue-4" unelevated label="资产导入" />
+        <q-btn color="primary" unelevated label="资产导出" @click="openModal('noUsb')" />
+        <q-btn color="light-blue-4" unelevated label="登录检查" @click="openModal('noConnection')" />
+        <q-btn color="primary" unelevated label="登录异常" @click="openModal('loginException')" />
+        <q-btn color="light-blue-4" unelevated label="报告导出" @click="openModal('exportReportChoice')" />
       </q-toolbar>
     </q-header>
 
@@ -126,9 +126,9 @@ const confirmExport = () => {
           <template v-slot:body-cell-actions="props">
             <q-td :props="props">
               <div class="q-gutter-sm">
-                <q-btn :color="props.row.selected ? 'green-6' : 'grey-6'" size="md" dense unelevated>{{ props.row.selected ? '取消选定' : '选定' }}</q-btn>
-                <q-btn color="teal-5" size="md" dense unelevated>资产详情</q-btn>
-                <q-btn color="teal-7" size="md" dense unelevated>核查记录</q-btn>
+                <q-btn :color="props.row.selected ? 'dark-blue-6' : 'grey-7'" size="md" dense unelevated>{{ props.row.selected ? '取消选定' : '选定' }}</q-btn>
+                <q-btn color="light-blue" size="md" dense unelevated>资产详情</q-btn>
+                <q-btn color="primary" size="md" dense unelevated>核查记录</q-btn>
               </div>
             </q-td>
           </template>
@@ -221,7 +221,7 @@ const confirmExport = () => {
 
 <style scoped>
 .bg-light-blue-grey {
-  background-color: #1d2b2b; /* 图片中的浅蓝灰色背景 */
+  background-color: #292a2d; /* 图片中的浅蓝灰色背景 */
   color: #333;
 }
 .bg-table-theme {

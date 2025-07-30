@@ -1,10 +1,10 @@
 <template>
-  <q-page class="bg-grey-2">
+  <q-page class="bg-secondary">
 
     <!-- 1. 顶部栏 (沿用上一次的风格) -->
-    <div class="bg-teal-9 text-white shadow-2">
+    <div class="bg-secondary text-white shadow-2">
       <q-toolbar>
-        <q-btn flat dense icon="home" label="Home" no-caps @click="$router.push('/mainview')" />
+        <q-btn flat dense icon="home" label="返回" no-caps @click="$router.push('/mainview')" />
         <q-toolbar-title>
           / 系统管理
         </q-toolbar-title>
@@ -12,12 +12,12 @@
     </div>
 
     <!-- 主内容区 -->
-    <div class="q-pa-md">
+    <div class="q-pa-md ">
       <!-- 2. 四个功能切换按钮 (Tabs) -->
       <q-tabs
         v-model="activeTab"
         align="left"
-        class="text-primary q-mb-md"
+        class="text-light-blue-3 q-mb-md"
         active-color="white"
         active-bg-color="primary"
         indicator-color="transparent"
@@ -33,7 +33,7 @@
         <q-tab-panels v-model="activeTab" animated>
 
           <!-- 面板1: 基线核查配置 -->
-          <q-tab-panel name="baseline" class="q-pa-none">
+          <q-tab-panel name="baseline" class="q-pa-none ">
             <div class="q-pa-md text-h5 text-weight-bold">基线核查配置</div>
             <q-table
               :rows="baselineRows"
@@ -284,7 +284,7 @@ const updatePagination = (newPagination) => {
 <style lang="scss">
 // 沿用上一次的表格斑马纹样式
 .q-table--striped tbody tr:nth-child(even) {
-  background-color: #f0fafa; // 一个非常浅的青色，与主题色搭配
+  background-color: #292a2d; // 一个非常浅的青色，与主题色搭配
 }
 
 // 给Tab按钮添加边框以区分

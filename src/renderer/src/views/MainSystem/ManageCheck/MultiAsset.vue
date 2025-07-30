@@ -87,7 +87,7 @@ const selectAsset = (id) => { selectedAssetId.value = id; };
             <span class="text-body1">当前站点：省调1</span>
           </div>
           <div class="text-red">总记录总数：{{ assetList.length }}</div>
-          <q-btn color="teal" label="资产合并" unelevated @click="isMergeDialogOpen = true"/>
+          <q-btn color="primary" label="资产合并" unelevated @click="isMergeDialogOpen = true"/>
         </div>
       </q-card>
 
@@ -97,7 +97,7 @@ const selectAsset = (id) => { selectedAssetId.value = id; };
         <div class="col-3 left-panel">
           <div class="panel-header">
             <span>资产列表</span>
-            <q-btn unelevated color="teal" label="新增" dense/>
+            <q-btn unelevated color="primary" label="新增" dense/>
           </div>
           <q-list separator>
             <q-item
@@ -177,12 +177,12 @@ const selectAsset = (id) => { selectedAssetId.value = id; };
 </template>
 
 <style scoped>
-.page-background { background-color: #313942; }
+.page-background { background-color: #292a2d; }
 .status-bar { position: absolute; top: 10px; left: 0; width: 100%; color: white; z-index: 10; }
-.back-button { background-color: #00796b; color: white; font-weight: bold; border-radius: 6px; padding: 4px 16px; }
+.back-button { background-color: #4c6afc; color: white; font-weight: bold; border-radius: 6px; padding: 4px 16px; }
 .main-content-area { padding: 60px 24px 24px; }
 .top-bar .action-btn { color: white; font-size: 1rem; }
-.info-panel { background-color: #3d4a58; color: #e0e0e0; border-radius: 8px; }
+.info-panel { background-color: #3f3f44; color: #e0e0e0; border-radius: 8px; }
 .main-panel-container { height: calc(100vh - 180px); /* 视口高度减去顶部所有栏的高度 */ }
 
 .left-panel, .right-panel { background-color: #f7f8fa; border: 1px solid #e0e0e0; }

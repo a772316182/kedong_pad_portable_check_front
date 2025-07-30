@@ -105,7 +105,7 @@ const closeCard = () => {
 /* 整体页面背景色 */
 .page-background {
   /* 从原型图提取的精确背景色 */
-  background-color: #2c3a45;
+  background-color: #292a2d;
   overflow: hidden; /* 防止意外滚动 */
 }
 
@@ -121,7 +121,7 @@ const closeCard = () => {
 
 /* 返回按钮样式 */
 .back-button {
-  background-color: #00796b; /* 从原型图提取的青色 */
+  background-color: #4c6afc; /* 从原型图提取的青色 */
   color: white;
   font-weight: bold;
   border-radius: 6px;

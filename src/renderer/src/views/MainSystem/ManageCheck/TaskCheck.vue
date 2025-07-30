@@ -38,7 +38,7 @@ const tasks = reactive([
         </q-toolbar-title>
         <q-space />
         <q-btn flat dense label="筛选" icon="filter_list" class="q-mr-sm" />
-        <q-btn color="light-blue-6" label="添加" icon="add" />
+        <q-btn color="primary" label="添加" icon="add" />
         <div class="text-caption text-grey-5 q-ml-md">
           当前电量: 15%
           <q-icon name="battery_full" />
@@ -81,10 +81,10 @@ const tasks = reactive([
 <style scoped>
 /* 自定义深色主题 */
 .bg-dark-page {
-  background-color: #2e3c41; /* 图片中的深青灰色背景 */
+  background-color: #292a2d; /* 图片中的深青灰色背景 */
 }
 .bg-dark-header {
-  background-color: #2e3c41; /* 头部与背景同色 */
+  background-color: #212327; /* 头部与背景同色 */
 }
 .full-height {
   height: 100%;

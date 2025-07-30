@@ -104,10 +104,10 @@ const handleViewClick = () => {
 <style scoped>
 /* 自定义深色主题 */
 .bg-dark-page {
-  background-color: #2e3c41; /* 图片中的深青灰色背景 */
+  background-color: #292a2d; /* 图片中的深青灰色背景 */
 }
 .bg-dark-header {
-  background-color: #2e3c41; /* 头部与背景同色 */
+  background-color: #212327; /* 头部与背景同色 */
 }
 
 .full-height {
