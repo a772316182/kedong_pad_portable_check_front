@@ -4,7 +4,7 @@
 
     <!-- 1. 新的顶部栏 (替换了原有的面包屑) -->
     <!-- 背景色 bg-teal-9 是一个比默认 primary 更深的青色 -->
-    <div class="bg-teal-6 text-white shadow-2">
+    <div class="bg-secondary text-white shadow-2">
       <q-toolbar>
         <!-- 返回按钮 -->
         <q-btn flat dense icon="arrow_back" label="返回" no-caps @click="goBack" />

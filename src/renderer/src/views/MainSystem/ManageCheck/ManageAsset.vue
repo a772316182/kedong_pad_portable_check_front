@@ -97,7 +97,7 @@ const resetFilters = () => {
             </div>
             <div class="text-grey-7">最近核查：</div>
           </div>
-          <q-btn color="teal" label="资产合并" unelevated/>
+          <q-btn color="primary" label="资产合并" unelevated/>
         </div>
       </q-card>
 
@@ -204,13 +204,13 @@ const resetFilters = () => {
 
 <style scoped>
 .page-background {
-  background-color: #313942;
+  background-color: #292a2d;
 }
 .status-bar {
   position: absolute; top: 10px; left: 0; width: 100%; color: white; z-index: 10;
 }
 .back-button {
-  background-color: #00796b; color: white; font-weight: bold; border-radius: 6px; padding: 4px 16px;
+  background-color: #4c6afc; color: white; font-weight: bold; border-radius: 6px; padding: 4px 16px;
 }
 .main-content-area {
   padding: 60px 24px 24px;

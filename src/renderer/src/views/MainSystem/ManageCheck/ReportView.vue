@@ -93,10 +93,10 @@ const navigateTo = (path) => {
 
 <style scoped>
 .bg-dark-page {
-  background-color: #2e3c41;
+  background-color: #292a2d;
 }
 .bg-dark-header {
-  background-color: #2e3c41;
+  background-color: #212327;
 }
 .report-card {
   width: 100%;

@@ -174,7 +174,7 @@ const navigateTo = (path) => {
   text-transform: none;
 }
 .bg-light-blue-grey {
-  background-color: #1d2b2b; /* 图片中的浅蓝灰色背景 */
+  background-color: #292a2d; /* 图片中的浅蓝灰色背景 */
   color: #333;
 }
 .bg-table-theme {
