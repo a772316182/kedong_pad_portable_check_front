@@ -12,7 +12,7 @@ function refreshEverything() {
       <router-view />
     </q-page-container>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
-      <q-btn fab icon="refresh" color="accent" @click="refreshEverything" />
+      <q-btn fab icon="refresh" color="blue-5" @click="refreshEverything" />
     </q-page-sticky>
   </q-layout>
 </template>

@@ -202,14 +202,14 @@ const modules = ref([
 <style scoped>
 /* 定义与原型一致的颜色和样式 */
 .main-background {
-  background-color: #313942;
+  background-color: #292a2d;
   border-bottom: 1px solid #4a5562;
 }
 .page-content {
   padding-top: 120px;
 }
 .exit-button {
-  background-color: #00796b;
+  background-color: #4c6afc;
   color: white;
   font-size: 1.1rem;
   font-weight: bold;

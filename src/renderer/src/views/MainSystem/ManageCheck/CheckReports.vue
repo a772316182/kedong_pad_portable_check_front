@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive } from 'vue';
-import router from '../router'
+import router from '../../../router'
 
 // 定义组件可以触发的事件
 const navigateTo = (path) => {

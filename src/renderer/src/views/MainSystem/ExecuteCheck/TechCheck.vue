@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive } from 'vue';
-import router from '../router'
+import router from '../../../router'
 const navigateTo = (path) => {
   console.log(`正在跳转到: ${path}`)
   // 使用 router.push 进行页面跳转

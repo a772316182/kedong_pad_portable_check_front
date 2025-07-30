@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive, onUnmounted } from 'vue';
-import router from '../router'
+import router from '../../../router'
 
 const navigateTo = (path) => {
   console.log(`正在跳转到: ${path}`)

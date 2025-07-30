@@ -14,8 +14,8 @@ const login = () => {
 </script>
 
 <template>
-  <q-page class="q-pa-md">
-    <q-card flat>
+  <q-page class="q-pa-md" style="background: rgb(41,42,45)">
+    <q-card flat >
       <q-card-section>
         <q-input v-model="username" label="用户名" placeholder="请输入用户名" outlined />
         <q-input

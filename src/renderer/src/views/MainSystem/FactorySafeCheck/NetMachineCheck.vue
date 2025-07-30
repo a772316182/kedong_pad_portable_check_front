@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive } from 'vue'
-import router from "../router";
+import router from "../../../router";
 
 // --- 响应式状态 ---
 
