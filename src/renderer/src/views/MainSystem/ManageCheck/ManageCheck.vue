@@ -50,7 +50,7 @@ const navigateTo = (path) => {
                 <q-icon color="primary" name="desktop_windows" />
               </q-item-section>
               <q-item-section>
-                <q-item-label class="text-h6">核查对象管理</q-item-label>
+                <q-item-label class="text-h6">站点管理</q-item-label>
               </q-item-section>
               <q-item-section side>
                 <q-icon name="chevron_right" />
@@ -62,7 +62,7 @@ const navigateTo = (path) => {
                 <q-icon color="primary" name="folder_open" />
               </q-item-section>
               <q-item-section>
-                <q-item-label class="text-h6">核查任务管理</q-item-label>
+                <q-item-label class="text-h6">任务管理</q-item-label>
               </q-item-section>
               <q-item-section side>
                 <q-icon name="chevron_right" />
@@ -74,7 +74,7 @@ const navigateTo = (path) => {
                 <q-icon color="primary" name="assignment" />
               </q-item-section>
               <q-item-section>
-                <q-item-label class="text-h6">核查结果管理</q-item-label>
+                <q-item-label class="text-h6">报告管理</q-item-label>
               </q-item-section>
               <q-item-section side>
                 <q-icon name="chevron_right" />

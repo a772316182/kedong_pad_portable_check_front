@@ -111,9 +111,9 @@ const confirmConnection = () => {
           <div v-if="currentStep === 'qualitative'" class="text-center">
             <p class="text-grey-4 q-mb-lg">请先确认本次核查属于哪一类核查任务</p>
             <div class="q-gutter-y-md" style="max-width: 400px; margin: auto;">
-              <q-btn class="full-width" size="lg" color="white" text-color="black" unelevated label="常规核查" @click="nextStep('site')" />
-              <q-btn class="full-width" size="lg" color="white" text-color="black" unelevated label="技术监督检查" @click="navigateTo('/techcheck')" />
-              <q-btn class="full-width" size="lg" color="white" text-color="black" unelevated label="迎检自查" disable />
+              <q-btn class="full-width" size="lg" color="white" text-color="black" unelevated label="自动核查" @click="nextStep('site')" />
+              <q-btn class="full-width" size="lg" color="white" text-color="black" unelevated label="人工核查" @click="navigateTo('/techcheck')" />
+              <q-btn class="full-width" size="lg" color="white" text-color="black" unelevated label="迎检自查（暂不要求）" disable/>
             </div>
           </div>
 
