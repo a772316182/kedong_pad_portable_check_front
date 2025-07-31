@@ -324,8 +324,122 @@ const navigateTo = (path) => {
     </q-drawer>
 
     <!-- === DIALOGS === -->
-    <q-dialog v-model="dialogs.assetProbe"><q-card class="form-dialog"><q-card-section class="row items-center"><div class="text-h6">资产探查配置</div><q-space/><q-btn icon="close" flat round dense v-close-popup /></q-card-section><q-card-section class="q-pt-none"><div class="form-row"><span class="form-label">本机IP地址:</span><div>{{ assetProbeConfig.ip }}</div><q-space/><q-btn size="sm" color="primary" outline label="历史记录"/></div><div class="form-row"><span class="form-label">子网掩码:</span><div>{{ assetProbeConfig.subnet }}</div></div><div class="form-row"><span class="form-label">网关:</span><q-input dense outlined v-model="assetProbeConfig.gateway" placeholder="请输入网关"/></div><div class="form-row"><span class="form-label">安全分区:</span><q-radio v-model="assetProbeConfig.zone" val="安全区" label="安全区"/><q-radio v-model="assetProbeConfig.zone" val="安全II区" label="安全II区"/></div><div class="form-row"><span class="form-label">资产探查速率:</span><q-radio v-model="assetProbeConfig.rate" val="高" label="高"/><q-radio v-model="assetProbeConfig.rate" val="中" label="中"/><q-radio v-model="assetProbeConfig.rate" val="低" label="低"/></div><div class="form-row"><span class="form-label">起止范围:</span><q-toggle v-model="assetProbeConfig.rangeEnabled" label="启用"/></div><div class="form-row" v-if="assetProbeConfig.rangeEnabled"><span class="form-label">IP范围:</span><q-input class="col" type="textarea" outlined v-model="assetProbeConfig.range" hint="多个分段: 192.168.1.1-192.168.1.254"/></div></q-card-section><q-card-actions align="center" class="q-pa-md"><q-btn label="确定" color="primary" unelevated style="width:100px"/></q-card-actions></q-card></q-dialog>
-    <q-dialog v-model="dialogs.loginlessCheck"><q-card class="form-dialog"><q-card-section class="row items-center"><div class="text-h6">免登录检查配置</div><q-space/><q-btn icon="close" flat round dense v-close-popup /></q-card-section><q-card-section class="q-pt-none"><div class="form-row"><span class="form-label">本机IP地址:</span><div>{{ loginlessCheckConfig.ip }}</div><q-space/><q-btn size="sm" color="primary" outline label="历史记录"/></div><div class="form-row"><span class="form-label">子网掩码:</span><div>{{ loginlessCheckConfig.subnet }}</div></div><div class="form-row"><span class="form-label">网关:</span><q-input dense outlined v-model="loginlessCheckConfig.gateway" placeholder="请输入网关"/></div><div class="form-row"><span class="form-label">高危端口扫描:</span><q-toggle v-model="loginlessCheckConfig.highRiskScan" color="primary"/></div><div class="form-row"><span class="form-label">端口号TCP:</span><div class="text-grey-7 text-caption">21,23,25,109,110,135,139,445,3389</div></div><div class="form-row"><span class="form-label">端口号UDP:</span><div class="text-grey-7 text-caption">67,69,137,138,5353</div></div><div class="form-row"><span class="form-label">指纹特征采集:</span><q-toggle v-model="loginlessCheckConfig.fingerprint" color="primary"/></div><div class="form-row"><span class="form-label">免登录检查速率:</span><q-radio v-model="loginlessCheckConfig.rate" val="高" label="高"/><q-radio v-model="loginlessCheckConfig.rate" val="中" label="中"/><q-radio v-model="loginlessCheckConfig.rate" val="低" label="低"/></div><div class="form-row"><span class="form-label">起止范围:</span><q-toggle v-model="loginlessCheckConfig.rangeEnabled" label="启用"/></div></q-card-section><q-card-actions align="center" class="q-pa-md"><q-btn label="确定" color="primary" unelevated style="width:100px"/></q-card-actions></q-card></q-dialog>
+    <q-dialog v-model="dialogs.assetProbe"
+      ><q-card class="form-dialog"
+        ><q-card-section class="row items-center"
+          ><div class="text-h6">资产探查配置</div>
+          <q-space /><q-btn icon="close" flat round dense v-close-popup /></q-card-section
+        ><q-card-section class="q-pt-none"
+          ><div class="form-row">
+            <span class="form-label">本机IP地址:</span>
+            <div>{{ assetProbeConfig.ip }}</div>
+            <q-space /><q-btn size="sm" color="primary" outline label="历史记录" />
+          </div>
+          <div class="form-row">
+            <span class="form-label">子网掩码:</span>
+            <div>{{ assetProbeConfig.subnet }}</div>
+          </div>
+          <div class="form-row">
+            <span class="form-label">网关:</span
+            ><q-input dense outlined v-model="assetProbeConfig.gateway" placeholder="请输入网关" />
+          </div>
+          <div class="form-row">
+            <span class="form-label">安全分区:</span
+            ><q-radio v-model="assetProbeConfig.zone" val="安全区" label="安全区" /><q-radio
+              v-model="assetProbeConfig.zone"
+              val="安全II区"
+              label="安全II区"
+            />
+          </div>
+          <div class="form-row">
+            <span class="form-label">资产探查速率:</span
+            ><q-radio v-model="assetProbeConfig.rate" val="高" label="高" /><q-radio
+              v-model="assetProbeConfig.rate"
+              val="中"
+              label="中"
+            /><q-radio v-model="assetProbeConfig.rate" val="低" label="低" />
+          </div>
+          <div class="form-row">
+            <span class="form-label">起止范围:</span
+            ><q-toggle v-model="assetProbeConfig.rangeEnabled" label="启用" />
+          </div>
+          <div class="form-row" v-if="assetProbeConfig.rangeEnabled">
+            <span class="form-label">IP范围:</span
+            ><q-input
+              class="col"
+              type="textarea"
+              outlined
+              v-model="assetProbeConfig.range"
+              hint="多个分段: 192.168.1.1-192.168.1.254"
+            /></div></q-card-section
+        ><q-card-actions align="center" class="q-pa-md"
+          ><q-btn
+            label="确定"
+            color="primary"
+            unelevated
+            style="width: 100px" /></q-card-actions></q-card
+    ></q-dialog>
+    <q-dialog v-model="dialogs.loginlessCheck"
+      ><q-card class="form-dialog"
+        ><q-card-section class="row items-center"
+          ><div class="text-h6">免登录检查配置</div>
+          <q-space /><q-btn icon="close" flat round dense v-close-popup /></q-card-section
+        ><q-card-section class="q-pt-none"
+          ><div class="form-row">
+            <span class="form-label">本机IP地址:</span>
+            <div>{{ loginlessCheckConfig.ip }}</div>
+            <q-space /><q-btn size="sm" color="primary" outline label="历史记录" />
+          </div>
+          <div class="form-row">
+            <span class="form-label">子网掩码:</span>
+            <div>{{ loginlessCheckConfig.subnet }}</div>
+          </div>
+          <div class="form-row">
+            <span class="form-label">网关:</span
+            ><q-input
+              dense
+              outlined
+              v-model="loginlessCheckConfig.gateway"
+              placeholder="请输入网关"
+            />
+          </div>
+          <div class="form-row">
+            <span class="form-label">高危端口扫描:</span
+            ><q-toggle v-model="loginlessCheckConfig.highRiskScan" color="primary" />
+          </div>
+          <div class="form-row">
+            <span class="form-label">端口号TCP:</span>
+            <div class="text-grey-7 text-caption">21,23,25,109,110,135,139,445,3389</div>
+          </div>
+          <div class="form-row">
+            <span class="form-label">端口号UDP:</span>
+            <div class="text-grey-7 text-caption">67,69,137,138,5353</div>
+          </div>
+          <div class="form-row">
+            <span class="form-label">指纹特征采集:</span
+            ><q-toggle v-model="loginlessCheckConfig.fingerprint" color="primary" />
+          </div>
+          <div class="form-row">
+            <span class="form-label">免登录检查速率:</span
+            ><q-radio v-model="loginlessCheckConfig.rate" val="高" label="高" /><q-radio
+              v-model="loginlessCheckConfig.rate"
+              val="中"
+              label="中"
+            /><q-radio v-model="loginlessCheckConfig.rate" val="低" label="低" />
+          </div>
+          <div class="form-row">
+            <span class="form-label">起止范围:</span
+            ><q-toggle
+              v-model="loginlessCheckConfig.rangeEnabled"
+              label="启用"
+            /></div></q-card-section
+        ><q-card-actions align="center" class="q-pa-md"
+          ><q-btn
+            label="确定"
+            color="primary"
+            unelevated
+            style="width: 100px" /></q-card-actions></q-card
+    ></q-dialog>
     <q-dialog v-model="dialogs.loginCheck" full-width><q-card class="login-check-dialog"><q-card-section class="row items-center"><div class="text-h6">登录账号与密码配置</div><q-space/><q-btn icon="close" flat round dense v-close-popup /></q-card-section><q-card-section><div class="row items-center q-gutter-x-md q-mb-md"><q-btn label="批量填充" color="primary" outline/><q-btn label="添加" color="primary" @click="addNewCredential"/><q-select dense outlined v-model="deviceType" :options="['主机设备', '网络设备']" label="设备类型" style="width: 200px" /></div><div class="cred-table-header row"><div class="col-2">资产IP</div><div class="col">端口号</div><div class="col">登录账号</div><div class="col">登录密码</div><div class="col">授权账号</div><div class="col">授权密码</div><div class="col-1">操作</div></div><div v-for="(cred, index) in loginCheckCredentials" :key="cred.id" class="cred-table-row row"><div class="col-2">{{ cred.ip }}</div><div class="col"><q-input dense outlined v-model="cred.port" placeholder="请输入..."/></div><div class="col"><q-input dense outlined v-model="cred.username" placeholder="请输入..."/></div><div class="col"><q-input dense outlined type="password" v-model="cred.password" placeholder="请输入..."/></div><div class="col"><q-input dense outlined v-model="cred.authUser" placeholder="请输入..."/></div><div class="col"><q-input dense outlined type="password" v-model="cred.authPass" placeholder="请输入..."/></div><div class="col-1 text-center"><q-btn flat round color="negative" icon="delete" @click="loginCheckCredentials.splice(index, 1)"/></div></div></q-card-section><q-card-actions align="center" class="q-pa-md"><q-btn label="确定" color="primary" unelevated style="width:100px" @click="confirmLoginCredentials"/></q-card-actions></q-card></q-dialog>
     <q-dialog v-model="dialogs.protocolSelection"><q-card style="width: 500px"><q-card-section class="row items-center"><div class="text-h6">选定网络协议</div><q-space/><q-btn icon="close" flat round dense v-close-popup /></q-card-section><q-card-section class="text-center"><div class="text-grey-8">已选定：【网络模式】</div><p>请结合待查资产的特征识别结果，选定合适的网络协议开展后续核查。</p><div class="row q-gutter-xl justify-center q-py-md"><q-card class="protocol-card" flat bordered clickable @click="selectProtocol('ssh')"><q-card-section class="text-center"><q-icon name="o" size="4em" color="blue-8"/><div class="text-subtitle1 text-weight-medium q-mt-sm">ssh协议</div></q-card-section></q-card><q-card class="protocol-card" flat bordered clickable @click="selectProtocol('https')"><q-card-section class="text-center"><q-icon name="o" size="4em" color="green-8"/><div class="text-subtitle1 text-weight-medium q-mt-sm">https协议</div></q-card-section></q-card></div></q-card-section></q-card></q-dialog>
     <q-dialog v-model="dialogs.httpsConfig"><q-card class="form-dialog" style="width: 600px"><q-card-section class="row items-center"><div class="text-h6">Https连接配置</div><q-space/><q-btn icon="close" flat round dense v-close-popup /></q-card-section><q-card-section class="q-pt-none"><div class="form-row"><span class="form-label">本机IP地址:</span><div>{{ httpsConfig.ip }}</div><q-space/><q-btn size="sm" color="primary" outline label="历史记录"/></div><div class="form-row"><span class="form-label">子网掩码:</span><div>{{ httpsConfig.subnet }}</div></div><div class="form-row"><span class="form-label">网关:</span><q-input dense outlined v-model="httpsConfig.gateway"/></div><div class="form-row"><span class="form-label">Https端口:</span><q-input dense outlined v-model="httpsConfig.port"/></div><div class="q-mt-md text-caption text-grey-7"><q-icon name="info" /> 本机Https服务开启后，待核查设备上通过访问 https://10.105.71.233:28081 下载核查脚本</div></q-card-section><q-card-actions align="center" class="q-gutter-x-lg q-pa-md"><q-btn label="关闭" color="grey" style="width: 150px"/><q-btn label="开启HTTPS连接" color="primary" unelevated style="width: 150px" @click="navigateTo('/logincheckinprogress')"/></q-card-actions></q-card></q-dialog>

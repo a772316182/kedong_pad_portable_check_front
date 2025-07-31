@@ -71,7 +71,9 @@ const resetFilters = () => {
 <template>
   <q-layout view="lHh Lpr lFf" class="page-background">
     <!-- 顶部主标题栏 -->
-    <q-header class="header-main text-white" elevated>
+
+    <!-- 顶部副信息栏 -->
+    <q-header class="header-sub" elevated>
       <q-toolbar>
         <q-btn flat dense round label="返回" icon="arrow_back_ios" @click="goBack" class="back-button" />
         <q-toolbar-title class="text-center text-weight-bolder">必选项检查</q-toolbar-title>
@@ -80,10 +82,6 @@ const resetFilters = () => {
           <span class="q-ml-xs text-subtitle1">筛选</span>
         </q-btn>
       </q-toolbar>
-    </q-header>
-
-    <!-- 顶部副信息栏 -->
-    <q-header class="header-sub" elevated :offset="[0, 50]">
       <q-toolbar class="text-white">
         <div class="row items-center q-gutter-x-xl">
           <span>适用对象：主机设备-Linux</span>
@@ -91,7 +89,6 @@ const resetFilters = () => {
           <span>核查项总数：{{ totalCheckItems }}</span>
         </div>
         <q-space />
-        <q-btn outline rounded color="light-blue-4" label="适用范围设置" />
       </q-toolbar>
     </q-header>
 
@@ -195,14 +192,10 @@ const resetFilters = () => {
 /* 副信息栏样式 */
 .header-sub {
   background-color: #313942 !important;
-  top: 50px !important; /* Quasar 默认 Header 是 50px 高 */
   font-size: 0.9rem;
 }
 
 /* 主内容区，给顶部留出两个Header的高度 */
-.main-content {
-  padding-top: 100px;
-}
 
 /* 左侧面板 */
 .left-panel {
