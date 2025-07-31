@@ -111,7 +111,7 @@ const selectAsset = (id) => { selectedAssetId.value = id; };
             >
               <q-item-section>{{ asset.ip }}</q-item-section>
               <q-item-section side>
-                <q-btn round flat dense icon="o_close" size="sm"/>
+                <q-btn round flat dense icon="close" size="sm"/>
               </q-item-section>
             </q-item>
           </q-list>

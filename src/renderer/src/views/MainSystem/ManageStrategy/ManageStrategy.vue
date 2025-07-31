@@ -45,11 +45,20 @@ const submitForm = () => {
 // 定义组件可以触发的事件
 const router = useRouter()
 
-const navigateTo = (path) => {
-  console.log(`正在跳转到: ${path}`)
+// --- MODIFICATION START ---
+// 修改 navigateTo 函数以接受一个可选的 'mode' 参数
+const navigateTo = (path, mode) => {
+  let finalPath = path;
+  // 如果 mode 是 'edit'，则在路径后附加查询参数
+  if (mode === 'edit') {
+    finalPath += '?mode=edit';
+  }
+  console.log(`正在跳转到: ${finalPath}`);
   // 使用 router.push 进行页面跳转
-  router.push(path)
+  router.push(finalPath);
 }
+// --- MODIFICATION END ---
+
 
 // --- 响应式数据 --- --暂无后端都是模拟数据
 const policies = reactive([
@@ -181,7 +190,7 @@ const handleAddNewPolicy = () => {
             <q-card v-ripple class="cursor-pointer full-height bg-white text-black" flat bordered>
               <q-card-section>
                 <q-card-section v-if="policy.preset_strategy" class="float-right"
-                  ><q-chip>预制核查策略</q-chip>
+                ><q-chip>预制核查策略</q-chip>
                 </q-card-section
                 >
                 <q-card-section v-if="!policy.preset_strategy" class="float-right">
@@ -212,12 +221,16 @@ const handleAddNewPolicy = () => {
                   style="width: 31%"
                   @click="navigateTo('/mustcheck')"
                 ></q-btn>
+                <!-- --- MODIFICATION START --- -->
+                <!-- 点击编辑按钮时，调用 navigateTo 并传入 'edit' 模式 -->
                 <q-btn
                   flat
                   color="positive"
                   label="编辑"
                   style="width: 31%"
+                  @click="navigateTo('/mustcheck', 'edit')"
                 ></q-btn>
+                <!-- --- MODIFICATION END --- -->
                 <q-btn
                   flat
                   color="negative"
@@ -255,81 +268,81 @@ const handleAddNewPolicy = () => {
       </q-card>
     </q-dialog>
     <q-dialog v-model="isAlertDialogVisible">
-          <q-card class="column full-height" flat>
-            <!-- 标题 -->
-            <q-card-section class="q-py-md">
-              <div class="text-h6">新增策略</div>
-            </q-card-section>
+      <q-card class="column full-height" flat>
+        <!-- 标题 -->
+        <q-card-section class="q-py-md">
+          <div class="text-h6">新增策略</div>
+        </q-card-section>
 
-            <!-- 表单区域 -->
-            <q-card-section class="q-pt-none col">
-              <q-list bordered separator>
-                <q-item>
-                  <q-item-section>
-                    <q-item-label>
-                      策略名称 <span class="text-red">*</span>
-                    </q-item-label>
-                  </q-item-section>
-                  <q-item-section side>
-                    <q-input
-                      v-model="policy.name"
-                      placeholder="请输入"
-                      borderless
-                      dense
-                      input-style="text-align: right;"
-                    />
-                  </q-item-section>
-                </q-item>
+        <!-- 表单区域 -->
+        <q-card-section class="q-pt-none col">
+          <q-list bordered separator>
+            <q-item>
+              <q-item-section>
+                <q-item-label>
+                  策略名称 <span class="text-red">*</span>
+                </q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-input
+                  v-model="policy.name"
+                  placeholder="请输入"
+                  borderless
+                  dense
+                  input-style="text-align: right;"
+                />
+              </q-item-section>
+            </q-item>
 
-                <q-item clickable v-ripple @click="selectObject">
-                  <q-item-section>
-                    <q-item-label>
-                      适用对象 <span class="text-red">*</span>
-                    </q-item-label>
-                  </q-item-section>
-                  <q-item-section side>
-                    <div class="row items-center text-grey">
-                      <span>{{ policy.target || '请选择' }}</span>
-                      <q-icon name="chevron_right" />
-                    </div>
-                  </q-item-section>
-                </q-item>
+            <q-item clickable v-ripple @click="selectObject">
+              <q-item-section>
+                <q-item-label>
+                  适用对象 <span class="text-red">*</span>
+                </q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <div class="row items-center text-grey">
+                  <span>{{ policy.target || '请选择' }}</span>
+                  <q-icon name="chevron_right" />
+                </div>
+              </q-item-section>
+            </q-item>
 
-                <q-item>
-                  <q-item-section>
-                    <q-item-label>
-                      核查依据
-                    </q-item-label>
-                  </q-item-section>
-                  <q-item-section side>
-                    <q-input
-                      v-model="policy.basis"
-                      placeholder="请输入"
-                      borderless
-                      dense
-                      input-style="text-align: right;"
-                    />
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-card-section>
+            <q-item>
+              <q-item-section>
+                <q-item-label>
+                  核查依据
+                </q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-input
+                  v-model="policy.basis"
+                  placeholder="请输入"
+                  borderless
+                  dense
+                  input-style="text-align: right;"
+                />
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-card-section>
 
-            <q-space />
+        <q-space />
 
-            <!-- 底部操作 -->
-            <q-card-section class="q-pa-md">
-              <q-btn
-                v-close-popup
-                color="teal-6"
-                label="确定"
-                unelevated
-                class="full-width"
-                size="lg"
-                @click="submitForm"
-              >
-              </q-btn>
-            </q-card-section>
-          </q-card>
+        <!-- 底部操作 -->
+        <q-card-section class="q-pa-md">
+          <q-btn
+            v-close-popup
+            color="teal-6"
+            label="确定"
+            unelevated
+            class="full-width"
+            size="lg"
+            @click="submitForm"
+          >
+          </q-btn>
+        </q-card-section>
+      </q-card>
     </q-dialog>
     <!-- 提示信息对话框 -->
   </q-layout>
