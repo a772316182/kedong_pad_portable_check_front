@@ -23,8 +23,6 @@ const testConnectivity = () => {
 };
 // ===============================================
 // END: 为弹窗和侧拉窗口新增/修改的状态
-
-const currentTime = ref('2023-08-20 15:46:55')
 const currentUser = ref('业务操作员')
 
 const navigateTo = (path) => {
@@ -39,9 +37,9 @@ const modules = ref([
     route: '/executeCheck'
   },
   {
-    title: '核查管理',
-    image: 'https://img95.699pic.com/photo/50028/1075.jpg_wh860.jpg',
-    route: '/manageCheck'
+    title: '报告管理',
+    image: 'https://img95.699pic.com/photo/60031/0952.jpg_wh860.jpg',
+    route: '/checkreports'
   },
   {
     title: '策略管理',
@@ -69,10 +67,7 @@ const modules = ref([
 <template>
   <q-layout view="lHh Lpr lFf" class="main-background">
     <q-header class="main-background text-white" height-hint="98">
-      <div class="row justify-between q-px-sm q-py-xs text-caption">
-        <span>{{ currentTime }}</span>
-        <span>当前电量: 15% <q-icon name="o" /></span>
-      </div>
+
       <q-toolbar class="q-py-md q-px-lg">
         <div class="row items-center">
           <q-btn

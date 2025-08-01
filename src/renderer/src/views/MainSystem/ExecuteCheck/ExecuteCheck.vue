@@ -100,21 +100,55 @@ const confirmConnection = () => {
       <q-page class="q-pa-md">
         <!-- 步骤条 -->
         <div class="stepper-container row q-col-gutter-none">
-          <div class="col text-center stepper-item" :class="{active: currentStep === 'qualitative', done: currentStep !== 'qualitative'}">任务定性</div>
+          <div class="col text-center stepper-item" :class="{active: currentStep === 'qualitative', done: currentStep !== 'qualitative'}">选择任务</div>
           <div class="col text-center stepper-item" :class="{active: currentStep === 'site', done: currentStep === 'task'}">站点确认</div>
-          <div class="col text-center stepper-item" :class="{active: currentStep === 'task'}">任务确认</div>
+          <div class="col text-center stepp er-item" :class="{active: currentStep === 'task'}">任务定性</div>
         </div>
 
         <!-- 步骤面板 -->
         <div class="q-mt-md">
           <!-- 步骤1: 任务定性 -->
-          <div v-if="currentStep === 'qualitative'" class="text-center">
-            <p class="text-grey-4 q-mb-lg">请先确认本次核查属于哪一类核查任务</p>
-            <div class="q-gutter-y-md" style="max-width: 400px; margin: auto;">
-              <q-btn class="full-width" size="lg" color="white" text-color="black" unelevated label="自动核查" @click="nextStep('site')" />
-              <q-btn class="full-width" size="lg" color="white" text-color="black" unelevated label="人工核查" @click="navigateTo('/techcheck')" />
-              <q-btn class="full-width" size="lg" color="white" text-color="black" unelevated label="迎检自查（暂不要求）" disable/>
-            </div>
+          <div v-if="currentStep === 'qualitative'" class="text-center flex flex-center">
+                <div class="q-pa-md" style="width: 100%; max-width: 600px;">
+                  <q-list separator>
+                    <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/stationview")'>
+                      <q-item-section avatar>
+                        <q-icon color="primary" name="desktop_windows" />
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label class="text-h6">站点管理</q-item-label>
+                      </q-item-section>
+                      <q-item-section side>
+                        <q-icon name="chevron_right" />
+                      </q-item-section>
+                    </q-item>
+
+                    <q-item v-ripple clickable class="q-py-lg" @click='navigateTo("/taskcheck")'>
+                      <q-item-section avatar>
+                        <q-icon color="primary" name="folder_open" />
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label class="text-h6">任务管理</q-item-label>
+                      </q-item-section>
+                      <q-item-section side>
+                        <q-icon name="chevron_right" />
+                      </q-item-section>
+                    </q-item>
+
+                    <q-item clickable v-ripple class="q-py-lg" @click="nextStep('site')">
+                  <q-item-section avatar>
+                        <q-icon color="primary" name="assignment" />
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label class="text-h6">开始核查</q-item-label>
+                      </q-item-section>
+                      <q-item-section side>
+                        <q-icon name="chevron_right" />
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </div>
+
           </div>
 
           <!-- 步骤2: 站点确认 -->
@@ -231,6 +265,16 @@ const confirmConnection = () => {
 }
 .bg-dark-content {
   background-color: #3a3c52;
+}
+ .q-item {
+   background-color: #ffffff;
+   color: #000000;
+   border-radius: 8px;
+   margin-bottom: 26px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+ }
+.q-list--separator > .q-item:not(:first-child) {
+  border-top: none;
 }
 .stepper-container {
   background-color: #fff;

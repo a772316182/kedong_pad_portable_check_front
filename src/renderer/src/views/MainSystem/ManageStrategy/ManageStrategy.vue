@@ -63,37 +63,68 @@ const navigateTo = (path, mode) => {
 // --- 响应式数据 --- --暂无后端都是模拟数据
 const policies = reactive([
   {
-    name: '两高一弱',
+    name: '主机设备-Linux',
     updated: '2025-07-03',
     items: 8,
     object: '主机设备-Linux',
-    preset_strategy: true
+    preset_strategy: true,
+    owned: false,
+    enabled: true
   },
-  {
-    name: '必选项核查',
-    updated: '2025-07-03',
-    items: 8,
-    object: '主机设备-Linux',
-    preset_strategy: true
-  },
-  { name: '网络设备', updated: '2025-07-03', items: 16, object: '网络设备', preset_strategy: true },
   {
     name: '主机设备-Windows',
     updated: '2025-07-03',
-    items: 15,
+    items: 8,
     object: '主机设备-Windows',
-    preset_strategy: true
+    preset_strategy: true,
+    owned: false,
+    enabled: true
   },
   {
-    name: '安徽加固手册',
+    name: '网络设备',
+    updated: '2025-07-03',
+    items: 16,
+    object: '网络设备',
+    preset_strategy: true,
+    owned: false,
+    enabled: true
+  },
+  {
+    name: '网络安全',
+    updated: '2025-07-03',
+    items: 15,
+    object: '网络安全',
+    preset_strategy: true,
+    owned: false,
+    enabled: true
+  },
+  {
+    name: '网络安全告警检查',
     updated: '2025-07-03',
     items: 8,
-    object: '主机设备-Linux',
-    link: 'RequiredCheck',
-    preset_strategy: true
+    object: '网络安全告警点对点检查',
+    preset_strategy: true,
+    owned: false,
+    enabled: true
   },
-  { name: '弱密码核查', updated: '2025-04-18', items: 2, object: '主机设备-Linux',preset_strategy:false },
-  { name: '主机设备-Linux', updated: '2025-04-18', items: 23, object: '主机设备-Linux',preset_strategy:false }
+  {
+    name: '弱密码核查',
+    updated: '2025-04-18',
+    items: 2,
+    object: '主机设备-Linux',
+    preset_strategy: false,
+    owned: true,
+    enabled: true
+  },
+  {
+    name: '主机设备-Linux',
+    updated: '2025-04-18',
+    items: 23,
+    object: '主机设备-Linux',
+    preset_strategy: false,
+    owned: true,
+    enabled: true
+  }
 ])
 
 // 控制抽屉和对话框的显示状态
@@ -109,7 +140,7 @@ const newPolicy = reactive({
   items: null
 })
 
-const customStrategy = ref({ enabled: true })
+const customStrategy = ref({ enabled: false})
 
 // --- 方法 ---
 const handleCardClick = () => {
@@ -154,30 +185,6 @@ const handleAddNewPolicy = () => {
       </q-toolbar>
     </q-header>
 
-    <!-- 右侧筛选抽屉 -->
-    <q-drawer
-      v-model="isFilterDrawerVisible"
-      side="right"
-      overlay
-      behavior="mobile"
-      bordered
-      :width="300"
-      class="bg-secondary text-white"
-    >
-      <q-scroll-area class="fit">
-        <div class="q-pa-md">
-          <h5 class="q-mt-none q-mb-md">筛选</h5>
-          <!-- 筛选表单内容可以放在这里 -->
-          <q-btn
-            color="light-blue-6"
-            label="应用筛选"
-            class="full-width q-mt-md"
-            @click="isFilterDrawerVisible = false"
-          />
-        </div>
-      </q-scroll-area>
-    </q-drawer>
-
     <q-page-container>
       <q-page class="q-pa-md">
         <!-- 策略卡片网格 -->
@@ -189,22 +196,22 @@ const handleAddNewPolicy = () => {
           >
             <q-card v-ripple class="cursor-pointer full-height bg-white text-black" flat bordered>
               <q-card-section>
-                <q-card-section v-if="policy.preset_strategy" class="float-right"
-                ><q-chip>预制核查策略</q-chip>
+                <q-card-section v-if="policy.preset_strategy" class="float-right">
+                  <q-chip class="bg-red-6 text-white">预制核查策略</q-chip>
                 </q-card-section
                 >
                 <q-card-section v-if="!policy.preset_strategy" class="float-right">
-                  <q-toggle v-model="customStrategy.enabled" color="primary" />
+                  <q-toggle v-model="customStrategy.enabled" color="blue-7" />
                 </q-card-section>
                 <div class="text-h6 text-primary">{{ policy.name }}</div>
-                <div class="text-subtitle2 text-grey-7">更新时间: {{ policy.updated }}</div>
+                <div class="text-subtitle2 text-grey-7">最后更新时间: {{ policy.updated }}</div>
               </q-card-section>
               <q-card-section class="q-pt-none text-grey-8">
                 <div>检查项数: {{ policy.items }}</div>
                 <div>使用对象: {{ policy.object }}</div>
               </q-card-section>
               <q-separator />
-              <q-card-actions v-if="policy.preset_strategy" align="center">
+              <q-card-actions v-if="policy.preset_strategy || !policy.owned" align="center">
                 <q-btn
                   flat
                   color="blue-6"
@@ -213,7 +220,7 @@ const handleAddNewPolicy = () => {
                   @click="navigateTo('/mustcheck')"
                 ></q-btn>
               </q-card-actions>
-              <q-card-actions  v-if="!policy.preset_strategy">
+              <q-card-actions v-if="!policy.preset_strategy && policy.owned">
                 <q-btn
                   flat
                   color="blue-6"
@@ -294,10 +301,12 @@ const handleAddNewPolicy = () => {
               </q-item-section>
             </q-item>
 
+
+
             <q-item clickable v-ripple @click="selectObject">
               <q-item-section>
                 <q-item-label>
-                  适用对象 <span class="text-red">*</span>
+                  策略引用 <span class="text-red">*</span>
                 </q-item-label>
               </q-item-section>
               <q-item-section side>
@@ -305,23 +314,6 @@ const handleAddNewPolicy = () => {
                   <span>{{ policy.target || '请选择' }}</span>
                   <q-icon name="chevron_right" />
                 </div>
-              </q-item-section>
-            </q-item>
-
-            <q-item>
-              <q-item-section>
-                <q-item-label>
-                  核查依据
-                </q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-input
-                  v-model="policy.basis"
-                  placeholder="请输入"
-                  borderless
-                  dense
-                  input-style="text-align: right;"
-                />
               </q-item-section>
             </q-item>
           </q-list>
