@@ -11,7 +11,6 @@ import StationView from '../views/MainSystem/ManageCheck/StationView.vue'
 import ManageAsset from '../views/MainSystem/ManageCheck/ManageAsset.vue'
 import CheckInProgress from '../views/MainSystem/ManageCheck/CheckInProgress.vue'
 import TaskCheck from '../views/MainSystem/ManageCheck/TaskCheck.vue'
-import MultiAsset from '../views/MainSystem/ManageCheck/MultiAsset.vue'
 import Checking from '../views/MainSystem/ExecuteCheck/Checking.vue'
 import CheckResult from '../views/MainSystem/ExecuteCheck/CheckResult.vue'
 import LoginCheckInProgress from '../views/MainSystem/ExecuteCheck/LoginCheckInProgress.vue'
@@ -100,11 +99,6 @@ const routes = [
     path: '/taskcheck',
     name: 'taskcheck',
     component: TaskCheck
-  },
-  {
-    path:'/multiasset',
-    name:'multiasset',
-    component:MultiAsset
   },
   {
     path:'/checking',

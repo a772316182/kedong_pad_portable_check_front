@@ -4,6 +4,9 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
+const navigateTo = (path) => {
+  router.push(path)
+}
 // --- 控制器 ---
 const isMergeDialogOpen = ref(false); // 控制资产合并弹窗
 const selectedAssetId = ref(1); // 当前选中的资产ID
@@ -72,7 +75,7 @@ const selectAsset = (id) => { selectedAssetId.value = id; };
         <div class="text-h4 text-white text-weight-bolder">资产管理</div>
         <q-space />
         <div class="row items-center q-gutter-x-lg">
-          <q-btn flat dense no-caps class="action-btn" icon="o" label="切换"/>
+          <q-btn flat dense no-caps class="action-btn" icon="o" label="切换" @click="navigateTo('/manageasset')"/>
           <q-btn flat dense no-caps class="action-btn" icon="o" label="排序"/>
           <q-btn flat dense no-caps class="action-btn" icon="o" label="筛选"/>
           <span class="text-white">当前电量: 15% <q-icon name="o"/></span>
