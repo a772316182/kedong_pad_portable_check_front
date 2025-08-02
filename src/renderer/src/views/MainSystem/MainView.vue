@@ -34,7 +34,7 @@ const modules = ref([
   {
     title: '执行核查',
     image: 'https://img95.699pic.com/photo/60007/2211.jpg_wh300.jpg',
-    route: '/executeCheck'
+    route: '/managecheck'
   },
   {
     title: '报告管理',
@@ -90,6 +90,9 @@ const modules = ref([
           </div>
           <div class="row items-center q-gutter-x-sm cursor-pointer">
             <q-btn unelevated label="消息" @click="messagesDrawer = true"/>
+          </div>
+          <div class="row items-center q-gutter-x-sm cursor-pointer">
+            <q-btn unelevated label="报告导出" @click="messagesDrawer = true"/>
           </div>
           <!-- END: 修改按钮点击事件 -->
           <div class="row items-center q-gutter-x-sm"></div>
