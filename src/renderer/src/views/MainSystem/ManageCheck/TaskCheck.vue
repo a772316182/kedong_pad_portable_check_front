@@ -3,7 +3,7 @@
     <!-- 顶部主工具栏 -->
     <q-header elevated class="bg-dark-header text-white">
       <q-toolbar>
-        <q-btn flat dense icon="arrow_back_ios" label="返回" @click="navigateTo('/manageCheck')"/>
+        <q-btn flat dense icon="arrow_back_ios" label="返回" @click="navigateTo('/executeCheck')"/>
         <q-toolbar-title class="absolute-center">
           任务管理
         </q-toolbar-title>

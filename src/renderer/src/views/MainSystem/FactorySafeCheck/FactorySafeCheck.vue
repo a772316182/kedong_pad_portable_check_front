@@ -32,7 +32,17 @@ const navigateTo = (path) => {
       <q-page class="flex flex-center">
         <div class="q-pa-md" style="width: 100%; max-width: 600px;">
           <q-list separator>
-
+            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/factoryview")'>
+              <q-item-section avatar>
+                <q-icon color="primary" name="home" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label class="text-h6">厂站列表管理</q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-icon name="chevron_right" />
+              </q-item-section>
+            </q-item>
             <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/basesafecheck")'>
               <q-item-section avatar>
                 <q-icon color="primary" name="home" />
