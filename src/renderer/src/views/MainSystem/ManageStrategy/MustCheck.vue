@@ -9,26 +9,27 @@ const $q = useQuasar(); // 初始化 Quasar 插件
 const router = useRouter();
 const route = useRoute(); // 获取当前路由对象
 
-// 控制编辑抽屉的显示/隐藏
-const editDrawerOpen = ref(false);
+// --- MODIFIED: 控制器 ---
+const editDrawerOpen = ref(false); // 编辑抽屉
+const isDetailDialogOpen = ref(false); // 新增：详情弹窗
 
+// --- MODIFIED: 数据模型 ---
 // 判断当前是否为编辑模式 (通过 URL 的 ?mode=edit 参数)
 const isEditMode = computed(() => route.query.mode === 'edit');
 
-// 当前选中的核查项ID (用于高亮和内容显示)
-const activeCheckItemId = ref(1);
-
-// 用于编辑抽屉的临时数据对象，避免直接修改列表中的原始数据
+// 用于编辑抽屉的临时数据对象
 const editingItem = ref(null);
+// 新增：用于详情弹窗的只读数据对象
+const currentDetailItem = ref(null);
 
-// 左侧核查项列表数据模型
+// 左侧核查项列表数据模型 (现在用于卡片)
 const checkItems = ref([
   {
     id: 1,
     label: '身份鉴别',
     selected: true,
     details: {
-      checkPoints: [ // 将细节拆分为“核查点”数组以支持更复杂的编辑
+      checkPoints: [
         {
           id: 'cp1-1',
           name: '配置口令复杂度策略',
@@ -61,53 +62,42 @@ const checkItems = ref([
 
 // 计算属性：动态计算核查项总数
 const totalCheckItems = computed(() => checkItems.value.length);
+const selectedCheckItems = computed(() => checkItems.value.filter(item => item.selected).length);
 
-// 计算属性：根据 activeCheckItemId 找到当前激活的核查项的完整信息
-const activeCheckItem = computed(() => {
-  return checkItems.value.find(item => item.id === activeCheckItemId.value);
-});
+// --- 方法 ---
 
-// 方法：返回上一页
 const goBack = () => {
   router.go(-1);
 };
 
-// 方法：点击左侧列表项时，更新激活的ID
-const selectItem = (itemId) => {
-  activeCheckItemId.value = itemId;
+// 新增：打开详情弹窗
+const openDetailDialog = (item) => {
+  currentDetailItem.value = item;
+  isDetailDialogOpen.value = true;
 };
 
+// --- 编辑相关方法 (逻辑不变) ---
 
-// --- 编辑相关方法 ---
-
-// 方法：打开编辑抽屉，并深拷贝数据
 const openEditDrawer = (item) => {
   editingItem.value = JSON.parse(JSON.stringify(item));
   editDrawerOpen.value = true;
 };
 
-// 方法：保存抽屉里的修改，并提供即时反馈
 const saveChanges = () => {
   if (!editingItem.value) return;
   const index = checkItems.value.findIndex(item => item.id === editingItem.value.id);
   if (index !== -1) {
-    // 1. 用修改后的数据替换掉原始数据
     checkItems.value[index] = editingItem.value;
-    // 2. 立即将左侧激活项设置为刚修改的项，让用户看到变化
-    activeCheckItemId.value = editingItem.value.id;
   }
-  // 3. 关闭抽屉并清空临时编辑数据
   editDrawerOpen.value = false;
   editingItem.value = null;
 };
 
-// 方法：取消编辑
 const cancelEdit = () => {
   editDrawerOpen.value = false;
   editingItem.value = null;
 };
 
-// 方法：在编辑抽屉中新增一个核查依据
 const addBasis = (checkPoint) => {
   if (!checkPoint.basis) {
     checkPoint.basis = [];
@@ -115,19 +105,13 @@ const addBasis = (checkPoint) => {
   checkPoint.basis.push({ id: `new_${Date.now()}`, text: '' });
 };
 
-// 方法：在编辑抽屉中删除一个核查依据
 const removeBasis = (checkPoint, basisIndex) => {
   checkPoint.basis.splice(basisIndex, 1);
 };
 
-// 方法：点击顶部保存按钮，保存所有修改并返回
 const saveAndGoBack = () => {
-  // 在这里可以添加调用后端API的逻辑来保存 checkItems.value 的数据
   console.log('正在保存所有修改...', checkItems.value);
-
   $q.loading.show({ message: '正在保存...' });
-
-  // 模拟一个异步保存操作
   setTimeout(() => {
     $q.loading.hide();
     $q.notify({
@@ -142,146 +126,125 @@ const saveAndGoBack = () => {
 
 <template>
   <q-layout view="lHh Lpr lFf" class="page-background">
-    <!-- 顶部主标题栏 -->
-    <q-header elevated class="bg-secondary text-white">
-      <!-- 第一个工具栏: 标题、返回和顶部保存按钮 -->
-      <q-toolbar>
-        <q-btn flat round dense icon="arrow_back" @click="goBack" />
-        <q-toolbar-title class="text-weight-bold">
-          234
-          <!-- 编辑图标，仅在编辑模式下显示 -->
-          <q-icon v-if="isEditMode" name="edit" class="q-ml-xs cursor-pointer" />
-        </q-toolbar-title>
-
-        <q-space />
-        <!-- 新增的保存按钮，仅在编辑模式下显示 -->
-        <q-btn
-          v-if="isEditMode"
-          label="保存"
-          color="primary"
-          unelevated
-          @click="saveAndGoBack"
-        />
-      </q-toolbar>
-
-      <!-- 第二个工具栏: 详细信息 -->
-      <q-toolbar>
-        <div class="row items-center q-gutter-x-xl text-body2">
-          <span>适用对象：主机设备-Linux</span>
-          <span>更新时间：2025-07-31 10:50:28</span>
-          <span>核查项总数：{{ totalCheckItems }}</span>
-        </div>
-      </q-toolbar>
-    </q-header>
-
-
-    <!-- 主体内容 -->
-    <q-page-container>
-      <q-page class="main-content row">
-        <!-- 左侧核查项列表 -->
-        <div class="col-3 left-panel">
-          <div class="text-h6 text-grey-8 q-pa-md">核查项</div>
-          <q-list separator>
-            <q-item
-              v-for="item in checkItems"
-              :key="item.id"
-              clickable
-              v-ripple
-              :active="activeCheckItemId === item.id"
-              @click="selectItem(item.id)"
-              class="check-item"
-              active-class="active-check-item"
-            >
-              <q-item-section avatar>
-                <q-checkbox v-model="item.selected" dense />
-              </q-item-section>
-              <q-item-section>{{ item.label }}</q-item-section>
-
-              <!-- 编辑按钮，仅在编辑模式下显示 -->
-              <q-item-section side v-if="isEditMode">
-                <q-btn
-                  flat
-                  round
-                  dense
-                  icon="open_in_new"
-                  @click.stop="openEditDrawer(item)"
-                  title="编辑此项"
-                />
-              </q-item-section>
-            </q-item>
-          </q-list>
+    <q-page padding>
+      <div class="main-content-area">
+        <!-- 顶部操作栏，采用新风格 -->
+        <div class="row items-center no-wrap q-mb-md">
+          <q-btn unelevated label="返回" @click="goBack" class="action-button" icon="arrow_back" />
+          <div class="text-h4 text-weight-bolder q-ml-lg" style="color: #4c6afc;">核查项管理</div>
+          <q-icon v-if="isEditMode" name="edit" size="md" class="q-ml-sm" style="color: #4c6afc;" />
+          <q-space />
+          <q-btn v-if="isEditMode" unelevated label="保存" @click="saveAndGoBack" class="action-button" icon="save"/>
         </div>
 
-        <!-- 右侧详情展示 -->
-        <div class="col-9 right-panel q-pa-lg">
-          <div v-if="activeCheckItem && activeCheckItem.details">
-            <q-card v-for="cp in activeCheckItem.details.checkPoints" :key="cp.id" flat bordered class="q-mb-md">
+        <!-- 信息概览栏，采用新风格 -->
+        <q-card class="info-panel q-pa-md q-mb-lg" flat>
+          <div class="row items-center justify-between">
+            <div class="column q-gutter-y-sm">
+              <span class="text-body1">适用对象：主机设备-Linux</span>
+              <span class="text-body1">更新时间：2025-07-31 10:50:28</span>
+            </div>
+            <div class="column items-end q-gutter-y-sm">
+              <div class="row items-center q-gutter-x-lg text-body1">
+                <span>核查项总数：{{ totalCheckItems }}</span>
+                <span><q-badge color="green" rounded class="q-mr-sm"/>已选：{{ selectedCheckItems }} 项</span>
+              </div>
+            </div>
+          </div>
+        </q-card>
+
+        <!-- 卡片网格布局 -->
+        <div class="row q-col-gutter-lg">
+          <div v-for="item in checkItems" :key="item.id" class="col-12 col-sm-6 col-md-4">
+            <q-card class="check-item-card" flat>
+              <div class="status-badge" :class="item.selected ? 'status-passed' : 'status-unchecked'">
+                {{ item.selected ? '已选用' : '未选用' }}
+              </div>
               <q-card-section>
-                <div class="row items-center no-wrap">
-                  <q-checkbox :model-value="true" dense class="q-mr-sm"/>
-                  <div class="text-h6 text-weight-bold">{{ cp.name }} <span v-if="cp.isAuto">(自动核查)</span></div>
+                <div class="text-h6 text-weight-bold q-mb-sm row items-center">
+                  <q-checkbox v-model="item.selected" dense class="q-mr-sm" :disable="!isEditMode"/>
+                  {{ item.label }}
                 </div>
+                <div class="item-info"><span>核查点数：</span>{{ item.details.checkPoints.length }}</div>
               </q-card-section>
-              <q-card-section class="q-pt-none">
-                <div class="text-subtitle1 q-mb-md">
-                  <span class="text-weight-medium">核查要求：</span>{{ cp.requirement }}
-                  <span v-if="cp.minLength">，口令最小长度：{{ cp.minLength }}</span>
-                </div>
-
-                <div class="text-subtitle1 text-weight-medium q-mb-sm">核查依据：</div>
-                <div v-if="cp.basis && cp.basis.length > 0">
-                  <div v-for="(basis, index) in cp.basis" :key="basis.id || index" class="text-body2 text-grey-8 basis-item">
-                    {{ index + 1 }}、{{ basis.text }}
-                  </div>
-                </div>
-                <div v-else class="text-grey">无</div>
-
-                <div class="q-mt-md text-subtitle1"><span class="text-weight-medium">口令最小长度：</span>{{ cp.minLength || '未设置' }}</div>
-              </q-card-section>
+              <q-separator color="rgba(255,255,255,0.1)"/>
+              <q-card-actions align="right" class="q-pa-sm q-gutter-x-sm">
+                <q-btn flat dense no-caps label="详情" color="light-blue-3" @click="openDetailDialog(item)"/>
+                <q-btn v-if="isEditMode" flat dense no-caps label="编辑" color="teal-3" @click="openEditDrawer(item)"/>
+              </q-card-actions>
             </q-card>
           </div>
         </div>
-      </q-page>
-    </q-page-container>
+      </div>
+      <!-- 刷新按钮 -->
+      <q-page-sticky position="bottom-right" :offset="[18, 18]">
+        <q-btn fab icon="refresh" color="primary" />
+      </q-page-sticky>
+    </q-page>
 
-    <!-- 编辑抽屉弹窗 -->
+    <!-- 新增：详情弹窗 -->
+    <q-dialog v-model="isDetailDialogOpen">
+      <q-card v-if="currentDetailItem" style="width: 700px; max-width: 90vw;">
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">{{ currentDetailItem.label }}</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section class="q-pt-md">
+          <q-scroll-area style="height: 60vh;">
+            <div class="q-pr-md">
+              <q-card v-for="cp in currentDetailItem.details.checkPoints" :key="cp.id" flat bordered class="q-mb-md">
+                <q-card-section>
+                  <div class="text-h6 text-weight-bold">{{ cp.name }} <q-chip v-if="cp.isAuto" dense color="cyan" text-color="white" label="自动核查"/></div>
+                </q-card-section>
+                <q-card-section class="q-pt-none">
+                  <div class="text-subtitle1 q-mb-md">
+                    <span class="text-weight-medium">核查要求：</span>{{ cp.requirement }}
+                    <span v-if="cp.minLength">，口令最小长度：{{ cp.minLength }}</span>
+                  </div>
+                  <div class="text-subtitle1 text-weight-medium q-mb-sm">核查依据：</div>
+                  <div v-if="cp.basis && cp.basis.length > 0">
+                    <div v-for="(basis, index) in cp.basis" :key="basis.id || index" class="text-body2 text-grey-8 basis-item">
+                      {{ index + 1 }}、{{ basis.text }}
+                    </div>
+                  </div>
+                  <div v-else class="text-grey">无</div>
+                </q-card-section>
+              </q-card>
+            </div>
+          </q-scroll-area>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+
+    <!-- 编辑抽屉 (未修改) -->
     <q-drawer v-model="editDrawerOpen" side="right" overlay bordered :width="500" class="bg-white">
       <div v-if="editingItem" class="column full-height">
-        <!-- 抽屉头部 -->
         <q-toolbar class="bg-blue-1 text-primary">
-          <q-toolbar-title class="text-weight-bold">编辑</q-toolbar-title>
+          <q-toolbar-title class="text-weight-bold">编辑核查项</q-toolbar-title>
           <q-btn flat round dense icon="save" @click="saveChanges" color="primary">
             <q-tooltip>保存此项修改</q-tooltip>
           </q-btn>
           <q-btn flat round dense icon="close" @click="cancelEdit" />
         </q-toolbar>
-
-        <!-- 抽屉内容 -->
         <q-scroll-area class="col">
           <div class="q-pa-md">
-            <!-- 编辑核查项名称 -->
             <div class="text-caption text-grey-7">核查项 *</div>
             <q-input v-model="editingItem.label" outlined dense class="q-mb-md" />
-
-            <!-- 遍历并编辑所有核查点 -->
-            <div v-for="(cp, cpIndex) in editingItem.details.checkPoints" :key="cp.id" class="q-mb-lg q-pa-md rounded-borders" style="border: 1px solid #e0e0e0;">
-
+            <div v-for="(cp) in editingItem.details.checkPoints" :key="cp.id" class="q-mb-lg q-pa-md rounded-borders" style="border: 1px solid #e0e0e0;">
               <div class="text-caption text-grey-7">核查点 *</div>
               <q-input v-model="cp.name" outlined dense class="q-mb-md" />
-
               <div class="text-caption text-grey-7">核查要求 *</div>
               <q-input v-model="cp.requirement" outlined dense type="textarea" autogrow class="q-mb-md" />
-
               <div class="text-caption text-grey-7">口令最小长度</div>
               <q-input v-model.number="cp.minLength" outlined dense type="number" class="q-mb-md" />
-
               <div class="text-caption text-grey-7 q-mb-xs">核查依据</div>
               <div v-for="(basis, basisIndex) in cp.basis" :key="basis.id" class="row items-center q-gutter-x-sm q-mb-xs">
                 <q-input v-model="basis.text" outlined dense class="col" />
                 <q-btn flat round dense color="negative" icon="delete" @click="removeBasis(cp, basisIndex)" />
               </div>
               <q-btn label="+ 新增核查依据" color="primary" flat unelevated @click="addBasis(cp)" class="full-width q-mt-sm" />
-
             </div>
           </div>
         </q-scroll-area>
@@ -292,40 +255,60 @@ const saveAndGoBack = () => {
 </template>
 
 <style scoped>
-/* 主页面背景 */
+/* --- 全局和顶部栏样式 --- */
 .page-background {
-  background-color: #f0f2f5;
+  background-color: #292a2d;
+}
+.main-content-area {
+  padding-top: 20px;
+}
+.action-button {
+  background-color: #4c6afc;
+  color: white;
+  font-weight: bold;
+  border-radius: 6px;
+  padding: 4px 12px;
+}
+.action-button .q-icon {
+  font-size: 1.2em;
+  margin-right: 4px;
+}
+.info-panel {
+  background-color: #333438;
+  color: #e0e0e0;
+  border-radius: 8px;
 }
 
-/* 左侧面板 */
-.left-panel {
-  background-color: #ffffff;
-  border-right: 1px solid #dcdcdc;
-  /* 自动计算高度，减去 Header 的总高度 */
-  height: calc(100vh - (var(--q-header-size)));
-  overflow-y: auto;
+/* --- 卡片样式 --- */
+.check-item-card {
+  background-color: #3d4a58;
+  color: #e0e0e0;
+  border-radius: 12px;
+  position: relative;
+  border: 1px solid #4f5b68;
 }
-
-.check-item {
+.status-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
-  color: #333;
 }
-/* 激活(选中)的列表项样式 */
-.active-check-item {
-  background-color: #e3f2fd !important;
-  color: #1976d2 !important;
-  border-left: 4px solid #1976d2;
+.status-passed { background-color: #28a745; }
+.status-unchecked { background-color: #6c757d; }
+
+.item-info {
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+}
+.item-info span {
+  color: #aeb8c4;
 }
 
-/* 右侧详情面板 */
-.right-panel {
-  background-color: #f9f9f9;
-  height: calc(100vh - (var(--q-header-size)));
-  overflow-y: auto;
-}
-.detail-card {
-  background-color: #ffffff;
-}
+/* --- 详情弹窗内样式 --- */
 .basis-item {
   line-height: 1.8;
   margin-bottom: 8px;
