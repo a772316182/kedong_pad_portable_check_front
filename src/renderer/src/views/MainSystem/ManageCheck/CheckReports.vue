@@ -1,58 +1,61 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <!-- 顶部主工具栏 -->
-    <q-header elevated class="bg-dark-header text-white">
+    <q-header elevated class="bg-header text-white">
       <q-toolbar>
         <q-btn unelevated color="primary" icon="arrow_back_ios" label="返回" @click="navigateTo('mainView')"/>
         <q-toolbar-title class="q-ml-md">
           报告管理
         </q-toolbar-title>
         <div class="row items-center q-gutter-x-md">
-        <q-btn unelevated label="导入" class="action-button" icon="file_upload" />
-        <q-btn unelevated label="导出" class="action-button" icon="file_download" />
+          <!-- 修改按钮样式以匹配目标图片 -->
+          <q-btn unelevated color="primary" label="导入" icon="file_upload" />
+          <q-btn unelevated color="primary" label="导出" icon="file_download" />
         </div>
       </q-toolbar>
     </q-header>
 
     <!-- 页面主要内容 -->
     <q-page-container>
-      <q-page class="q-pa-md bg-dark-page">
+      <!-- 修改页面背景和内边距 -->
+      <q-page class="q-pa-lg bg-page">
 
         <!-- 报告表格 -->
         <q-table
           :rows="reports"
           :columns="reportColumns"
           row-key="id"
-          class="text-grey-4"
-          separator="cell"
-          dark
-          flat
-          bordered
-          card-class="bg-dark-table-card"
-          table-header-class="bg-dark-table-header text-white"
+          class="text-white"
+        <!-- 修改表格样式：分隔线、边框和背景类 -->
+        separator="horizontal"
+        dark
+        flat
+        card-class="bg-table-card"
+        table-header-class="bg-table-header text-white"
         >
-          <template v-slot:body-cell-actions="props">
-            <q-td :props="props" class="q-gutter-sm">
-              <q-btn flat dense round icon="visibility" class="text-light-blue-4" @click="navigateTo('reportview')">
-                <q-tooltip>查看报告详情</q-tooltip>
-              </q-btn>
-              <q-btn flat dense round icon="usb" class="text-light-blue-4" @click="downloadToUSB(props.row)">
-                <q-tooltip>导出到U盘</q-tooltip>
-              </q-btn>
-              <q-btn flat dense round icon="drive_file_rename_outline" class="text-light-blue-4" @click="openRenameDialog(props.row)">
-                <q-tooltip>重命名报告</q-tooltip>
-              </q-btn>
-              <q-btn flat dense round icon="delete" class="text-red-4" @click="openDeleteDialog(props.row)">
-                <q-tooltip>删除</q-tooltip>
-              </q-btn>
-            </q-td>
-          </template>
+        <template v-slot:body-cell-actions="props">
+          <q-td :props="props" class="q-gutter-sm">
+            <!-- 修改操作按钮颜色以匹配目标图片 -->
+            <q-btn flat dense round icon="visibility" color="primary" @click="navigateTo('reportview')">
+              <q-tooltip>查看报告详情</q-tooltip>
+            </q-btn>
+            <q-btn flat dense round icon="usb" color="primary" @click="downloadToUSB(props.row)">
+              <q-tooltip>导出到U盘</q-tooltip>
+            </q-btn>
+            <q-btn flat dense round icon="drive_file_rename_outline" color="primary" @click="openRenameDialog(props.row)">
+              <q-tooltip>重命名报告</q-tooltip>
+            </q-btn>
+            <q-btn flat dense round icon="delete" color="negative" @click="openDeleteDialog(props.row)">
+              <q-tooltip>删除</q-tooltip>
+            </q-btn>
+          </q-td>
+        </template>
         </q-table>
 
       </q-page>
     </q-page-container>
 
-    <!-- 重命名弹窗 -->
+    <!-- 重命名弹窗 (无需修改) -->
     <q-dialog v-model="renameDialog.isOpen" persistent>
       <q-card dark bordered style="width: 500px">
         <q-card-section class="row items-center">
@@ -76,7 +79,7 @@
       </q-card>
     </q-dialog>
 
-    <!-- 删除确认弹窗 -->
+    <!-- 删除确认弹窗 (无需修改) -->
     <q-dialog v-model="deleteDialog.isOpen" persistent>
       <q-card dark bordered style="width: 400px">
         <q-card-section class="row items-center">
@@ -201,24 +204,18 @@ const confirmDelete = () => {
 </script>
 
 <style lang="sass" scoped>
-.action-button
-  background-color: #4c6afc
-  color: white
-  font-weight: bold
-  border-radius: 6px
-  padding: 4px 12px
+/* 新的样式类，用于匹配目标图片的风格 */
+.bg-header
+  background: #1e202e
 
-.bg-dark-header
-  background: #272727
+.bg-page
+  background: #141620
 
-.bg-dark-page
-  background: #363636
-
-.bg-dark-table-header
+.bg-table-header
   background: #424864 !important
 
-.bg-dark-table-card
-  background: #363636
+.bg-table-card
+  background: #27293d
 
 .q-toolbar__title
   font-weight: bold
