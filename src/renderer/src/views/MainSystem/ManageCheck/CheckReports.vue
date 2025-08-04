@@ -7,7 +7,10 @@
         <q-toolbar-title class="q-ml-md">
           报告管理
         </q-toolbar-title>
+        <div class="row items-center q-gutter-x-md">
         <q-btn unelevated label="导入" class="action-button" icon="file_upload" />
+        <q-btn unelevated label="导出" class="action-button" icon="file_download" />
+        </div>
       </q-toolbar>
     </q-header>
 

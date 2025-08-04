@@ -447,7 +447,7 @@ const handleExport = () => {
   background: #292a2d
 
 .main-content-area
-  padding-top: 20px;
+  padding-top: 20px
 
 .bg-dark-table-header
   background: #424864 !important

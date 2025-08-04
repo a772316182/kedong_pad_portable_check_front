@@ -109,45 +109,45 @@ const confirmConnection = () => {
         <div class="q-mt-md">
           <!-- 步骤1: 任务定性 -->
           <div v-if="currentStep === 'qualitative'" class="text-center flex flex-center">
-                <div class="q-pa-md" style="width: 100%; max-width: 600px;">
-                  <q-list separator>
-                    <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/stationview")'>
-                      <q-item-section avatar>
-                        <q-icon color="primary" name="desktop_windows" />
-                      </q-item-section>
-                      <q-item-section>
-                        <q-item-label class="text-h6">站点管理</q-item-label>
-                      </q-item-section>
-                      <q-item-section side>
-                        <q-icon name="chevron_right" />
-                      </q-item-section>
-                    </q-item>
-
-                    <q-item v-ripple clickable class="q-py-lg" @click='navigateTo("/taskcheck")'>
-                      <q-item-section avatar>
-                        <q-icon color="primary" name="folder_open" />
-                      </q-item-section>
-                      <q-item-section>
-                        <q-item-label class="text-h6">任务管理</q-item-label>
-                      </q-item-section>
-                      <q-item-section side>
-                        <q-icon name="chevron_right" />
-                      </q-item-section>
-                    </q-item>
-
-                    <q-item clickable v-ripple class="q-py-lg" @click="nextStep('site')">
+            <div class="q-pa-md" style="width: 100%; max-width: 600px;">
+              <q-list separator>
+                <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/stationview")'>
                   <q-item-section avatar>
-                        <q-icon color="primary" name="assignment" />
-                      </q-item-section>
-                      <q-item-section>
-                        <q-item-label class="text-h6">开始核查</q-item-label>
-                      </q-item-section>
-                      <q-item-section side>
-                        <q-icon name="chevron_right" />
-                      </q-item-section>
-                    </q-item>
-                  </q-list>
-                </div>
+                    <q-icon color="primary" name="desktop_windows" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label class="text-h6">站点管理</q-item-label>
+                  </q-item-section>
+                  <q-item-section side>
+                    <q-icon name="chevron_right" />
+                  </q-item-section>
+                </q-item>
+
+                <q-item v-ripple clickable class="q-py-lg" @click='navigateTo("/taskcheck")'>
+                  <q-item-section avatar>
+                    <q-icon color="primary" name="folder_open" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label class="text-h6">任务管理</q-item-label>
+                  </q-item-section>
+                  <q-item-section side>
+                    <q-icon name="chevron_right" />
+                  </q-item-section>
+                </q-item>
+
+                <q-item clickable v-ripple class="q-py-lg" @click="nextStep('site')">
+                  <q-item-section avatar>
+                    <q-icon color="primary" name="assignment" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label class="text-h6">开始核查</q-item-label>
+                  </q-item-section>
+                  <q-item-section side>
+                    <q-icon name="chevron_right" />
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </div>
 
           </div>
 
@@ -266,13 +266,13 @@ const confirmConnection = () => {
 .bg-dark-content {
   background-color: #3a3c52;
 }
- .q-item {
-   background-color: #ffffff;
-   color: #000000;
-   border-radius: 8px;
-   margin-bottom: 26px;
+.q-item {
+  background-color: #ffffff;
+  color: #000000;
+  border-radius: 8px;
+  margin-bottom: 26px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
- }
+}
 .q-list--separator > .q-item:not(:first-child) {
   border-top: none;
 }

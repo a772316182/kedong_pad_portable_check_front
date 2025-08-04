@@ -32,7 +32,7 @@ const navigateTo = (path) => {
 
 const modules = ref([
   {
-    title: '执行核查',
+    title: '执行检查',
     image: 'https://img95.699pic.com/photo/60007/2211.jpg_wh300.jpg',
     route: '/managecheck'
   },
