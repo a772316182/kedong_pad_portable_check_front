@@ -160,7 +160,7 @@
           <q-item-label header>检查范围</q-item-label>
           <q-item><q-checkbox v-model="singleTask.scope" val="major" label="重大" /><q-checkbox v-model="singleTask.scope" val="large" label="较大" /><q-checkbox v-model="singleTask.scope" val="normal" label="一般" /></q-item>
         </q-list>
-        <div class="absolute-bottom q-pa-md"><q-btn color="teal-6" label="保存" class="full-width" size="lg" @click="submitAndClose"/></div>
+        <div class="absolute-bottom q-pa-md"><q-btn color="primary" label="保存" class="full-width" size="lg" @click="submitAndClose"/></div>
       </div>
 
       <!-- 批量新增主视图 -->

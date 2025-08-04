@@ -126,7 +126,7 @@ const confirmSelection = () => {
           <div v-if="currentStep === 'task-selection'">
             <div class="row items-center q-mb-md">
               <p class="col text-grey-4">请选择需要执行的核查任务</p>
-              <q-btn color="primary" unelevated label="新增任务" @click="navigateTo('/task-create')" />
+              <q-btn color="primary" unelevated label="新增任务" @click="navigateTo('/taskcheck')" />
             </div>
 
             <!-- 列表为空时的状态 -->

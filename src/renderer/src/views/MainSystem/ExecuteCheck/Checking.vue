@@ -279,13 +279,13 @@ const navigateTo = (path) => {
           <q-btn class="sub-action-btn" unelevated label="登录检查" @click="dialogs.protocolSelection = true"/>
           <q-btn class="sub-action-btn" unelevated label="登录异常"/>
           <q-btn class="main-action-btn" unelevated label="查看拓扑"/>
-          <q-btn class="main-action-btn" unelevated label="报告导出" @click="openExportReportDialog"/>
+          <q-btn class="main-action-btn" unelevated label="报告生成" @click="navigateTo('/checkreports')"/>
         </div>
         <!-- Assets Table -->
         <q-table :rows="assets" :columns="columns" row-key="id" flat hide-bottom class="assets-table">
           <template v-slot:body-cell-actions="props">
             <q-td :props="props" class="q-gutter-x-sm">
-              <q-btn :color="props.row.selected ? 'grey-6' : 'primary'" :label="props.row.selected ? '取消选定' : '选定'" dense unelevated @click="toggleSelection(props.row)"/>
+              <q-btn :color="props.row.selected ? 'red-4' : 'primary'" :label="props.row.selected ? '取消选定' : '选定'" dense unelevated @click="toggleSelection(props.row)"/>
               <q-btn color="primary" label="资产详情" dense unelevated/>
               <q-btn color="primary" label="核查记录" class="sub-action-btn" unelevated @click="dialogs.mentionCheck=true;"/>
             </q-td>

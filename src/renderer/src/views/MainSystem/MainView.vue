@@ -37,14 +37,14 @@ const modules = ref([
     route: '/managecheck'
   },
   {
-    title: '报告管理',
-    image: 'https://img95.699pic.com/photo/60031/0952.jpg_wh860.jpg',
-    route: '/checkreports'
-  },
-  {
     title: '策略管理',
     image: 'https://img95.699pic.com/photo/60031/0952.jpg_wh860.jpg',
     route: '/manageStrategy'
+  },
+  {
+    title: '报告管理',
+    image: 'https://th.bing.com/th/id/OIP.wODjm8FsPJ-uuG_ay6B4twAAAA?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3',
+    route: '/checkreports'
   },
   {
     title: '厂站安全检查',
@@ -92,7 +92,6 @@ const modules = ref([
             <q-btn unelevated label="消息" @click="messagesDrawer = true"/>
           </div>
           <div class="row items-center q-gutter-x-sm cursor-pointer">
-            <q-btn unelevated label="报告导出" @click="messagesDrawer = true"/>
           </div>
           <!-- END: 修改按钮点击事件 -->
           <div class="row items-center q-gutter-x-sm"></div>

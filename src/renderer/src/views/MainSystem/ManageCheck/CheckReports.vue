@@ -26,7 +26,6 @@
           :columns="reportColumns"
           row-key="id"
           class="text-white"
-        <!-- 修改表格样式：分隔线、边框和背景类 -->
         separator="horizontal"
         dark
         flat
