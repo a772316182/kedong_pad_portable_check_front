@@ -1,94 +1,114 @@
 <script setup>
-// 定义组件可以触发的事件
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
 const navigateTo = (path) => {
   console.log(`正在跳转到: ${path}`)
-  // 使用 router.push 进行页面跳转
   router.push(path)
 }
 </script>
 
 <template>
-  <!-- 使用 QLayout 作为页面根布局，并应用深色背景 -->
-  <q-layout view="lHh Lpr lFf" class="bg-dark-page">
+  <q-layout view="lHh Lpr lFf">
+    <!-- 顶部主工具栏 -->
     <q-header elevated class="bg-dark-header text-white">
       <q-toolbar>
-        <q-btn label="返回" color="primary" @click="navigateTo('/mainview')" />
-        <q-toolbar-title>
-          执行核查入口
+        <q-btn
+          unelevated
+          color="primary"
+          icon="arrow_back_ios"
+          label="返回"
+          @click="navigateTo('/mainView')"
+        />
+        <q-toolbar-title class="absolute-center">
+          执行检查入口
         </q-toolbar-title>
-        <q-space />
       </q-toolbar>
     </q-header>
 
+    <!-- 页面主要内容 -->
     <q-page-container>
-      <q-page class="flex flex-center">
-        <div class="q-pa-md" style="width: 100%; max-width: 600px;">
-          <q-list separator>
-
-            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/stationview")'>
-              <q-item-section avatar>
-                <q-icon color="primary" name="desktop_windows" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label class="text-h6">站点管理</q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-icon name="chevron_right" />
-              </q-item-section>
-            </q-item>
-
-            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/taskcheck")'>
-              <q-item-section avatar>
-                <q-icon color="primary" name="folder_open" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label class="text-h6">任务管理</q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-icon name="chevron_right" />
-              </q-item-section>
-            </q-item>
-
-            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/executeCheck")'>
-              <q-item-section avatar>
-                <q-icon color="primary" name="assignment" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label class="text-h6">执行核查</q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-icon name="chevron_right" />
-              </q-item-section>
-            </q-item>
-          </q-list>
+      <q-page class="bg-dark-page">
+        <!-- 步骤指示器 (样式更新) -->
+        <div class="stepper-bar-container">
+          <div class="stepper-bar-new">
+            <div class="step active">
+              <span>事务选择/启动检查</span>
+              <div class="arrow"></div>
+            </div>
+          </div>
         </div>
+
+        <!-- 功能入口 (样式更新为纵向排列) -->
+        <div class="flex flex-center" style="height: calc(100vh - 150px);">
+          <div class="q-gutter-y-md" style="width: 400px; max-width: 90vw;">
+            <q-card flat bordered class="entry-card" @click="navigateTo('/stationview')">
+              <q-card-section class="text-center q-pa-lg">
+                <q-icon name="computer" size="80px" />
+                <div class="text-h5 q-mt-md">站点管理</div>
+              </q-card-section>
+            </q-card>
+            <q-card flat bordered class="entry-card" @click="navigateTo('/taskcheck')">
+              <q-card-section class="text-center q-pa-lg">
+                <q-icon name="folder" size="80px" />
+                <div class="text-h5 q-mt-md">任务管理</div>
+              </q-card-section>
+            </q-card>
+            <q-card flat bordered class="entry-card" @click="navigateTo('/executecheck')">
+              <q-card-section class="text-center q-pa-lg">
+                <q-icon name="play_circle_outline" size="80px" />
+                <div class="text-h5 q-mt-md">开始检查</div>
+              </q-card-section>
+            </q-card>
+          </div>
+        </div>
+
       </q-page>
     </q-page-container>
   </q-layout>
 </template>
 
-<style scoped>
-/* 自定义深色主题 */
-.bg-dark-page {
-  background-color: #292a2d; /* 一个较深的灰色作为页面背景 */
-}
-.bg-dark-header {
-  background-color: #212327; /* 一个更深的灰色作为头部背景 */
-}
+<style lang="sass" scoped>
+.bg-dark-header
+  background: #272727
 
-/* 使用 Quasar 的 List 组件来模拟图片中的长按钮效果 */
-.q-item {
-  background-color: #ffffff;
-  color: #000000;
-  border-radius: 8px;
-  margin-bottom: 24px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-.q-list--separator > .q-item:not(:first-child) {
-  border-top: none;
-}
+.bg-dark-page
+  background: #363636
+
+.q-toolbar__title
+  font-weight: bold
+
+.stepper-bar-container
+  padding: 16px 32px
+  background: #272727
+
+.stepper-bar-new
+  display: flex
+  width: 100%
+  .step
+    flex: 1
+    display: flex
+    align-items: center
+    justify-content: center
+    padding: 12px 0
+    font-weight: 500
+    background-color: #4a4a4a
+    color: #a0a0a0
+    position: relative
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%)
+    &:not(:last-child)
+      margin-right: 2px
+    &.active
+      background-color: $primary
+      color: white
+
+.entry-card
+  background-color: #424864
+  color: #a0a0a0
+  cursor: pointer
+  border-color: #424864
+  transition: all 0.3s
+  &:hover
+    background-color: #535a7e
 </style>
