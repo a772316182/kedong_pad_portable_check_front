@@ -3,7 +3,7 @@
     <!-- 顶部主工具栏 (样式更新) -->
     <q-header elevated class="bg-dark-header text-white">
       <q-toolbar>
-        <q-btn unelevated color="primary" icon="arrow_back_ios" label="返回" @click="navigateTo('/executeCheck')"/>
+        <q-btn unelevated color="primary" icon="arrow_back_ios" label="返回" @click="navigateTo('/managecheck')"/>
         <q-toolbar-title class="q-ml-md">
           任务管理
         </q-toolbar-title>
@@ -447,7 +447,7 @@ const handleExport = () => {
   background: #292a2d
 
 .main-content-area
-  padding-top: 20px;
+  padding-top: 20px
 
 .bg-dark-table-header
   background: #424864 !important

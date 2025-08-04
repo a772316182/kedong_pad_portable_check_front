@@ -145,10 +145,6 @@ const hideDetailView = () => {
 <template>
   <q-layout view="lHh Lpr lFf" class="page-background">
     <!-- Top Bar -->
-    <div class="top-bar row items-center justify-between q-px-md">
-      <span>2025-06-20 15:25:23</span>
-      <span>当前电量: 22% <q-icon name="o"/></span>
-    </div>
 
     <!-- Main Header -->
     <div class="main-header row items-center q-px-md">
@@ -161,6 +157,7 @@ const hideDetailView = () => {
       <div>
         <!-- 修改此处的点击事件，调用我们准备数据的方法 -->
         <q-btn unelevated label="恶意代码结果" @click="showBadCodeResult" class="back-button"/>
+        <q-btn unelevated label="报告导出" @click="showBadCodeResult" class="back-button"  icon="file_download"/>
       </div>
     </div>
 

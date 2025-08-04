@@ -18,13 +18,9 @@ const navigateTo = (path) => {
       <q-toolbar>
         <q-btn label="返回" color="primary" @click="navigateTo('/mainview')" />
         <q-toolbar-title>
-          核查管理
+          执行核查入口
         </q-toolbar-title>
         <q-space />
-        <div class="text-caption text-grey-5">
-          当前电量: 15%
-          <q-icon name="battery_full" />
-        </div>
       </q-toolbar>
     </q-header>
 
@@ -57,12 +53,12 @@ const navigateTo = (path) => {
               </q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/checkreports")'>
+            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/executeCheck")'>
               <q-item-section avatar>
                 <q-icon color="primary" name="assignment" />
               </q-item-section>
               <q-item-section>
-                <q-item-label class="text-h6">报告管理</q-item-label>
+                <q-item-label class="text-h6">执行核查</q-item-label>
               </q-item-section>
               <q-item-section side>
                 <q-icon name="chevron_right" />

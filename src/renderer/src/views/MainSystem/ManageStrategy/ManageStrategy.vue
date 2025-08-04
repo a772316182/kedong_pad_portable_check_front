@@ -158,7 +158,6 @@ const deletePolicy = (policyToDelete) => {
   $q.dialog({
     title: '确认删除',
     message: `您确定要删除策略 "${policyToDelete.name}" 吗？此操作不可撤销。`,
-    cancel: true,
     persistent: true,
     ok: { label: '删除', color: 'negative' },
     cancel: { label: '取消', flat: true },
