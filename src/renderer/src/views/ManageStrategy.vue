@@ -2,134 +2,71 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
+// 【关键】依赖于外部的共享数据文件
+import { policies } from '../data/policyStore' // 请确保这个路径是正确的
 
 const $q = useQuasar();
 const router = useRouter()
 
-// --- 响应式数据 (未修改) ---
-const policies = reactive([
-  {
-    name: '主机设备-Linux',
-    updated: '2025-07-03',
-    items: 8,
-    object: '主机设备-Linux',
-    preset_strategy: true,
-    owned: false,
-    enabled: true
-  },
-  {
-    name: '主机设备-Windows',
-    updated: '2025-07-03',
-    items: 8,
-    object: '主机设备-Windows',
-    preset_strategy: true,
-    owned: false,
-    enabled: true
-  },
-  {
-    name: '网络设备',
-    updated: '2025-07-03',
-    items: 16,
-    object: '网络设备',
-    preset_strategy: true,
-    owned: false,
-    enabled: true
-  },
-  {
-    name: '网络安全',
-    updated: '2025-07-03',
-    items: 15,
-    object: '网络安全',
-    preset_strategy: true,
-    owned: false,
-    enabled: true
-  },
-  {
-    name: '网络安全告警检查',
-    updated: '2025-07-03',
-    items: 8,
-    object: '网络安全告警点对点检查',
-    preset_strategy: true,
-    owned: false,
-    enabled: true
-  },
-  {
-    name: '弱密码核查',
-    updated: '2025-04-18',
-    items: 2,
-    object: '主机设备-Linux',
-    preset_strategy: false,
-    owned: true,
-    enabled: true
-  },
-  {
-    name: '主机设备-Linux-自定义',
-    updated: '2025-04-18',
-    items: 23,
-    object: '主机设备-Linux',
-    preset_strategy: false,
-    owned: true,
-    enabled: true
-  }
-])
-
-// --- 新增: 为 q-table 定义列 ---
+// 【关键修正】修改 `columns` 定义，使“检查项数”动态计算
 const columns = [
   { name: 'name', label: '策略名称', align: 'left', field: 'name', sortable: true },
   { name: 'preset_strategy', label: '预制策略', align: 'center', field: 'preset_strategy' },
   { name: 'enabled', label: '启用状态', align: 'center' },
-  { name: 'items', label: '检查项数', align: 'center', field: 'items', sortable: true },
+  {
+    name: 'items',
+    label: '检查项数',
+    align: 'center',
+    // 使用函数动态计算每个策略的实际核查项数量
+    field: row => (row.details && row.details.checkItems) ? row.details.checkItems.length : 0,
+    sortable: true,
+    // 提供一个自定义的排序函数以确保排序功能正常
+    sort: (a, b) => a - b
+  },
   { name: 'object', label: '适用对象', align: 'left', field: 'object' },
   { name: 'updated', label: '最后更新时间', align: 'left', field: 'updated', sortable: true },
   { name: 'actions', label: '操作', align: 'center' },
 ]
 
-// 策略数据模型 (未修改)
-const policy = ref({
-  name: '',
-  target: '',
-  basis: '',
-});
-
-// 控制器 (未修改)
+// 弹窗相关的数据和方法保持不变
+const policy = ref({ name: '', target: '', basis: '', });
 const isAddDialogVisible = ref(false)
 const isAlertDialogVisible = ref(false)
-const newPolicy = reactive({
-  name: '',
-  object: '',
-  items: null
-})
+const newPolicy = reactive({ name: '', object: '', items: null })
 
-// --- 方法 (navigateTo 未修改) ---
-const navigateTo = (path, mode) => {
+const navigateTo = (path, mode, policyName) => {
   let finalPath = path;
-  if (mode === 'edit') {
-    finalPath += '?mode=edit';
+  let query = {};
+
+  if (policyName) {
+    query.name = policyName;
   }
-  console.log(`正在跳转到: ${finalPath}`);
-  router.push(finalPath);
+  if (mode === 'edit') {
+    query.mode = 'edit';
+  }
+
+  router.push({ path: finalPath, query });
 }
 
-const handleCardClick = () => {
-  isAlertDialogVisible.value = true
-}
+const handleCardClick = () => { isAlertDialogVisible.value = true }
 
 const handleAddNewPolicy = () => {
-  if (!newPolicy.name || !newPolicy.object || !newPolicy.items) {
-    $q.notify({
-      color: 'negative',
-      message: '请填写所有字段！',
-      icon: 'warning',
-    });
+  if (!newPolicy.name || !newPolicy.object || newPolicy.items === null) {
+    $q.notify({ color: 'negative', message: '请填写所有字段！', icon: 'warning', });
     return
   }
-  policies.push({ ...newPolicy, updated: new Date().toISOString().split('T')[0], owned: true, preset_strategy: false, enabled: true })
-  newPolicy.name = ''
-  newPolicy.object = ''
-  newPolicy.items = null
+  policies.push({
+    ...newPolicy,
+    updated: new Date().toISOString().split('T')[0],
+    owned: true,
+    preset_strategy: false,
+    enabled: true,
+    // 为新策略初始化 details 和一个空的 checkItems 数组
+    details: { checkItems: [] }
+  })
+  newPolicy.name = ''; newPolicy.object = ''; newPolicy.items = null;
   isAddDialogVisible.value = false
 }
-
 
 const selectObject = () => {
   $q.notify('触发“选择适用对象”操作');
@@ -138,22 +75,13 @@ const selectObject = () => {
 
 const submitForm = () => {
   if (!policy.value.name || !policy.value.target) {
-    $q.notify({
-      color: 'negative',
-      message: '策略名称和适用对象为必填项',
-      icon: 'warning',
-    });
+    $q.notify({ color: 'negative', message: '策略名称和适用对象为必填项', icon: 'warning', });
     return;
   }
   console.log('提交的策略:', policy.value);
-  $q.notify({
-    color: 'positive',
-    message: '策略新增成功',
-    icon: 'check_circle',
-  });
+  $q.notify({ color: 'positive', message: '策略新增成功', icon: 'check_circle', });
 };
 
-// --- 新增: 删除策略的函数 ---
 const deletePolicy = (policyToDelete) => {
   $q.dialog({
     title: '确认删除',
@@ -167,14 +95,10 @@ const deletePolicy = (policyToDelete) => {
     const index = policies.findIndex(p => p.name === policyToDelete.name);
     if (index > -1) {
       policies.splice(index, 1);
-      $q.notify({
-        color: 'positive',
-        message: '策略已成功删除'
-      });
+      $q.notify({ color: 'positive', message: '策略已成功删除' });
     }
   });
 };
-
 </script>
 
 <template>
@@ -190,11 +114,11 @@ const deletePolicy = (policyToDelete) => {
           <div class="row items-center q-gutter-x-md">
             <q-btn unelevated label="导入" class="action-button" icon="file_upload" />
             <q-btn unelevated label="导出" class="action-button" icon="file_download" />
-            <q-btn unelevated label="新增" @click="handleCardClick()" class="action-button" icon="add" />
+            <q-btn unelevated label="新增" @click="isAddDialogVisible = true" class="action-button" icon="add" />
           </div>
         </div>
 
-        <!-- 列表式表格，取代原有的卡片网格 -->
+        <!-- 列表式表格 -->
         <q-table
           class="policy-table"
           flat
@@ -208,7 +132,7 @@ const deletePolicy = (policyToDelete) => {
           <!-- 自定义“预制策略”列的显示 -->
           <template v-slot:body-cell-preset_strategy="props">
             <q-td :props="props" class="text-center">
-              <q-chip v-if="props.row.preset_strategy" dense size="sm" color="blue-grey-8" text-color="white" label="是" />
+              <q-chip v-if="props.row.preset_strategy" dense color="blue-grey-8" text-color="white" label="是" />
               <span v-else class="text-grey-5">否</span>
             </q-td>
           </template>
@@ -223,15 +147,13 @@ const deletePolicy = (policyToDelete) => {
           <!-- 自定义“操作”列的显示 -->
           <template v-slot:body-cell-actions="props">
             <q-td :props="props" class="q-gutter-x-sm text-center">
-              <q-btn flat dense round @click="navigateTo('/mustcheck')" icon="visibility" color="light-blue-3">
+              <q-btn flat dense round @click="navigateTo('/mustcheck', null, props.row.name)" icon="visibility" color="light-blue-3">
                 <q-tooltip>查看</q-tooltip>
               </q-btn>
-              <!-- 编辑和删除按钮仅对非预制且拥有的策略显示 -->
               <template v-if="!props.row.preset_strategy && props.row.owned">
-                <q-btn flat dense round @click="navigateTo('/mustcheck', 'edit')" icon="edit" color="light-blue-3">
+                <q-btn flat dense round @click="navigateTo('/mustcheck', 'edit', props.row.name)" icon="edit" color="light-blue-3">
                   <q-tooltip>编辑</q-tooltip>
                 </q-btn>
-                <!-- **** FIXED: Replaced invalid comment with a function call **** -->
                 <q-btn flat dense round @click="deletePolicy(props.row)" icon="close" color="negative">
                   <q-tooltip class="bg-red">删除</q-tooltip>
                 </q-btn>
@@ -241,16 +163,16 @@ const deletePolicy = (policyToDelete) => {
         </q-table>
       </div>
 
-      <!-- 刷新按钮 (示例，保持与图片一致) -->
+      <!-- 刷新按钮 -->
       <q-page-sticky position="bottom-right" :offset="[18, 18]">
         <q-btn fab icon="refresh" color="primary" />
       </q-page-sticky>
 
     </q-page>
 
-    <!-- 弹窗部分 (未修改) -->
+    <!-- 弹窗部分 (完整) -->
     <q-dialog v-model="isAddDialogVisible">
-      <q-card class="bg-white text-black" style="width: 500px">
+      <q-card class="bg-white text-black dialog-add" style="width: 500px">
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6">新增策略</div>
           <q-space />
@@ -260,7 +182,7 @@ const deletePolicy = (policyToDelete) => {
           <q-form class="q-gutter-md" @submit.prevent="handleAddNewPolicy">
             <q-input v-model="newPolicy.name" outlined label="策略名称" />
             <q-input v-model="newPolicy.object" outlined label="适用对象" />
-            <q-input v-model.number="newPolicy.items" outlined type="number" label="检查项数" />
+            <q-input v-model.number="newPolicy.items" outlined type="number" label="检查项数 (初始占位)" />
             <div class="row justify-end q-mt-lg">
               <q-btn v-close-popup label="取消" type="reset" color="grey-6" flat class="q-mr-sm" />
               <q-btn label="确认新增" type="submit" color="primary" />
@@ -271,7 +193,7 @@ const deletePolicy = (policyToDelete) => {
     </q-dialog>
 
     <q-dialog v-model="isAlertDialogVisible">
-      <q-card class="column full-height" flat style="width: 400px; max-width: 90vw;">
+      <q-card class="column full-height dialog-alert" flat style="width: 550px; max-width: 90vw;">
         <q-card-section class="q-py-md">
           <div class="text-h6">新增策略</div>
         </q-card-section>
@@ -308,8 +230,44 @@ const deletePolicy = (policyToDelete) => {
   </q-layout>
 </template>
 
+<!-- 全局样式 (无 scoped) -->
+<style>
+:root {
+  --font-scale-factor: 1.5;
+}
+.dialog-add .text-h6 {
+  font-size: calc(1.25rem * var(--font-scale-factor));
+}
+.dialog-add .q-field__label,
+.dialog-add .q-field__native {
+  font-size: calc(1rem * var(--font-scale-factor));
+}
+.dialog-add .q-btn .q-btn__content {
+  font-size: calc(0.9rem * var(--font-scale-factor));
+}
+.dialog-alert .text-h6 {
+  font-size: calc(1.25rem * var(--font-scale-factor));
+}
+.dialog-alert .q-item__label {
+  font-size: calc(1rem * var(--font-scale-factor));
+}
+.dialog-alert .q-item__section:not([class*="--side"]) {
+  min-width: 180px;
+  flex-shrink: 0;
+}
+.dialog-alert .q-input .q-field__native {
+  font-size: calc(1rem * var(--font-scale-factor)) !important;
+}
+.dialog-alert .q-card__section .q-btn .q-btn__content {
+  font-size: calc(1.1rem * var(--font-scale-factor));
+}
+.q-tooltip {
+  font-size: calc(12px * var(--font-scale-factor));
+}
+</style>
+
+<!-- 局部样式 (有 scoped) -->
 <style scoped>
-/* --- 全局和顶部栏样式 --- */
 .page-background {
   background-color: #292a2d;
 }
@@ -323,41 +281,46 @@ const deletePolicy = (policyToDelete) => {
   color: white;
   font-weight: bold;
   border-radius: 6px;
-  padding: 4px 12px;
+  font-size: calc(14px * var(--font-scale-factor));
+  padding: calc(4px * var(--font-scale-factor)) calc(12px * var(--font-scale-factor));
 }
 .action-button .q-icon {
-  font-size: 1.2em;
+  font-size: calc(1.2em * var(--font-scale-factor));
   margin-right: 4px;
+}
+.page-background :deep(.text-h4) {
+  font-size: calc(2.125rem * var(--font-scale-factor));
 }
 
 /* --- 表格样式 --- */
 .policy-table {
-  background-color: #333438; /* 比页面背景稍亮的表格背景 */
+  background-color: #333438;
   border-radius: 8px;
 }
-
-/* 使用 :deep() 来穿透组件样式封装 */
-:deep(.policy-table thead tr th) {
+.policy-table :deep(thead tr th) {
   color: white;
   font-weight: bold;
-  /* 调整为图片中的淡紫色/蓝色表头 */
   background-color: #3c415c;
-  font-size: 16px;
+  font-size: calc(16px * var(--font-scale-factor));
   border-bottom: none;
 }
-
-:deep(.policy-table tbody td) {
-  color: #e0e0e0; /* 浅灰色字体，增加可读性 */
-  font-size: 14px;
-  border-color: #424242; /* 行分割线颜色 */
+.policy-table :deep(tbody td) {
+  color: #e0e0e0;
+  font-size: calc(14px * var(--font-scale-factor));
+  border-color: #424242;
 }
-
-:deep(.policy-table tbody tr:hover) {
+.policy-table :deep(tbody tr:hover) {
   background-color: rgba(255, 255, 255, 0.05) !important;
 }
+.policy-table :deep(.q-chip) {
+  font-size: calc(13px * var(--font-scale-factor));
+  font-weight: 500;
+  height: auto;
+  padding: calc(4px * var(--font-scale-factor)) calc(10px * var(--font-scale-factor));
+}
 
-/* --- 弹窗样式 (保持原有风格) --- */
-.q-item__label {
-  font-size: 16px;
+/* --- 悬浮按钮 --- */
+.page-background :deep(.q-page-sticky .q-btn) {
+  font-size: calc(1.5rem * var(--font-scale-factor));
 }
 </style>
