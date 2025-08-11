@@ -112,8 +112,7 @@ const deletePolicy = (policyToDelete) => {
           <div class="text-h4 text-weight-bolder q-ml-lg" style="color: #4c6afc;">策略管理</div>
           <q-space />
           <div class="row items-center q-gutter-x-md">
-            <q-btn unelevated label="导入" class="action-button" icon="file_upload" />
-            <q-btn unelevated label="导出" class="action-button" icon="file_download" />
+            <q-btn unelevated label="人工策略管理" class="action-button" icon="engineering" />
             <q-btn unelevated label="新增" @click="isAddDialogVisible = true" class="action-button" icon="add" />
           </div>
         </div>
