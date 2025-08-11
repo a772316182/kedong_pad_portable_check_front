@@ -1,102 +1,106 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <!-- 顶部主工具栏 -->
-    <q-header elevated class="bg-header text-white">
-      <q-toolbar>
-        <q-btn unelevated color="primary" icon="arrow_back_ios" label="返回" @click="navigateTo('mainView')"/>
-        <q-toolbar-title class="q-ml-md">
-          报告管理
-        </q-toolbar-title>
-        <div class="row items-center q-gutter-x-md">
-          <!-- 修改按钮样式以匹配目标图片 -->
-          <q-btn unelevated color="primary" label="导入" icon="file_upload" />
-          <q-btn unelevated color="primary" label="导出" icon="file_download" />
-        </div>
-      </q-toolbar>
-    </q-header>
+  <!-- 【正确做法】用一个 div 将 q-layout 包裹起来，并在这个 div 上设置背景和内边距 -->
+  <div class="layout-container">
+    <q-layout view="lHh Lpr lFf" class="page-background">
+      <!-- 顶部主工具栏 -->
+      <q-header elevated class="text-white q-py-md">
+        <q-toolbar>
+          <!-- 【样式统一】应用 action-button 样式 -->
+          <q-btn unelevated label="返回" @click="navigateTo('mainView')" class="action-button" icon="arrow_back_ios"/>
+          <!-- 【样式统一】修改标题颜色和样式 -->
+          <div class="text-h4 text-weight-bolder q-ml-lg" style="color: #4c6afc;">
+            报告管理
+          </div>
 
-    <!-- 页面主要内容 -->
-    <q-page-container>
-      <!-- 修改页面背景和内边距 -->
-      <q-page class="q-pa-lg bg-page">
+          <q-space /> <!-- 添加一个 q-space 来将右侧按钮推到边缘 -->
+          <div class="row items-center q-gutter-x-md">
+            <!-- 【样式统一】应用 action-button 样式 -->
+            <q-btn unelevated label="导入" icon="file_upload" class="action-button" />
+            <q-btn unelevated label="导出" icon="file_download" class="action-button" />
+          </div>
+        </q-toolbar>
+      </q-header>
 
-        <!-- 报告表格 -->
-        <q-table
-          :rows="reports"
-          :columns="reportColumns"
-          row-key="id"
-          class="text-white"
-        separator="horizontal"
-        dark
-        flat
-        card-class="bg-table-card"
-        table-header-class="bg-table-header text-white"
-        >
-        <template v-slot:body-cell-actions="props">
-          <q-td :props="props" class="q-gutter-sm">
-            <!-- 修改操作按钮颜色以匹配目标图片 -->
-            <q-btn flat dense round icon="visibility" color="primary" @click="navigateTo('reportview')">
-              <q-tooltip>查看报告详情</q-tooltip>
-            </q-btn>
-            <q-btn flat dense round icon="usb" color="primary" @click="downloadToUSB(props.row)">
-              <q-tooltip>导出到U盘</q-tooltip>
-            </q-btn>
-            <q-btn flat dense round icon="drive_file_rename_outline" color="primary" @click="openRenameDialog(props.row)">
-              <q-tooltip>重命名报告</q-tooltip>
-            </q-btn>
-            <q-btn flat dense round icon="delete" color="negative" @click="openDeleteDialog(props.row)">
-              <q-tooltip>删除</q-tooltip>
-            </q-btn>
-          </q-td>
-        </template>
-        </q-table>
+      <!-- 页面主要内容 -->
+      <q-page-container>
+        <q-page class="q-pa-lg">
 
-      </q-page>
-    </q-page-container>
-
-    <!-- 重命名弹窗 (无需修改) -->
-    <q-dialog v-model="renameDialog.isOpen" persistent>
-      <q-card dark bordered style="width: 500px">
-        <q-card-section class="row items-center">
-          <div class="text-h6">重命名报告</div>
-          <q-space />
-          <q-btn icon="close" flat round dense v-close-popup />
-        </q-card-section>
-        <q-card-section>
-          <q-input
-            v-model="renameDialog.newName"
-            label="新的报告名称"
+          <!-- 报告表格 -->
+          <q-table
+            :rows="reports"
+            :columns="reportColumns"
+            row-key="id"
+            class="report-table"
+            separator="horizontal"
             dark
-            autofocus
-            @keyup.enter="confirmRename"
-          />
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="取消" v-close-popup />
-          <q-btn flat label="确认" color="primary" @click="confirmRename" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+            flat
+          >
+            <template v-slot:body-cell-actions="props">
+              <q-td :props="props" class="q-gutter-sm">
+                <!-- 【样式统一】修改操作按钮颜色以匹配目标图片 -->
+                <q-btn flat dense round icon="visibility" color="light-blue-3" @click="navigateTo('reportview')">
+                  <q-tooltip>查看报告详情</q-tooltip>
+                </q-btn>
+                <q-btn flat dense round icon="usb" color="light-blue-3" @click="downloadToUSB(props.row)">
+                  <q-tooltip>导出到U盘</q-tooltip>
+                </q-btn>
+                <q-btn flat dense round icon="drive_file_rename_outline" color="light-blue-3" @click="openRenameDialog(props.row)">
+                  <q-tooltip>重命名报告</q-tooltip>
+                </q-btn>
+                <q-btn flat dense round icon="delete" color="negative" @click="openDeleteDialog(props.row)">
+                  <q-tooltip>删除</q-tooltip>
+                </q-btn>
+              </q-td>
+            </template>
+          </q-table>
 
-    <!-- 删除确认弹窗 (无需修改) -->
-    <q-dialog v-model="deleteDialog.isOpen" persistent>
-      <q-card dark bordered style="width: 400px">
-        <q-card-section class="row items-center">
-          <div class="text-h6">确认删除</div>
-          <q-space />
-          <q-btn icon="close" flat round dense v-close-popup />
-        </q-card-section>
-        <q-card-section>
-          您确定要删除报告 “{{ deleteDialog.report?.name }}” 吗？
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="取消" v-close-popup />
-          <q-btn flat label="删除" color="negative" @click="confirmDelete" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+        </q-page>
+      </q-page-container>
 
-  </q-layout>
+      <!-- 重命名弹窗 -->
+      <q-dialog v-model="renameDialog.isOpen" persistent>
+        <q-card class="dialog-card" dark bordered style="width: 500px">
+          <q-card-section class="row items-center">
+            <div class="text-h6">重命名报告</div>
+            <q-space />
+            <q-btn icon="close" flat round dense v-close-popup />
+          </q-card-section>
+          <q-card-section>
+            <q-input
+              v-model="renameDialog.newName"
+              label="新的报告名称"
+              dark
+              autofocus
+              @keyup.enter="confirmRename"
+            />
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn flat label="取消" v-close-popup />
+            <q-btn flat label="确认" color="primary" @click="confirmRename" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+
+      <!-- 删除确认弹窗 -->
+      <q-dialog v-model="deleteDialog.isOpen" persistent>
+        <q-card class="dialog-card" dark bordered style="width: 400px">
+          <q-card-section class="row items-center">
+            <div class="text-h6">确认删除</div>
+            <q-space />
+            <q-btn icon="close" flat round dense v-close-popup />
+          </q-card-section>
+          <q-card-section>
+            您确定要删除报告 “{{ deleteDialog.report?.name }}” 吗？
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn flat label="取消" v-close-popup />
+            <q-btn flat label="删除" color="negative" @click="confirmDelete" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+
+    </q-layout>
+  </div>
 </template>
 
 <script setup>
@@ -109,10 +113,8 @@ const router = useRouter()
 
 const navigateTo = (path) => {
   console.log(`正在跳转到: ${path}`)
-  // 使用 router.push 进行页面跳转
   router.push(path)
 }
-// 表格列定义
 const reportColumns = [
   { name: 'name', required: true, label: '报告名称', align: 'left', field: 'name', sortable: true },
   { name: 'creationDate', label: '生成时间', align: 'left', field: 'creationDate', sortable: true },
@@ -121,13 +123,11 @@ const reportColumns = [
   { name: 'actions', label: '操作', align: 'center', field: 'actions' },
 ];
 
-// 模拟报告数据
 const reports = ref([
   { id: 1, name: '安全巡检报告', creationDate: '2025-06-20 15:47:30', size: '2.5 MB', version: 'v1.0' },
   { id: 2, name: '季度安全审计报告', creationDate: '2025-05-15 11:28:00', size: '4.1 MB', version: 'v1.2' },
 ]);
 
-// 重命名和删除弹窗的状态
 const renameDialog = ref({
   isOpen: false,
   report: null,
@@ -138,17 +138,6 @@ const deleteDialog = ref({
   report: null
 });
 
-// 查看报告 (实际项目中会跳转路由)
-const viewReport = (report) => {
-  $q.notify({
-    message: `正在查看报告: ${report.name}`,
-    color: 'info',
-    icon: 'visibility'
-  });
-  // 例如: router.push(`/reports/${report.id}`)
-};
-
-// 下载到U盘
 const downloadToUSB = (report) => {
   $q.notify({
     message: `已将报告 “${report.name}” 发送到U盘`,
@@ -157,14 +146,12 @@ const downloadToUSB = (report) => {
   });
 };
 
-// 打开重命名弹窗
 const openRenameDialog = (report) => {
   renameDialog.value.report = report;
   renameDialog.value.newName = report.name;
   renameDialog.value.isOpen = true;
 };
 
-// 确认重命名
 const confirmRename = () => {
   const { report, newName } = renameDialog.value;
   if (newName && newName.trim() !== '') {
@@ -180,13 +167,11 @@ const confirmRename = () => {
   renameDialog.value.isOpen = false;
 };
 
-// 打开删除弹窗
 const openDeleteDialog = (report) => {
   deleteDialog.value.report = report;
   deleteDialog.value.isOpen = true;
 };
 
-// 确认删除
 const confirmDelete = () => {
   const { report } = deleteDialog.value;
   const index = reports.value.findIndex(r => r.id === report.id);
@@ -202,20 +187,90 @@ const confirmDelete = () => {
 
 </script>
 
-<style lang="sass" scoped>
-/* 新的样式类，用于匹配目标图片的风格 */
-.bg-header
-  background: #1e202e
+<!-- 全局样式 (无 scoped) -->
+<style>
+/* --- 全局缩放控制参数 --- */
+:root {
+  --font-scale-factor: 1.3;
+}
 
-.bg-page
-  background: #141620
+/* --- 弹窗样式 --- */
+.dialog-card .text-h6 {
+  font-size: calc(1.25rem * var(--font-scale-factor));
+}
+.dialog-card .q-card__section {
+  font-size: calc(1rem * var(--font-scale-factor));
+}
+.dialog-card .q-field__native,
+.dialog-card .q-field__label {
+  font-size: calc(1rem * var(--font-scale-factor));
+}
+.dialog-card .q-btn .q-btn__content {
+  font-size: calc(0.9rem * var(--font-scale-factor));
+}
+.q-tooltip {
+  font-size: calc(12px * var(--font-scale-factor));
+}
+</style>
 
-.bg-table-header
-  background: #424864 !important
+<!-- 局部样式 (有 scoped) -->
+<style scoped>
+/* --- 【新增】外部容器样式 --- */
+.layout-container {
+  background-color: #292a2d;
+  padding: 20px; /* 在这里设置想要的留白大小 */
+  min-height: 100vh; /* 确保容器至少和屏幕一样高 */
+  box-sizing: border-box; /* 确保 padding 不会增加总宽高 */
+}
 
-.bg-table-card
-  background: #27293d
+/* --- 整体背景和布局 --- */
+/* 【修改】移除 .page-background 的背景色，因为它已由 layout-container 提供 */
+.page-background {
+  /* background-color: #292a2d; */ /* 这一行可以注释或删除 */
+}
+.page-background :deep(.q-page) {
+  background-color: #292a2d;
+}
+.page-background :deep(.q-header) {
+  background: #292a2d;
+  border-bottom: 1px solid #4a5562;
+}
 
-.q-toolbar__title
-  font-weight: bold
+/* --- 顶部操作栏 --- */
+.action-button {
+  background-color: #4c6afc;
+  color: white;
+  font-weight: bold;
+  border-radius: 6px;
+  font-size: calc(17px * var(--font-scale-factor));
+  padding: calc(4px * var(--font-scale-factor)) calc(12px * var(--font-scale-factor));
+}
+.action-button .q-icon {
+  font-size: calc(1.2em * var(--font-scale-factor));
+  margin-right: 4px;
+}
+.page-background :deep(.text-h4) {
+  font-size: calc(2.125rem * var(--font-scale-factor));
+}
+
+/* --- 表格样式 --- */
+.report-table {
+  background-color: #333438;
+  border-radius: 8px;
+}
+.report-table :deep(thead tr th) {
+  color: white;
+  font-weight: bold;
+  background-color: #3c415c;
+  font-size: calc(16px * var(--font-scale-factor));
+  border-bottom: none;
+}
+.report-table :deep(tbody td) {
+  color: #e0e0e0;
+  font-size: calc(14px * var(--font-scale-factor));
+  border-color: #424242;
+}
+.report-table :deep(tbody tr:hover) {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
 </style>
