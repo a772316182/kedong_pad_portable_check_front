@@ -38,7 +38,7 @@ const modules = ref([
   },
   {
     title: '报告管理',
-    image: 'https://th.bing.com/th/id/OIP.wODjm8FsPJ-uuG_ay6B4twAAAA?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3',
+    image: 'https://imgs.699pic.com/images/600/337/393.jpg!detail.v1',
     route: '/checkreports'
   },
   {
