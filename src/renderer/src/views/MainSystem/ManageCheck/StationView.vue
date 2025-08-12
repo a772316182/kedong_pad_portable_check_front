@@ -1,3 +1,139 @@
+<template>
+  <q-layout view="lHh Lpr lFf" class="page-background">
+    <!-- 顶部主工具栏 (已放大) -->
+    <q-header elevated class="bg-dark-header text-white">
+      <q-toolbar style="min-height: 80px;">
+        <q-btn unelevated label="返回上一级" @click="navigateTo('/stationandtask')" class="action-button" icon="arrow_back" size="lg" />
+        <q-toolbar-title class="q-ml-lg text-h4 text-weight-bolder">
+          站点管理
+        </q-toolbar-title>
+        <q-space />
+        <div class="row items-center q-gutter-x-md">
+          <q-btn unelevated label="导入" @click="importData" class="action-button" icon="file_upload" size="lg" />
+          <q-btn unelevated label="导出" @click="exportData" class="action-button" icon="file_download" size="lg" />
+          <q-btn unelevated label="添加" @click="openAddDialog" class="action-button" icon="add" size="lg" />
+        </div>
+      </q-toolbar>
+    </q-header>
+
+    <q-page-container>
+      <q-page padding>
+        <!-- 主内容区域 -->
+        <div class="main-content-area">
+
+          <!-- 信息展示表格 -->
+          <q-table
+            class="site-table"
+            flat
+            dark
+            :rows="sites"
+            :columns="columns"
+            row-key="id"
+            hide-bottom
+            :rows-per-page-options="[0]"
+          >
+            <!-- 自定义操作列 -->
+            <template v-slot:body-cell-actions="props">
+              <q-td :props="props" class="q-gutter-x-sm text-center">
+                <q-btn flat dense round @click="navigateTo('/manageasset')" icon="visibility" color="light-blue-3">
+                  <q-tooltip>查看</q-tooltip>
+                </q-btn>
+                <q-btn flat dense round @click="openEditDialog(props.row.id)" icon="edit" color="light-blue-3">
+                  <q-tooltip>编辑</q-tooltip>
+                </q-btn>
+                <q-btn flat dense round @click="deleteRow(props.row.id)" icon="close" color="negative">
+                  <q-tooltip class="bg-red">删除此站点</q-tooltip>
+                </q-btn>
+              </q-td>
+            </template>
+          </q-table>
+
+        </div>
+      </q-page>
+    </q-page-container>
+
+    <!-- 用于新增和编辑的通用弹窗 -->
+    <q-dialog v-model="isDialogVisible" @hide="onDialogHide">
+      <q-card class="dialog-card text-black" style="width: 850px; max-width: 80vw;">
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h5">{{ dialogTitle }}</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section class="q-pt-md">
+          <q-scroll-area style="height: 80vh;">
+            <q-form class="q-gutter-y-md q-pr-md">
+              <q-input outlined dense v-model="siteForm.name" placeholder="请输入站点名称">
+                <template #before>
+                  <label class="dialog-label" style="font-size: 18px">
+                    <span class="text-red">*</span> 站点名称:
+                  </label>
+                </template>
+              </q-input>
+
+              <q-select outlined dense v-model="siteForm.type" :options="siteTypeOptions" placeholder="请选择站点类型">
+                <template #before>
+                  <label class="dialog-label" style="font-size: 18px">
+                    <span class="text-red">*</span> 站点类型:
+                  </label>
+                </template>
+              </q-select>
+
+              <q-select outlined dense v-model="siteForm.province" :options="provinceOptions" placeholder="请选择所属省份">
+                <template #before><label class="dialog-label" style="font-size: 18px">所属省份:</label></template>
+              </q-select>
+
+              <q-select outlined dense v-model="siteForm.city" :options="cityOptions" placeholder="请选择所属地市">
+                <template #before><label class="dialog-label" style="font-size: 18px">所属地市:</label></template>
+              </q-select>
+
+              <q-select outlined dense v-model="siteForm.level" :options="levelOptions" placeholder="请选择站点等级">
+                <template #before><label class="dialog-label" style="font-size: 18px">站点等级:</label></template>
+              </q-select>
+
+              <q-input outlined dense v-model="siteForm.personInCharge" placeholder="请输入站点负责人">
+                <template #before><label class="dialog-label" style="font-size: 18px">站点负责人:</label></template>
+              </q-input>
+
+              <q-input outlined dense v-model="siteForm.contact" placeholder="请输入联系方式">
+                <template #before><label class="dialog-label" style="font-size: 18px">联系方式:</label></template>
+              </q-input>
+
+              <q-input outlined dense v-model="siteForm.networkPlan" hint="网络示例: 192.168.1.1-192.168.1.254">
+                <template #before><label class="dialog-label" style="font-size: 18px">接入网规划:</label></template>
+              </q-input>
+
+              <q-input outlined dense v-model="siteForm.network1Realtime" placeholder="请输入">
+                <template #before><label class="dialog-label" style="font-size: 18px">接入网一(实时):</label></template>
+              </q-input>
+
+              <q-input outlined dense v-model="siteForm.network2Realtime" placeholder="请输入">
+                <template #before><label class="dialog-label" style="font-size: 18px">接入网二(实时):</label></template>
+              </q-input>
+
+              <q-input outlined dense v-model="siteForm.network1NonRealtime" placeholder="请输入">
+                <template #before><label class="dialog-label" style="font-size: 18px">接入网一(非实时):</label></template>
+              </q-input>
+
+              <q-input outlined dense v-model="siteForm.network2NonRealtime" placeholder="请输入">
+                <template #before><label class="dialog-label" style="font-size: 18px">接入网二(非实时):</label></template>
+              </q-input>
+
+            </q-form>
+          </q-scroll-area>
+        </q-card-section>
+
+        <q-card-actions align="center" class="q-pa-lg">
+          <q-btn label="取消" color="grey-6" style="width: 140px" size="lg" v-close-popup />
+          <q-btn label="保存" color="primary" style="width: 140px" size="lg" @click="submitForm" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+  </q-layout>
+</template>
+
 <script setup>
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
@@ -102,6 +238,7 @@ const siteTypeOptions = ref(['主站', '变电站', '发电厂', '集控站系�
 // 按钮点击事件处理函数
 const navigateTo = (path) => {
   console.log(`正在跳转到: ${path}`)
+  // 在实际项目中，取消下一行的注释以启用路由
   router.push(path)
 }
 
@@ -171,146 +308,15 @@ const dialogTitle = computed(() => {
 
 </script>
 
-<template>
-  <q-layout view="lHh Lpr lFf" class="page-background">
-    <q-page padding>
-      <!-- 主内容区域 -->
-      <div class="main-content-area">
-        <!-- 标题和操作按钮栏 -->
-        <div class="row items-center no-wrap q-mb-md">
-          <!-- 返回按钮 -->
-          <q-btn unelevated label="返回" @click="navigateTo('/stationandtask')" class="action-button q-mr-md" icon="arrow_back" />
-
-          <!-- 标题 -->
-          <div class="text-h4 text-weight-bolder" style="color: #4c6afc;">站点管理</div>
-
-          <q-space />
-
-          <!-- 其他操作按钮 -->
-          <div class="row items-center q-gutter-x-md">
-            <q-btn unelevated label="导入" @click="importData" class="action-button" icon="file_upload" />
-            <q-btn unelevated label="导出" @click="exportData" class="action-button" icon="file_download" />
-            <q-btn unelevated label="添加" @click="openAddDialog" class="action-button" icon="add" />
-          </div>
-        </div>
-
-        <!-- 信息展示表格 -->
-        <q-table
-          class="site-table"
-          flat
-          dark
-          :rows="sites"
-          :columns="columns"
-          row-key="id"
-          hide-bottom
-          :rows-per-page-options="[0]"
-        >
-          <!-- 自定义操作列 -->
-          <template v-slot:body-cell-actions="props">
-            <q-td :props="props" class="q-gutter-x-sm text-center">
-              <q-btn flat dense round @click="navigateTo('/manageasset')" icon="visibility" color="light-blue-3">
-                <q-tooltip>查看</q-tooltip>
-              </q-btn>
-              <q-btn flat dense round @click="openEditDialog(props.row.id)" icon="edit" color="light-blue-3">
-                <q-tooltip>编辑</q-tooltip>
-              </q-btn>
-              <q-btn flat dense round @click="deleteRow(props.row.id)" icon="close" color="negative">
-                <q-tooltip class="bg-red">删除此站点</q-tooltip>
-              </q-btn>
-            </q-td>
-          </template>
-        </q-table>
-
-      </div>
-    </q-page>
-
-    <!-- 用于新增和编辑的通用弹窗 -->
-    <q-dialog v-model="isDialogVisible" @hide="onDialogHide">
-      <q-card class="dialog-card text-black" style="width: 750px; max-width: 80vw;">
-        <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">{{ dialogTitle }}</div>
-          <q-space />
-          <q-btn icon="close" flat round dense v-close-popup />
-        </q-card-section>
-
-        <q-card-section class="q-pt-md">
-          <q-scroll-area style="height: 70vh;">
-            <q-form class="q-gutter-y-md q-pr-md">
-              <q-input outlined dense v-model="siteForm.name" placeholder="请输入站点名称">
-                <template #before>
-                  <label class="dialog-label" style="font-size: large">
-                    <span class="text-red">*</span> 站点名称:
-                  </label>
-                </template>
-              </q-input>
-
-              <q-select outlined dense v-model="siteForm.type" :options="siteTypeOptions" placeholder="请选择站点类型">
-                <template #before>
-                  <label class="dialog-label" style="font-size: large">
-                    <span class="text-red">*</span> 站点类型:
-                  </label>
-                </template>
-              </q-select>
-
-              <q-select outlined dense v-model="siteForm.province" :options="provinceOptions" placeholder="请选择所属省份">
-                <template #before><label class="dialog-label" style="font-size: large">所属省份:</label></template>
-              </q-select>
-
-              <q-select outlined dense v-model="siteForm.city" :options="cityOptions" placeholder="请选择所属地市">
-                <template #before><label class="dialog-label" style="font-size: large">所属地市:</label></template>
-              </q-select>
-
-              <q-select outlined dense v-model="siteForm.level" :options="levelOptions" placeholder="请选择站点等级">
-                <template #before><label class="dialog-label" style="font-size: large">站点等级:</label></template>
-              </q-select>
-
-              <q-input outlined dense v-model="siteForm.personInCharge" placeholder="请输入站点负责人">
-                <template #before><label class="dialog-label" style="font-size: large">站点负责人:</label></template>
-              </q-input>
-
-              <q-input outlined dense v-model="siteForm.contact" placeholder="请输入联系方式">
-                <template #before><label class="dialog-label" style="font-size: large">联系方式:</label></template>
-              </q-input>
-
-              <q-input outlined dense v-model="siteForm.networkPlan" hint="网络示例: 192.168.1.1-192.168.1.254">
-                <template #before><label class="dialog-label" style="font-size: large">接入网规划:</label></template>
-              </q-input>
-
-              <q-input outlined dense v-model="siteForm.network1Realtime" placeholder="请输入">
-                <template #before><label class="dialog-label" style="font-size: large">接入网一(实时):</label></template>
-              </q-input>
-
-              <q-input outlined dense v-model="siteForm.network2Realtime" placeholder="请输入">
-                <template #before><label class="dialog-label" style="font-size: large">接入网二(实时):</label></template>
-              </q-input>
-
-              <q-input outlined dense v-model="siteForm.network1NonRealtime" placeholder="请输入">
-                <template #before><label class="dialog-label" style="font-size: large">接入网一(非实时):</label></template>
-              </q-input>
-
-              <q-input outlined dense v-model="siteForm.network2NonRealtime" placeholder="请输入">
-                <template #before><label class="dialog-label" style="font-size: large">接入网二(非实时):</label></template>
-              </q-input>
-
-            </q-form>
-          </q-scroll-area>
-        </q-card-section>
-
-        <q-card-actions align="center" class="q-pa-lg">
-          <q-btn label="取消" color="grey-6" style="width: 120px" v-close-popup />
-          <q-btn label="保存" color="primary" style="width: 120px" @click="submitForm" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
-  </q-layout>
-</template>
-
 <style scoped>
 /* 整体页面背景色 */
 .page-background {
   background-color: #292a2d;
   overflow: hidden;
+}
+
+.bg-dark-header {
+  background: #272727 !important;
 }
 
 /* 主内容区域 */
@@ -340,12 +346,14 @@ const dialogTitle = computed(() => {
   color: white;
   font-weight: bold;
   background-color: rgba(76, 106, 252, 0.2);
-  font-size: 16px;
+  font-size: 24px; /* 放大表头字体 */
+  height: 2.6em;
 }
 :deep(.site-table tbody td) {
   color: #e0e0e0;
-  font-size: 14px;
+  font-size: 22px; /* 放大表格内容字体 */
   border-color: #424242;
+  height: 3.25em;
 }
 :deep(.site-table tbody tr:hover) {
   background-color: rgba(255, 255, 255, 0.05) !important;
@@ -358,7 +366,7 @@ const dialogTitle = computed(() => {
 }
 
 .dialog-label {
-  width: 120px;
+  width: 140px; /* 增加宽度以适应更大的字体 */
   text-align: right;
   padding-right: 12px;
   color: #333;

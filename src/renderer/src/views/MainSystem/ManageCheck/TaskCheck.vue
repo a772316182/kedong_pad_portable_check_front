@@ -1,6 +1,5 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <!-- 顶部主工具栏 (样式更新) -->
     <q-header elevated class="bg-dark-header text-white">
       <q-toolbar>
         <q-btn unelevated color="primary" icon="arrow_back_ios" label="返回" @click="navigateTo('/stationandtask')"/>
@@ -11,58 +10,53 @@
         <q-btn-group unelevated>
           <q-btn icon="file_upload" label="导入" color="primary" @click="importDialogOpen = true" />
           <q-btn icon="file_download" label="导出" color="primary" @click="exportDialogOpen = true" />
-          <q-btn icon="add" label="新增任务" color="primary" @click="openDrawer('single')" />
         </q-btn-group>
       </q-toolbar>
     </q-header>
 
-    <!-- 页面主要内容 (样式更新) -->
     <q-page-container>
       <q-page class="q-pa-md bg-dark-page ">
         <div class="main-content-area">
-        <!-- 任务表格 -->
-        <q-table
-          :rows="tasks"
-          :columns="taskTableColumns"
-          row-key="id"
-          class="text-grey-4"
-          separator="cell"
-          dark
-          flat
-          bordered
-          card-class="bg-dark-table-card"
-          table-header-class="bg-dark-table-header text-white"
-        >
-          <template v-slot:body-cell-status="props">
-            <q-td :props="props">
-              <q-chip :color="props.row.statusColor" text-color="white" dense :label="props.row.status" />
-            </q-td>
-          </template>
-          <template v-slot:body-cell-actions="props">
-            <q-td :props="props" class="q-gutter-sm">
-              <q-btn v-if="!props.row.expired" flat dense round icon="visibility" class="text-light-blue-4" @click="navigateTo('/checking')">
-                <q-tooltip>核查详情</q-tooltip>
-              </q-btn>
-              <q-btn v-if="props.row.expired" flat dense round icon="visibility" class="text-light-blue-4" disabled>
-                <q-tooltip>核查详情</q-tooltip>
-              </q-btn>
-              <!-- 条件渲染：只有任务所有者才能看到编辑和删除按钮 -->
-              <template v-if="props.row.owner === currentUser">
-                <q-btn flat dense round icon="edit" class="text-light-blue-4" @click="openEditDrawer(props.row)">
-                  <q-tooltip>编辑</q-tooltip>
+          <q-table
+            :rows="tasks"
+            :columns="taskTableColumns"
+            row-key="id"
+            class="text-grey-4"
+            separator="cell"
+            dark
+            flat
+            bordered
+            card-class="bg-dark-table-card"
+            table-header-class="bg-dark-table-header text-white"
+          >
+            <template v-slot:body-cell-status="props">
+              <q-td :props="props">
+                <q-chip :color="props.row.statusColor" text-color="white" dense :label="props.row.status" />
+              </q-td>
+            </template>
+            <template v-slot:body-cell-actions="props">
+              <q-td :props="props" class="q-gutter-sm">
+                <q-btn v-if="!props.row.expired" flat dense round icon="visibility" class="text-light-blue-4" @click="navigateTo('/checking')">
+                  <q-tooltip>核查详情</q-tooltip>
                 </q-btn>
-                <q-btn flat dense round icon="delete" class="text-red-4" @click="deleteTask(props.row)">
-                  <q-tooltip>删除</q-tooltip>
+                <q-btn v-if="props.row.expired" flat dense round icon="visibility" class="text-light-blue-4" disabled>
+                  <q-tooltip>核查详情</q-tooltip>
                 </q-btn>
-              </template>
-            </q-td>
-          </template>
-        </q-table>
+                <template v-if="props.row.owner === currentUser">
+                  <q-btn flat dense round icon="edit" class="text-light-blue-4" @click="openEditDrawer(props.row)">
+                    <q-tooltip>编辑</q-tooltip>
+                  </q-btn>
+                  <q-btn flat dense round icon="delete" class="text-red-4" @click="deleteTask(props.row)">
+                    <q-tooltip>删除</q-tooltip>
+                  </q-btn>
+                </template>
+              </q-td>
+            </template>
+          </q-table>
         </div>
       </q-page>
     </q-page-container>
 
-    <!-- 批量导入弹窗 -->
     <q-dialog v-model="importDialogOpen">
       <q-card style="width: 500px; max-width: 80vw;">
         <q-card-section class="row items-center q-pb-none">
@@ -93,7 +87,6 @@
       </q-card>
     </q-dialog>
 
-    <!-- 批量导出弹窗 -->
     <q-dialog v-model="exportDialogOpen">
       <q-card style="width: 500px; max-width: 80vw;">
         <q-card-section class="row items-center q-pb-none">
@@ -133,7 +126,6 @@
     </q-dialog>
 
 
-    <!-- 新增任务抽屉 -->
     <q-drawer
       v-model="drawerOpen"
       side="right"
@@ -142,7 +134,6 @@
       bordered
       class="bg-white"
     >
-      <!-- 单个新增视图 -->
       <div v-if="drawerView === 'single'">
         <q-toolbar>
           <q-toolbar-title>新增任务</q-toolbar-title>
@@ -163,7 +154,6 @@
         <div class="absolute-bottom q-pa-md"><q-btn color="primary" label="保存" class="full-width" size="lg" @click="submitAndClose"/></div>
       </div>
 
-      <!-- 批量新增主视图 -->
       <div v-if="drawerView === 'batch'">
         <q-toolbar>
           <q-btn flat round dense icon="arrow_back_ios" @click="drawerView = 'single'"/>
@@ -178,7 +168,6 @@
         </q-list>
       </div>
 
-      <!-- 同站点多时间段视图 -->
       <div v-if="drawerView === 'batch-time'">
         <q-toolbar>
           <q-btn flat round dense icon="arrow_back_ios" @click="drawerView = 'batch'"/>
@@ -206,7 +195,6 @@
 
     </q-drawer>
 
-    <!-- 编辑任务抽屉 -->
     <q-drawer
       v-model="editDrawerOpen"
       side="right"
@@ -257,14 +245,14 @@ const editDrawerOpen = ref(false);
 const editingTask = ref(null);
 const selectedTasks = ref([]);
 
-// 新增：导入/导出功能的状态
+// 导入/导出功能的状态
 const importDialogOpen = ref(false);
 const exportDialogOpen = ref(false);
 const importFile = ref(null);
 const exportScope = ref('all');
 const exportFormat = ref('xlsx');
 
-// 新增：模拟当前用户
+// 模拟当前用户
 const currentUser = ref('operator');
 
 // 模拟主页任务数据 (新增 owner 属性)
@@ -275,7 +263,7 @@ const tasks = ref([
   { id: '250709_250718_2', station: '甘孜集控', timeRange: '2025-07-09~2025-07-18', executor: '全部', passed: 2, failed: 0, status: '已过期', statusColor: 'grey', owner: 'operator', expired: true },
 ]);
 
-// 新增：表格列定义
+// 表格列定义
 const taskTableColumns = [
   { name: 'id', required: true, label: '任务名称', align: 'left', field: row => row.id, sortable: true },
   { name: 'station', label: '站点', align: 'left', field: 'station', sortable: true },
@@ -339,11 +327,11 @@ const openEditDrawer = (task) => {
     name: task.id,
     time: task.timeRange,
     executor: task.executor,
-    creator: 'operator', // 假设创建人不变
-    province: '', // 卡片上无此信息
-    city: '', // 卡片上无此信息
+    creator: 'operator',
+    province: '',
+    city: '',
     station: task.station,
-    scope: [] // 卡片上无此信息,
+    scope: []
   };
   editDrawerOpen.value = true;
 };
@@ -357,14 +345,12 @@ const addExecutionStation = () => {
 };
 
 const submitAndClose = () => {
-  // 在这里可以处理表单提交逻辑
-  // 例如，根据 drawerView.value 来决定提交哪个表单的数据
   $q.notify({
     color: 'positive',
     message: '任务已保存',
     icon: 'check'
   });
-  drawerOpen.value = false; // 关闭抽屉
+  drawerOpen.value = false;
 };
 
 const saveAndCloseEditDrawer = () => {
@@ -372,7 +358,6 @@ const saveAndCloseEditDrawer = () => {
 
   const taskIndex = tasks.value.findIndex(t => t.id === editingTask.value.id);
   if (taskIndex !== -1) {
-    // 更新任务数据
     tasks.value[taskIndex].id = editingTask.value.name;
     tasks.value[taskIndex].timeRange = editingTask.value.time;
     tasks.value[taskIndex].executor = editingTask.value.executor;
@@ -384,18 +369,16 @@ const saveAndCloseEditDrawer = () => {
     message: '任务已更新',
     icon: 'check'
   });
-  editDrawerOpen.value = false; // 关闭编辑抽屉
+  editDrawerOpen.value = false;
 };
 
-// 新增：删除任务函数
+// **修改后的删除任务函数**
 const deleteTask = (taskToDelete) => {
-  $q.dialog({
-    title: '确认删除',
-    message: `您确定要删除任务 “${taskToDelete.id}” 吗？`,
-    cancel: true,
-    persistent: true,
-    dark: true
-  }).onOk(() => {
+  // 使用浏览器原生的 confirm 对话框
+  const confirmed = window.confirm(`您确定要删除任务 “${taskToDelete.id}” 吗？`);
+
+  // 如果用户点击了“确定” (confirmed 为 true)
+  if (confirmed) {
     const index = tasks.value.findIndex(task => task.id === taskToDelete.id);
     if (index > -1) {
       tasks.value.splice(index, 1);
@@ -404,10 +387,10 @@ const deleteTask = (taskToDelete) => {
         message: '任务删除成功'
       });
     }
-  });
+  }
 };
 
-// 新增：导入/导出处理函数
+// 导入/导出处理函数
 const handleImport = () => {
   if (!importFile.value) {
     $q.notify({
@@ -417,7 +400,6 @@ const handleImport = () => {
     });
     return;
   }
-  // 模拟导入逻辑
   $q.notify({
     color: 'positive',
     message: `文件 "${importFile.value.name}" 已开始导入`,
@@ -428,7 +410,6 @@ const handleImport = () => {
 };
 
 const handleExport = () => {
-  // 模拟导出逻辑
   $q.notify({
     color: 'positive',
     message: `任务已导出为 ${exportFormat.value.toUpperCase()} 格式`,
