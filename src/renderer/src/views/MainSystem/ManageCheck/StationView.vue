@@ -179,7 +179,7 @@ const dialogTitle = computed(() => {
         <!-- 标题和操作按钮栏 -->
         <div class="row items-center no-wrap q-mb-md">
           <!-- 返回按钮 -->
-          <q-btn unelevated label="返回" @click="navigateTo('/managecheck')" class="action-button q-mr-md" icon="arrow_back" />
+          <q-btn unelevated label="返回" @click="navigateTo('/stationandtask')" class="action-button q-mr-md" icon="arrow_back" />
 
           <!-- 标题 -->
           <div class="text-h4 text-weight-bolder" style="color: #4c6afc;">站点管理</div>

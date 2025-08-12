@@ -19,7 +19,7 @@ const navigateTo = (path) => {
           color="primary"
           icon="arrow_back_ios"
           label="返回"
-          @click="navigateTo('/mainView')"
+          @click="navigateTo('/modeselect')"
         />
         <q-toolbar-title class="absolute-center">
           执行检查入口
