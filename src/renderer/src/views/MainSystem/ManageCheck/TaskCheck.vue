@@ -3,7 +3,7 @@
     <!-- 顶部主工具栏 (样式更新) -->
     <q-header elevated class="bg-dark-header text-white">
       <q-toolbar>
-        <q-btn unelevated color="primary" icon="arrow_back_ios" label="返回" @click="navigateTo('/managecheck')"/>
+        <q-btn unelevated color="primary" icon="arrow_back_ios" label="返回" @click="navigateTo('/stationandtask')"/>
         <q-toolbar-title class="q-ml-md">
           任务管理
         </q-toolbar-title>

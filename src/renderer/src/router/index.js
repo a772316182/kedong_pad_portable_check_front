@@ -26,6 +26,8 @@ import SecurityStrategy from '../views/MainSystem/FactorySafeCheck/SecurityStrat
 import SecurityAlert from '../views/MainSystem/FactorySafeCheck/SecurityAlert.vue'
 import ManageCustomer from '../views/MainSystem/ManageCustomer.vue'
 import ManageSystem from '../views/MainSystem/ManageSystem.vue'
+import ModeSelect from '../views/MainSystem/ManageCheck/ModeSelect.vue'
+import StationAndTask from '../views/MainSystem/ManageCheck/StationAndTask.vue'
 
 const routes = [
   {
@@ -164,6 +166,16 @@ const routes = [
     path:'/managesystem',
     name:'managesystem',
     component: ManageSystem
+  },
+  {
+    path:'/modeselect',
+    name:'modeselect',
+    component: ModeSelect
+  },
+  {
+    path:'/stationandtask',
+    name:'stationandtask',
+    component: StationAndTask
   }
 ]
 
