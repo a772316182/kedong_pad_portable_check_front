@@ -6,193 +6,229 @@ const router = useRouter();
 
 const navigateTo = (path) => {
   console.log(`正在跳转到: ${path}`);
-  // 在实际应用中，您会使用 router.push 进行页面跳转
   router.push(path);
-  //alert(`模拟跳转到: ${path}`);
 }
 
-// --- 响应式数据 ---
+// --- 响应式数据 (增加了数据以演示滚动) ---
+const currentStep = ref('site-selection');
 
-// 当前步骤: 'task-selection' (任务选择), 'task-qualification' (任务定性)
-const currentStep = ref('task-selection');
+const sites = reactive([
+  { id: 'site-a', name: "总部数据中心", location: "北京", manager: "张三" },
+  { id: 'site-b', name: "华东区域节点", location: "上海", manager: "李四" },
+  { id: 'site-c', name: "华南区域节点", location: "广州", manager: "王五" },
+  { id: 'site-d', name: "西南区域节点", location: "成都", manager: "赵六" },
+  { id: 'site-e', name: "西北区域节点", location: "西安", manager: "孙七" },
+  { id: 'site-f', name: "华中区域节点", location: "武汉", manager: "周八" },
+  { id: 'site-g', name: "东北区域节点", location: "沈阳", manager: "钱九" },
+]);
 
-// 模拟任务数据
-// 您可以把 tasks 设置为空数组 [] 来测试列表为空的场景
-// const tasks = reactive([]);
 const tasks = reactive([
   { id: 1, name: "主机设备-Linux-安全检查", policy: "主机设备-Linux", lastUpdate: "2025-07-03" },
   { id: 2, name: "主机设备-Windows-安全检查", policy: "主机设备-Windows", lastUpdate: "2025-07-03" },
   { id: 3, name: "网络安全-月度检查", policy: "网络安全", lastUpdate: "2025-07-03" },
   { id: 4, name: "弱密码专项排查", policy: "否", lastUpdate: "2025-04-18" },
+  { id: 5, name: "数据库安全审计", policy: "数据库安全策略", lastUpdate: "2025-06-15" },
+  { id: 6, name: "应用系统漏洞扫描", policy: "应用安全规范", lastUpdate: "2025-07-01" },
+  { id: 7, name: "物理环境安全巡检", policy: "机房管理制度", lastUpdate: "2025-05-30" },
+  { id: 8, name: "数据备份与恢复演练", policy: "灾备预案", lastUpdate: "2025-06-20" },
 ]);
 
-// 模拟任务定性类型
 const qualificationTypes = reactive([
+  { id: 'auto', name: '自动审查', icon: 'smart_toy' },
   { id: 'manual', name: '人工审查', icon: 'person_search' },
-  { id: 'auto', name: '自动审查', icon: 'smart_toy' }
 ]);
 
-// 选中的任务和定性方式
+const selectedSite = ref(null);
 const selectedTask = ref(null);
-const selectedQualifications = ref([]); // 支持多选，存储定性类型的id
+
+const selectedQualifications = reactive({
+  manual: [],
+  auto: []
+});
+
+const qualificationOptions = {
+  manual: [
+    { label: '专家访谈', value: '专家访谈' },
+    { label: '文档审核', value: '文档审核' },
+  ],
+  auto: [
+    { label: '配置核查', value: '配置核查' },
+    { label: '漏洞扫描', value: '漏洞扫描' },
+    { label: '基线比对', value: '基线比对' },
+    { label: '日志分析', value: '日志分析' },
+  ]
+};
+
+const showAddTaskDialog = ref(false);
+const newTaskForm = reactive({
+  name: '',
+  policy: '',
+  lastUpdate: ''
+});
+
+const showQualificationDialog = ref(false);
+const currentQualificationType = ref(null);
 
 // --- 计算属性 ---
-
-// 根据当前步骤动态计算“上一步/返回”按钮的文本
 const backButtonLabel = computed(() => {
-  return currentStep.value === 'task-selection' ? '返回' : '上一步';
+  return currentStep.value === 'site-selection' ? '返回' : '上一步';
+});
+
+const qualificationDialogTitle = computed(() => {
+  if (!currentQualificationType.value) return '';
+  const typeInfo = qualificationTypes.find(t => t.id === currentQualificationType.value);
+  return `选择${typeInfo?.name || ''}方式`;
 });
 
 // --- 方法 ---
-
-// 处理返回/上一步的逻辑
 const goBack = () => {
-  if (currentStep.value === 'task-selection') {
-    // 假设返回到主视图
+  if (currentStep.value === 'site-selection') {
     navigateTo('/managecheck');
+  } else if (currentStep.value === 'task-selection') {
+    selectedTask.value = null;
+    currentStep.value = 'site-selection';
   } else if (currentStep.value === 'task-qualification') {
-    // 从定性返回任务选择时，清空选择
-    selectedQualifications.value = [];
+    selectedQualifications.manual = [];
+    selectedQualifications.auto = [];
     currentStep.value = 'task-selection';
   }
 };
 
-// 选择一个任务并进入下一步
+const selectSiteAndProceed = (site) => {
+  selectedSite.value = site;
+  currentStep.value = 'task-selection';
+};
+
 const selectTaskAndProceed = (task) => {
   selectedTask.value = task;
   currentStep.value = 'task-qualification';
 };
 
-// 切换定性方式的选中状态
-const toggleQualification = (typeId) => {
-  const index = selectedQualifications.value.indexOf(typeId);
-  if (index === -1) {
-    // 如果不存在，则添加
-    selectedQualifications.value.push(typeId);
-  } else {
-    // 如果已存在，则移除
-    selectedQualifications.value.splice(index, 1);
-  }
+const openAddTaskDialog = () => {
+  newTaskForm.name = '';
+  newTaskForm.policy = '';
+  newTaskForm.lastUpdate = new Date().toISOString().split('T')[0];
+  showAddTaskDialog.value = true;
 };
 
-// 最终确认选择
+const saveNewTask = () => {
+  if (!newTaskForm.name.trim()) {
+    alert("任务名称不能为空");
+    return;
+  }
+  tasks.push({
+    id: Date.now(),
+    name: newTaskForm.name,
+    policy: newTaskForm.policy || '无',
+    lastUpdate: newTaskForm.lastUpdate
+  });
+  showAddTaskDialog.value = false;
+};
+
+const openQualificationDialog = (typeId) => {
+  currentQualificationType.value = typeId;
+  showQualificationDialog.value = true;
+};
+
 const confirmSelection = () => {
-  if (selectedQualifications.value.length === 0) {
+  if (selectedQualifications.manual.length === 0 && selectedQualifications.auto.length === 0) {
     alert("请至少选择一个审查方式");
     return;
   }
+  const selectedDetails = [];
+  if (selectedQualifications.auto.length > 0) {
+    selectedDetails.push(`自动审查: ${selectedQualifications.auto.join(', ')}`);
+  }
+  if (selectedQualifications.manual.length > 0) {
+    selectedDetails.push(`人工审查: ${selectedQualifications.manual.join(', ')}`);
+  }
+  console.log("站点已确认:", selectedSite.value.name);
   console.log("任务已确认:", selectedTask.value.name);
-  console.log("定性方式:", selectedQualifications.value.join(', '));
-  // 可以在这里执行后续逻辑，例如跳转到核查页面
-  alert(`已选定任务 "${selectedTask.value.name}"\n审查方式: ${selectedQualifications.value.join(', ')}`);
+  console.log("定性方式详情:", selectedDetails.join('; '));
+  alert(`已选定站点: "${selectedSite.value.name}"\n已选定任务 "${selectedTask.value.name}"\n审查方式:\n${selectedDetails.join('\n')}`);
   navigateTo('/checking');
 };
-
 </script>
 
 <template>
-  <q-layout view="lHh Lpr lFf" class="bg-dark-page text-white">
-    <q-header class="bg-dark-page q-pa-sm">
-      <q-toolbar>
-        <q-btn unelevated color="primary" :label="backButtonLabel" @click="goBack" icon="arrow_back" />
+  <q-layout view="lHh LpR lFf" class="bg-dark-page text-white">
+    <!-- 1. 固定的顶部区域 -->
+    <q-header class="bg-dark-page" bordered>
+      <!-- 主标题工具栏 -->
+      <q-toolbar class="q-pt-sm q-pb-sm">
+        <q-btn unelevated color="primary" :label="backButtonLabel" @click="goBack" icon="arrow_back" class="header-button" />
         <q-space />
-        <q-toolbar-title class="text-center text-h5 text-weight-bold">
+        <q-toolbar-title class="text-center text-weight-bold header-title">
           启动核查
         </q-toolbar-title>
         <q-space />
-        <!-- 动态头部按钮：仅在任务定性步骤且已选择方式时显示 -->
-        <q-btn
-          v-if="currentStep === 'task-qualification'"
-          color="primary"
-          unelevated
-          label="确定"
-          :disable="selectedQualifications.length === 0"
-          @click="confirmSelection"
-        />
+        <div style="width: 100px"></div>
       </q-toolbar>
-    </q-header>
 
-    <q-page-container>
-      <q-page class="q-pa-md">
-        <!-- 步骤条 -->
+      <!-- [修改] 步骤条现在是 header 的一部分，也会被固定 -->
+      <div class="header-stepper-wrapper">
         <div class="stepper-container row q-col-gutter-none">
+          <div class="col text-center stepper-item" :class="{active: currentStep === 'site-selection', done: ['task-selection', 'task-qualification'].includes(currentStep)}">站点选择</div>
           <div class="col text-center stepper-item" :class="{active: currentStep === 'task-selection', done: currentStep === 'task-qualification'}">任务选择</div>
           <div class="col text-center stepper-item" :class="{active: currentStep === 'task-qualification'}">任务定性</div>
         </div>
+      </div>
+    </q-header>
 
-        <!-- 步骤面板 -->
-        <div class="q-mt-xl">
-          <!-- 步骤1: 任务选择 -->
-          <div v-if="currentStep === 'task-selection'">
-            <div class="row items-center q-mb-md">
-              <p class="col text-grey-4">请选择需要执行的核查任务</p>
-              <q-btn color="primary" unelevated label="新增任务" @click="navigateTo('/taskcheck')" />
-            </div>
-
-            <!-- 列表为空时的状态 -->
-            <div v-if="tasks.length === 0" class="empty-state text-center q-pa-xl bg-dark-content rounded-borders">
-              <q-icon name="inbox" size="5em" color="grey-7" />
-              <div class="text-h6 text-grey-6 q-mt-md">列表为空！</div>
-              <div class="text-grey-5 q-mt-sm">当前没有可执行的任务，请先创建。</div>
-              <q-btn
-                class="q-mt-lg"
-                color="primary"
-                unelevated
-                label="创建任务"
-                @click="navigateTo('/task-create')"
-              />
-            </div>
-
-            <!-- 任务列表 -->
-            <q-list v-else dark separator class="bg-dark-content rounded-borders">
-              <q-item
-                v-for="task in tasks"
-                :key="task.id"
-                clickable
-                v-ripple
-                class="q-py-md list-item-hover"
-                @click="selectTaskAndProceed(task)"
-              >
+    <!-- 2. 可滚动的内容区 -->
+    <q-page-container>
+      <q-page class="q-pa-lg">
+        <!-- 步骤面板 (现在位于可滚动区域内) -->
+        <div>
+          <!-- 步骤1: 站点选择 -->
+          <div v-if="currentStep === 'site-selection'">
+            <p class="step-description">请选择需要进行核查的站点</p>
+            <q-list v-if="sites.length > 0" dark separator class="bg-dark-content rounded-borders">
+              <q-item v-for="site in sites" :key="site.id" clickable v-ripple class="list-item-hover" @click="selectSiteAndProceed(site)">
                 <q-item-section>
-                  <q-item-label class="text-weight-bold">{{ task.name }}</q-item-label>
-                  <q-item-label caption class="text-grey-5">关联策略: {{ task.policy }} | 最后更新: {{ task.lastUpdate }}</q-item-label>
+                  <q-item-label class="item-title">{{ site.name }}</q-item-label>
+                  <q-item-label caption class="item-caption">位置: {{ site.location }} | 负责人: {{ site.manager }}</q-item-label>
                 </q-item-section>
                 <q-item-section side>
-                  <q-icon name="chevron_right" color="grey-6" />
+                  <q-icon name="chevron_right" color="grey-6" size="lg"/>
                 </q-item-section>
               </q-item>
             </q-list>
           </div>
 
-          <!-- 步骤2: 任务定性 -->
+          <!-- 步骤2: 任务选择 -->
+          <div v-if="currentStep === 'task-selection' && selectedSite">
+            <p class="step-description">
+              已选择站点: <span class="text-weight-bold text-white">{{ selectedSite.name }}</span>。请选择需要执行的核查任务。
+            </p>
+            <q-list v-if="tasks.length > 0" dark separator class="bg-dark-content rounded-borders">
+              <q-item v-for="task in tasks" :key="task.id" clickable v-ripple class="list-item-hover" @click="selectTaskAndProceed(task)">
+                <q-item-section>
+                  <q-item-label class="item-title">{{ task.name }}</q-item-label>
+                  <q-item-label caption class="item-caption">关联策略: {{ task.policy }} | 最后更新: {{ task.lastUpdate }}</q-item-label>
+                </q-item-section>
+                <q-item-section side>
+                  <q-icon name="chevron_right" color="grey-6" size="lg"/>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </div>
+
+          <!-- 步骤3: 任务定性 -->
           <div v-if="currentStep === 'task-qualification' && selectedTask">
-            <p class="text-grey-4 q-mb-lg">
-              已选择任务: <span class="text-weight-bold text-white">{{ selectedTask.name }}</span>。请选定审查方式（可多选）。
+            <p class="step-description">
+              已选定: <span class="text-weight-bold text-white">{{ selectedSite.name }} / {{ selectedTask.name }}</span>。请选定审查方式（可多选）。
             </p>
             <div class="row q-col-gutter-xl justify-center">
-              <div
-                class="col-12 col-sm-6 col-md-4"
-                v-for="q_type in qualificationTypes"
-                :key="q_type.id"
-              >
-                <q-card
-                  class="qualification-card text-center cursor-pointer"
-                  :class="{ 'selected': selectedQualifications.includes(q_type.id) }"
-                  flat
-                  @click="toggleQualification(q_type.id)"
-                >
-                  <q-card-section class="q-py-lg">
-                    <q-icon :name="q_type.icon" size="4.5em" />
-                    <div class="text-h6 q-mt-md">{{ q_type.name }}</div>
+              <div class="col-12 col-sm-6 col-md-5" v-for="q_type in qualificationTypes" :key="q_type.id">
+                <q-card class="qualification-card text-center cursor-pointer" :class="{ 'selected': selectedQualifications[q_type.id].length > 0 }" flat @click="openQualificationDialog(q_type.id)">
+                  <q-card-section class="q-py-xl">
+                    <q-icon :name="q_type.icon" size="6em" />
+                    <div class="card-title">{{ q_type.name }}</div>
+                    <div class="card-caption">
+                      {{ selectedQualifications[q_type.id].length > 0 ? selectedQualifications[q_type.id].join(', ') : '点击选择' }}
+                    </div>
                   </q-card-section>
-                  <q-chip
-                    v-if="selectedQualifications.includes(q_type.id)"
-                    icon="check"
-                    color="positive"
-                    text-color="white"
-                    label="已选定"
-                    class="absolute-top-right q-ma-sm"
-                  />
                 </q-card>
               </div>
             </div>
@@ -200,27 +236,218 @@ const confirmSelection = () => {
         </div>
       </q-page>
     </q-page-container>
+
+    <!-- 3. 固定的底部按钮区 -->
+    <q-footer class="bg-dark-page page-footer" bordered>
+      <div v-if="currentStep === 'site-selection'" class="text-center">
+        <q-btn color="primary" unelevated label="新增/编辑站点" @click="navigateTo('/stationview')" class="shadow-5 bottom-action-button" />
+      </div>
+      <!-- [修改] 使用 justify-center 和 gap 增加按钮间距 -->
+      <div v-if="currentStep === 'task-selection'" class="row justify-center" style="gap: 60px; width: 100%;">
+        <q-btn color="primary" unelevated label="新增任务" @click="openAddTaskDialog" class="shadow-5 bottom-action-button" />
+        <q-btn color="primary" unelevated label="修改历史任务" @click="navigateTo('/taskcheck')" class="shadow-5 bottom-action-button" />
+      </div>
+      <div v-if="currentStep === 'task-qualification'" class="text-center">
+        <q-btn color="primary" unelevated :disable="selectedQualifications.manual.length === 0 && selectedQualifications.auto.length === 0" @click="confirmSelection" class="shadow-10 final-confirm-btn">
+          <q-icon name="rocket_launch" />
+          开始核查
+        </q-btn>
+      </div>
+    </q-footer>
+
+    <!-- 对话框部分保持不变 -->
+    <q-dialog v-model="showAddTaskDialog" persistent>
+      <q-card class="bg-dark-content text-white dialog-card">
+        <q-card-section class="row items-center">
+          <div class="dialog-title">新增任务</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+        <q-card-section>
+          <q-input dark color="primary" v-model="newTaskForm.name" label="任务名称" outlined class="q-mb-lg" />
+          <q-input dark color="primary" v-model="newTaskForm.policy" label="关联策略" outlined class="q-mb-lg" />
+          <q-input dark color="primary" v-model="newTaskForm.lastUpdate" label="最后更新日期" type="date" outlined />
+        </q-card-section>
+        <q-card-actions class="bg-dark-page q-pa-md" align="center">
+          <q-btn label="取消" color="grey" v-close-popup class="dialog-action-btn" />
+          <q-btn label="保存" color="primary" @click="saveNewTask" class="dialog-action-btn" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="showQualificationDialog">
+      <q-card class="bg-dark-content text-white dialog-card">
+        <q-card-section class="row items-center">
+          <div class="dialog-title">{{ qualificationDialogTitle }}</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-option-group :options="qualificationOptions[currentQualificationType]" type="checkbox" v-model="selectedQualifications[currentQualificationType]" dark color="primary" keep-color />
+        </q-card-section>
+        <q-card-actions align="right" class="bg-dark-page q-pa-lg">
+          <q-btn flat label="确定" color="primary" v-close-popup class="dialog-action-btn" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-layout>
 </template>
 
 <style scoped>
-.bg-dark-page {
-  background-color: #292a2d;
+/* --- 新增/修改的样式 --- */
+.q-header.q-header--bordered,
+.q-footer.q-footer--bordered {
+  border-color: rgba(255, 255, 255, 0.12) !important;
 }
-.bg-dark-content {
-  background-color: #3a3c52; /* 列表和卡片的背景色 */
+
+/* [新增] 步骤条包装器，用于在 header 内部提供边距 */
+.header-stepper-wrapper {
+  padding: 0 24px 24px 24px;
 }
-.rounded-borders {
+
+.page-footer {
+  padding: 16px;
+  min-height: 124px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- 1. 顶部工具栏 (Header) --- */
+.header-button {
+  font-size: 1.2rem !important;
+  padding: 8px 16px;
+}
+.header-title {
+  font-size: 2.5rem !important;
+}
+
+/* --- 2. 步骤条 (Stepper) --- */
+.stepper-item {
+  padding: 22px 15px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  position: relative;
+  transition: all 0.3s ease;
+}
+.stepper-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 38px solid transparent;
+  border-bottom: 38px solid transparent;
+  border-left: 25px solid #3a3c52;
+  z-index: 1;
+  transition: border-color 0.3s ease;
+}
+
+/* --- 3. 步骤描述文字 --- */
+.step-description {
+  font-size: 1.4rem;
+  color: #e0e0e0;
+  margin-bottom: 1.5rem;
+  margin-top: 1rem;
+}
+
+/* --- 4. 列表项 (Sites & Tasks) --- */
+.list-item-hover {
+  padding: 25px 20px;
+}
+.item-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.item-caption {
+  font-size: 1.2rem;
+  color: #c0c0c0 !important;
+}
+
+/* --- 5. 底部动作按钮 (Steps 1 & 2) --- */
+.bottom-action-button {
+  font-size: 1.4rem !important;
+  min-width: 240px;
+  padding: 15px 30px;
   border-radius: 8px;
 }
+
+/* --- 6. 定性卡片 (Step 3) --- */
+.qualification-card {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.card-title {
+  font-size: 2.2rem;
+  font-weight: 500;
+  margin-top: 1.5rem;
+}
+.card-caption {
+  font-size: 1.3rem;
+  color: #b0b0b0;
+  margin-top: 1rem;
+  padding: 0 1rem;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.selected .card-caption {
+  color: #66a1ff;
+  font-weight: bold;
+}
+
+/* --- 7. 最终确认按钮 (Step 3) --- */
+.final-confirm-btn {
+  width: 350px;
+  height: 90px;
+  font-size: 2.4rem;
+  border-radius: 15px;
+  font-weight: bold;
+}
+.final-confirm-btn .q-icon {
+  font-size: 2.5rem;
+  margin-right: 1rem;
+}
+
+/* --- 对话框样式 --- */
+.dialog-card {
+  width: 600px;
+  max-width: 90vw;
+}
+.dialog-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+:deep(.q-field__label) {
+  font-size: 1.2rem !important;
+}
+:deep(.q-field .q-field__native) {
+  font-size: 1.2rem !important;
+}
+:deep(.q-option-group .q-checkbox__label) {
+  font-size: 1.3rem;
+}
+.dialog-action-btn {
+  font-size: 1.2rem !important;
+  padding: 8px 24px;
+}
+
+/* --- 通用基础样式 (无需修改) --- */
+.bg-dark-page { background-color: #292a2d; }
+.bg-dark-content { background-color: #3a3c52; }
+.rounded-borders { border-radius: 8px; }
 .q-list--dark.q-list--separator > .q-item-type + .q-item-type {
   border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 .list-item-hover:hover {
   background-color: rgba(76, 106, 252, 0.2) !important;
 }
-
-/* 步骤条样式 */
 .stepper-container {
   background-color: #3a3c52;
   border-radius: 8px;
@@ -229,46 +456,13 @@ const confirmSelection = () => {
   overflow: hidden;
   border: 1px solid #5f6368;
 }
-.stepper-item {
-  padding: 12px;
-  font-weight: 600;
-  position: relative;
-  transition: all 0.3s ease;
-}
-.stepper-item:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  right: -10px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 0;
-  height: 0;
-  border-top: 25px solid transparent;
-  border-bottom: 25px solid transparent;
-  border-left: 20px solid #3a3c52;
-  z-index: 1;
-  transition: border-color 0.3s ease;
-}
-.stepper-item.active {
-  background-color: #4c6afc;
-  color: white;
-}
-.stepper-item.active::after {
-  border-left-color: #4c6afc;
-}
-
-.stepper-item.done {
-  background-color: #5f6368;
-  color: #e0e0e0;
-}
-.stepper-item.done::after {
-  border-left-color: #5f6368;
-}
-
-/* 任务定性卡片样式 */
+.stepper-item.active { background-color: #4c6afc; color: white; }
+.stepper-item.active::after { border-left-color: #4c6afc; }
+.stepper-item.done { background-color: #5f6368; color: #e0e0e0; }
+.stepper-item.done::after { border-left-color: #5f6368; }
 .qualification-card {
   background-color: #3a3c52;
-  border: 2px solid #5f6368;
+  border: 3px solid #5f6368;
   transition: all 0.2s ease-in-out;
   position: relative;
 }
@@ -280,10 +474,5 @@ const confirmSelection = () => {
 .qualification-card.selected {
   border-color: #4c6afc;
   background-color: rgba(76, 106, 252, 0.1);
-}
-
-/* 列表为空状态样式 */
-.empty-state {
-  border: 2px dashed #5f6368;
 }
 </style>
