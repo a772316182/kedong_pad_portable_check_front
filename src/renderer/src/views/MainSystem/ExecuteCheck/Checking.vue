@@ -33,8 +33,7 @@ const applyFilters = () => {
 const dialogs = reactive({
   assetProbe: false,
   loginlessCheck: false,
-  protocolSelection: false,
-  credentialConfig: false, // 新增：登录凭据配置弹窗
+  loginCheckWizard: false, // 替换原有的 protocolSelection 和 credentialConfig
   assetMerge: false,
   assetDetail: false,
   editAsset: false,
@@ -81,51 +80,68 @@ const pagination = ref({
 });
 // #endregion
 
-// #region --- 登录检查相关状态与函数 ---
-const selectedProtocol = ref(null);
+// #region --- 登录检查相关状态与函数 (重构为向导模式) ---
+const wizardStep = ref(1);
+const connectionType = ref(null); // network, usb, serial
+const networkProtocol = ref(null); // ssh, http
 const loginCredentials = ref([]);
-const protocols = [
-  { id: 'ssh', label: 'SSH协议', icon: 'terminal' },
-  { id: 'https', label: 'HTTPS协议', icon: 'http' },
-  { id: 'serial', label: '串口', icon: 'power_input' }
-];
 
-const openProtocolDialog = () => {
-  selectedProtocol.value = null; // 重置已选协议
-  dialogs.protocolSelection = true;
-}
-
-const openCredentialDialog = () => {
-  if (!selectedProtocol.value) {
-    $q.notify({ type: 'negative', message: '请选择一个网络协议！' });
-    return;
+const loginWizardCardStyle = computed(() => {
+  if (wizardStep.value === 3 && networkProtocol.value === 'ssh') {
+    return { width: '95vw', maxWidth: '2200px', height: '90vh' }; // SSH style
   }
-
-  const selectedAssets = assets.value.filter(a => a.selected);
-  if (selectedAssets.length === 0) {
-    $q.notify({ type: 'negative', message: '请在主列表中至少选择一个资产进行登录检查！' });
-    return;
+  if (wizardStep.value === 3 && networkProtocol.value === 'http') {
+    return { width: '1000px' }; // HTTP style
   }
+  // Default style for steps 1 and 2
+  return { width: '800px' };
+});
 
-  const getDefaultPort = (protocol) => {
-    if (protocol === 'ssh') return '22';
-    if (protocol === 'https') return '443';
-    return '';
+const startLoginCheckWizard = () => {
+  wizardStep.value = 1;
+  connectionType.value = null;
+  networkProtocol.value = null;
+  dialogs.loginCheckWizard = true;
+};
+
+const wizardNext = () => {
+  if (wizardStep.value === 1) {
+    if (!connectionType.value) {
+      $q.notify({ type: 'negative', message: '请选择一种连接方式！' });
+      return;
+    }
+    wizardStep.value++;
+  } else if (wizardStep.value === 2) {
+    if (connectionType.value === 'network') {
+      if (!networkProtocol.value) {
+        $q.notify({ type: 'negative', message: '请选择网络协议！' });
+        return;
+      }
+
+      if (networkProtocol.value === 'ssh') {
+        const selectedAssets = assets.value.filter(a => a.selected);
+        if (selectedAssets.length === 0) {
+          $q.notify({ type: 'negative', message: '请在主列表中至少选择一个资产进行登录检查！' });
+          return;
+        }
+        const getDefaultPort = (protocol) => protocol === 'ssh' ? '22' : '';
+        loginCredentials.value = selectedAssets.map(asset => ({
+          id: asset.id, ip: asset.name, assetType: asset.type,
+          port: getDefaultPort(networkProtocol.value), username: '', password: '',
+          privilegeUsername: '', privilegePassword: ''
+        }));
+      }
+      wizardStep.value++;
+    } else {
+      $q.notify({ type: 'info', message: '该功能待实现' });
+    }
   }
+};
 
-  loginCredentials.value = selectedAssets.map(asset => ({
-    id: asset.id,
-    ip: asset.name,
-    assetType: asset.type,
-    port: getDefaultPort(selectedProtocol.value),
-    username: '',
-    password: '',
-    privilegeUsername: '',
-    privilegePassword: ''
-  }));
-
-  dialogs.protocolSelection = false;
-  dialogs.credentialConfig = true;
+const wizardBack = () => {
+  if (wizardStep.value > 1) {
+    wizardStep.value--;
+  }
 };
 
 const removeCredentialRow = (index) => {
@@ -142,10 +158,13 @@ const applySameAsAbove = (index) => {
 const confirmCredentials = () => {
   console.log("最终凭据信息:", JSON.parse(JSON.stringify(loginCredentials.value)));
   $q.notify({ type: 'positive', message: '登录检查任务已开始' });
-  dialogs.credentialConfig = false;
+  dialogs.loginCheckWizard = false;
   navigateTo('/logincheckinprogress')
 };
 
+const closeWizard = () => {
+  dialogs.loginCheckWizard = false;
+}
 // #endregion
 
 
@@ -530,9 +549,9 @@ const startLoginlessCheck = () => {
       <q-card class="table-container" flat>
         <div class="sub-actions-bar row items-center q-gutter-x-md q-pa-md">
           <q-btn v-if="autoCheckTasks && autoCheckTasks.includes('免登录检查')" class="sub-action-btn" unelevated label="免登录检查" @click="dialogs.loginlessCheck = true"/>
-          <q-btn v-if="autoCheckTasks && autoCheckTasks.includes('登录检查')" class="sub-action-btn" unelevated label="登录检查" @click="openProtocolDialog"/>
-          <q-btn v-if="autoCheckTasks && autoCheckTasks.includes('告警对点')" class="sub-action-btn" unelevated label="告警对点" @click="openProtocolDialog"/>
-          <q-btn v-if="autoCheckTasks && autoCheckTasks.includes('安防策略检查')" class="sub-action-btn" unelevated label="安防策略检查" @click="openProtocolDialog"/>
+          <q-btn v-if="autoCheckTasks && autoCheckTasks.includes('登录检查')" class="sub-action-btn" unelevated label="登录检查" @click="startLoginCheckWizard"/>
+          <q-btn v-if="autoCheckTasks && autoCheckTasks.includes('告警对点')" class="sub-action-btn" unelevated label="告警对点" @click="startLoginCheckWizard"/>
+          <q-btn v-if="autoCheckTasks && autoCheckTasks.includes('安防策略检查')" class="sub-action-btn" unelevated label="安防策略检查" @click="startLoginCheckWizard"/>
 
           <div v-if="manualCheckTasks.length > 0" class="manual-check-info text-white q-ml-md row items-center">
             <q-icon name="person_search" size="md" class="q-mr-sm" color="cyan-3"/>
@@ -699,7 +718,7 @@ const startLoginlessCheck = () => {
             <q-input dark color="primary" dense outlined v-model="selectedAsset.model" class="col"/>
           </div>
         </q-card-section>
-        <q-card-actions align="right" class="q-pa-md bg-dark-header">
+        <q-card-actions align="right" class="bg-dark-header q-pa-md">
           <q-btn label="取消" flat color="white" v-close-popup />
           <q-btn label="保存" color="primary" unelevated style="min-width: 120px;" @click="saveAsset" />
         </q-card-actions>
@@ -830,75 +849,135 @@ const startLoginlessCheck = () => {
       </q-card>
     </q-dialog>
 
-    <q-dialog v-model="dialogs.protocolSelection" persistent>
-      <q-card class="bg-dark-page text-white" style="width: 800px;">
-        <q-card-section class="row items-center bg-dark-header">
-          <div class="text-h6">选定网络协议</div>
-          <q-space /><q-btn icon="close" flat round dense v-close-popup />
-        </q-card-section>
-        <q-card-section class="q-pa-xl text-center">
-          <div class="text-h6 q-mb-sm">已选定: <span class="text-primary">{{ selectedProtocol ? protocols.find(p=>p.id === selectedProtocol).label : '【网络模式】' }}</span></div>
-          <div class="text-grey-5 q-mb-xl">请结合待查资产的特征识别结果，选定合适的网络协议开展后续核查。</div>
-          <div class="row justify-center q-gutter-xl">
-            <div v-for="p in protocols" :key="p.id"
-                 class="protocol-card column items-center justify-center q-pa-lg cursor-pointer"
-                 :class="{ 'active-protocol': selectedProtocol === p.id }"
-                 @click="selectedProtocol = p.id">
-              <q-icon :name="p.icon" size="4rem" class="q-mb-md" />
-              <div class="text-h6">{{ p.label }}</div>
-            </div>
-          </div>
-        </q-card-section>
-        <q-separator dark />
-        <q-card-actions align="right" class="bg-dark-header q-pa-md">
-          <q-btn label="取消" flat color="white" v-close-popup />
-          <q-btn label="确定" color="primary" unelevated @click="openCredentialDialog" style="min-width: 120px;" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
-    <q-dialog v-model="dialogs.credentialConfig" persistent full-width>
-      <q-card class="bg-dark-page text-white credential-dialog">
-        <q-card-section class="row items-center bg-dark-header">
-          <div class="text-h6">登录账号及密码配置</div>
-          <q-space /><q-btn icon="close" flat round dense v-close-popup />
-        </q-card-section>
-        <q-card-section class="q-pa-md">
-          <div class="row items-center q-gutter-md q-mb-md">
-            <q-btn color="primary" unelevated label="批量填充" />
-            <q-btn color="primary" unelevated label="添加" />
-            <q-space />
-            <div class="text-grey-5">当前站点：省调1</div>
-          </div>
-          <div class="credential-table-container">
-            <div class="row credential-table-header text-center text-weight-bold">
-              <div class="col-2">资产IP</div>
-              <div class="col">端口号</div>
-              <div class="col-2">登录账号</div>
-              <div class="col-2">登录密码</div>
-              <div class="col-2">提权账号</div>
-              <div class="col-2">提权密码</div>
-              <div class="col-1">操作</div>
-            </div>
-            <div v-for="(cred, index) in loginCredentials" :key="cred.id" class="row credential-table-row items-center">
-              <div class="col-2 text-center">{{ cred.ip }}</div>
-              <div class="col"><q-input dark dense outlined v-model="cred.port" placeholder="端口..."/></div>
-              <div class="col-2"><q-input dark dense outlined v-model="cred.username" placeholder="账号..."/></div>
-              <div class="col-2"><q-input dark dense outlined v-model="cred.password" type="password" placeholder="密码..."><template v-slot:append><q-icon name="visibility" class="cursor-pointer"/></template></q-input></div>
-              <div class="col-2"><q-input dark dense outlined v-model="cred.privilegeUsername" placeholder="提权账号..."/></div>
-              <div class="col-2"><q-input dark dense outlined v-model="cred.privilegePassword" type="password" placeholder="提权密码..."><template v-slot:append><q-icon name="visibility" class="cursor-pointer"/></template></q-input></div>
-              <div class="col-1 row justify-center q-gutter-x-sm">
-                <q-btn dense flat round icon="delete" color="negative" @click="removeCredentialRow(index)" />
-                <q-btn dense flat round icon="arrow_upward" color="primary" @click="applySameAsAbove(index)"><q-tooltip>同上一笔</q-tooltip></q-btn>
+    <q-dialog v-model="dialogs.loginCheckWizard" persistent>
+      <q-card class="bg-dark-page text-white" :style="loginWizardCardStyle">
+        <template v-if="wizardStep === 1">
+          <q-card-section class="row items-center bg-dark-header">
+            <div class="text-h6">登录检查：选择连接方式</div>
+            <q-space /><q-btn icon="close" flat round dense @click="closeWizard" />
+          </q-card-section>
+          <q-card-section class="q-pa-xl text-center">
+            <div class="text-grey-5 q-mb-xl">请选择本次检查使用的连接方式。</div>
+            <div class="row justify-center q-gutter-xl">
+              <div class="protocol-card column items-center justify-center q-pa-lg cursor-pointer" :class="{ 'active-protocol': connectionType === 'network' }" @click="connectionType = 'network'">
+                <q-icon name="wifi" size="4rem" class="q-mb-md" />
+                <div class="text-h6">网络连接</div>
+              </div>
+              <div class="protocol-card column items-center justify-center q-pa-lg cursor-pointer" :class="{ 'active-protocol': connectionType === 'usb' }" @click="connectionType = 'usb'">
+                <q-icon name="usb" size="4rem" class="q-mb-md" />
+                <div class="text-h6">USB连接</div>
+              </div>
+              <div class="protocol-card column items-center justify-center q-pa-lg cursor-pointer" :class="{ 'active-protocol': connectionType === 'serial' }" @click="connectionType = 'serial'">
+                <q-icon name="power_input" size="4rem" class="q-mb-md" />
+                <div class="text-h6">串口连接</div>
               </div>
             </div>
+          </q-card-section>
+          <q-separator dark />
+          <q-card-actions align="right" class="bg-dark-header q-pa-md">
+            <q-btn label="取消" flat color="white" @click="closeWizard" />
+            <q-btn label="下一步" color="primary" unelevated @click="wizardNext" style="min-width: 120px;" />
+          </q-card-actions>
+        </template>
+
+        <template v-if="wizardStep === 2">
+          <div v-if="connectionType === 'network'">
+            <q-card-section class="row items-center bg-dark-header">
+              <div class="text-h6">选定网络协议</div>
+              <q-space /><q-btn icon="close" flat round dense @click="closeWizard" />
+            </q-card-section>
+            <q-card-section class="q-pa-xl text-center">
+              <div class="text-grey-5 q-mb-xl">请选择需要使用的网络协议。</div>
+              <div class="row justify-center q-gutter-xl">
+                <div class="protocol-card column items-center justify-center q-pa-lg cursor-pointer" :class="{ 'active-protocol': networkProtocol === 'ssh' }" @click="networkProtocol = 'ssh'">
+                  <q-icon name="terminal" size="4rem" class="q-mb-md" />
+                  <div class="text-h6">SSH连接</div>
+                </div>
+                <div class="protocol-card column items-center justify-center q-pa-lg cursor-pointer" :class="{ 'active-protocol': networkProtocol === 'http' }" @click="networkProtocol = 'http'">
+                  <q-icon name="http" size="4rem" class="q-mb-md" />
+                  <div class="text-h6">HTTP连接</div>
+                </div>
+              </div>
+            </q-card-section>
+            <q-separator dark />
+            <q-card-actions align="right" class="bg-dark-header q-pa-md">
+              <q-btn label="上一步" flat color="white" @click="wizardBack" />
+              <q-btn label="下一步" color="primary" unelevated @click="wizardNext" style="min-width: 120px;" />
+            </q-card-actions>
           </div>
-        </q-card-section>
-        <q-separator dark/>
-        <q-card-actions align="right" class="bg-dark-header q-pa-md">
-          <q-btn label="取消" flat color="white" v-close-popup />
-          <q-btn label="确定" color="primary" unelevated @click="confirmCredentials" style="min-width: 120px;" />
-        </q-card-actions>
+
+          <div v-if="connectionType === 'usb' || connectionType === 'serial'">
+            <q-card-section class="row items-center bg-dark-header">
+              <div class="text-h6">配置{{ connectionType === 'usb' ? 'USB' : '串口' }}连接</div>
+              <q-space /><q-btn icon="close" flat round dense @click="closeWizard" />
+            </q-card-section>
+            <q-card-section class="q-pa-xl text-center">
+              <div class="text-h5 text-grey-6">此功能正在开发中...</div>
+            </q-card-section>
+            <q-separator dark />
+            <q-card-actions align="right" class="bg-dark-header q-pa-md">
+              <q-btn label="上一步" flat color="white" @click="wizardBack" />
+            </q-card-actions>
+          </div>
+        </template>
+
+        <template v-if="wizardStep === 3">
+          <div v-if="networkProtocol === 'ssh'" class="credential-dialog-step3">
+            <q-card-section class="row items-center bg-dark-header">
+              <div class="text-h6">登录账号及密码配置</div>
+              <q-space /><q-btn icon="close" flat round dense @click="closeWizard" />
+            </q-card-section>
+            <q-card-section class="q-pa-md" style="flex: 1; overflow-y: auto;">
+              <div class="row items-center q-gutter-md q-mb-md">
+                <q-btn color="primary" unelevated label="批量填充" />
+                <q-btn color="primary" unelevated label="添加" />
+                <q-space />
+                <div class="text-grey-5">当前站点：省调1</div>
+              </div>
+              <div class="credential-table-container">
+                <div class="row credential-table-header text-center text-weight-bold">
+                  <div class="col-2">资产IP</div><div class="col">端口号</div><div class="col-2">登录账号</div><div class="col-2">登录密码</div><div class="col-2">提权账号</div><div class="col-2">提权密码</div><div class="col-1">操作</div>
+                </div>
+                <div v-for="(cred, index) in loginCredentials" :key="cred.id" class="row credential-table-row items-center">
+                  <div class="col-2 text-center">{{ cred.ip }}</div>
+                  <div class="col"><q-input dark dense outlined v-model="cred.port" placeholder="端口..."/></div>
+                  <div class="col-2"><q-input dark dense outlined v-model="cred.username" placeholder="账号..."/></div>
+                  <div class="col-2"><q-input dark dense outlined v-model="cred.password" type="password" placeholder="密码..."><template v-slot:append><q-icon name="visibility" class="cursor-pointer"/></template></q-input></div>
+                  <div class="col-2"><q-input dark dense outlined v-model="cred.privilegeUsername" placeholder="提权账号..."/></div>
+                  <div class="col-2"><q-input dark dense outlined v-model="cred.privilegePassword" type="password" placeholder="提权密码..."><template v-slot:append><q-icon name="visibility" class="cursor-pointer"/></template></q-input></div>
+                  <div class="col-1 row justify-center q-gutter-x-sm">
+                    <q-btn dense flat round icon="delete" color="negative" @click="removeCredentialRow(index)" />
+                    <q-btn dense flat round icon="arrow_upward" color="primary" @click="applySameAsAbove(index)"><q-tooltip>同上一笔</q-tooltip></q-btn>
+                  </div>
+                </div>
+              </div>
+            </q-card-section>
+            <q-separator dark/>
+            <q-card-actions align="right" class="bg-dark-header q-pa-md">
+              <q-btn label="上一步" flat color="white" @click="wizardBack" />
+              <q-btn label="确定" color="primary" unelevated @click="confirmCredentials" style="min-width: 120px;" />
+            </q-card-actions>
+          </div>
+
+          <div v-if="networkProtocol === 'http'">
+            <q-card-section class="row items-center bg-dark-header">
+              <div class="text-h6">HTTP连接操作</div>
+              <q-space /><q-btn icon="close" flat round dense @click="closeWizard" />
+            </q-card-section>
+            <q-card-section class="q-pa-xl text-center">
+              <div class="text-grey-5 q-mb-xl">请选择需要对已选资产执行的操作。</div>
+              <div class="row q-gutter-xl justify-center">
+                <q-btn icon="download" label="下载检测软件" color="primary" unelevated size="xl" class="q-px-xl q-py-lg"/>
+                <q-btn icon="visibility" label="查看报告" color="primary" unelevated size="xl" class="q-px-xl q-py-lg"/>
+              </div>
+            </q-card-section>
+            <q-separator dark />
+            <q-card-actions align="right" class="bg-dark-header q-pa-md">
+              <q-btn label="上一步" flat color="white" @click="wizardBack" />
+              <q-btn label="完成" color="primary" unelevated @click="closeWizard" style="min-width: 120px;" />
+            </q-card-actions>
+          </div>
+        </template>
       </q-card>
     </q-dialog>
 
@@ -981,7 +1060,6 @@ const startLoginlessCheck = () => {
   font-size: 1.4rem;
 }
 
-/* MODIFIED: Specifically target loginless-check-dialog form controls for further enlargement */
 .loginless-check-dialog .form-label {
   font-size: 1.7rem;
 }
@@ -1000,6 +1078,7 @@ const startLoginlessCheck = () => {
   border-radius: 8px;
   background-color: #3d4a58;
   transition: all 0.3s ease;
+  min-width: 180px;
 }
 .protocol-card:hover {
   border-color: var(--q-primary);
@@ -1011,13 +1090,18 @@ const startLoginlessCheck = () => {
   color: white;
 }
 
-.credential-dialog {
-  height: 90vh;
+.credential-dialog-step3 {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 .credential-table-container {
   border: 1px solid #4f5b68;
   border-radius: 4px;
   font-size: 1.4rem;
+  /* flex-grow: 1; */
+  /* overflow-y: auto; */
 }
 .credential-table-header {
   background-color: #424864;
@@ -1065,7 +1149,7 @@ const startLoginlessCheck = () => {
   background-color: rgba(0, 188, 212, 0.2);
   padding: 8px 16px;
   border-radius: 6px;
-  border: 1px solid rgba(0, 188, 212, 0.4);
+  border: 1px solid rgba(0, 188, 212,.4);
   font-size: 1.2rem; /* 增大人工核查提示字体 */
 }
 
@@ -1086,3 +1170,4 @@ const startLoginlessCheck = () => {
   font-size: 2rem;
 }
 </style>
+I want to know the weather for New York City tomorrow
