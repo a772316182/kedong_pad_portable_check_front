@@ -48,14 +48,14 @@ const selectedQualifications = reactive({
 
 const qualificationOptions = {
   manual: [
-    { label: '专家访谈', value: '专家访谈' },
-    { label: '文档审核', value: '文档审核' },
+    { label: '检查大纲自查', value: '检查大纲自查' },
+    { label: '远程登录检查', value: '远程登录检查' },
   ],
   auto: [
-    { label: '配置核查', value: '配置核查' },
-    { label: '漏洞扫描', value: '漏洞扫描' },
-    { label: '基线比对', value: '基线比对' },
-    { label: '日志分析', value: '日志分析' },
+    { label: '免登录检查', value: '免登录检查' },
+    { label: '登录检查', value: '登录检查' },
+    { label: '告警对点', value: '告警对点' },
+    { label: '安防策略检查', value: '安防策略检查' },
   ]
 };
 
@@ -146,15 +146,21 @@ const confirmSelection = () => {
   console.log("任务已确认:", selectedTask.value.name);
   console.log("定性方式详情:", selectedDetails.join('; '));
   alert(`已选定站点: "${selectedSite.value.name}"\n已选定任务 "${selectedTask.value.name}"\n审查方式:\n${selectedDetails.join('\n')}`);
+
+  // --- 新增：将选定数据存储到 sessionStorage ---
+  // 下一个页面可以通过 sessionStorage.getItem('key') 和 JSON.parse() 来获取这些对象
+  sessionStorage.setItem('selectedSite', JSON.stringify(selectedSite.value));
+  sessionStorage.setItem('selectedTask', JSON.stringify(selectedTask.value));
+  sessionStorage.setItem('selectedQualifications', JSON.stringify(selectedQualifications));
+  // -----------------------------------------
+
   navigateTo('/checking');
 };
 </script>
 
 <template>
   <q-layout view="lHh LpR lFf" class="bg-dark-page text-white">
-    <!-- 1. 固定的顶部区域 -->
     <q-header class="bg-dark-page" bordered>
-      <!-- 主标题工具栏 -->
       <q-toolbar class="q-pt-sm q-pb-sm">
         <q-btn unelevated color="primary" :label="backButtonLabel" @click="goBack" icon="arrow_back" class="header-button" />
         <q-space />
@@ -165,7 +171,6 @@ const confirmSelection = () => {
         <div style="width: 100px"></div>
       </q-toolbar>
 
-      <!-- [修改] 步骤条现在是 header 的一部分，也会被固定 -->
       <div class="header-stepper-wrapper">
         <div class="stepper-container row q-col-gutter-none">
           <div class="col text-center stepper-item" :class="{active: currentStep === 'site-selection', done: ['task-selection', 'task-qualification'].includes(currentStep)}">站点选择</div>
@@ -175,12 +180,9 @@ const confirmSelection = () => {
       </div>
     </q-header>
 
-    <!-- 2. 可滚动的内容区 -->
     <q-page-container>
       <q-page class="q-pa-lg">
-        <!-- 步骤面板 (现在位于可滚动区域内) -->
         <div>
-          <!-- 步骤1: 站点选择 -->
           <div v-if="currentStep === 'site-selection'">
             <p class="step-description">请选择需要进行核查的站点</p>
             <q-list v-if="sites.length > 0" dark separator class="bg-dark-content rounded-borders">
@@ -196,7 +198,6 @@ const confirmSelection = () => {
             </q-list>
           </div>
 
-          <!-- 步骤2: 任务选择 -->
           <div v-if="currentStep === 'task-selection' && selectedSite">
             <p class="step-description">
               已选择站点: <span class="text-weight-bold text-white">{{ selectedSite.name }}</span>。请选择需要执行的核查任务。
@@ -214,7 +215,6 @@ const confirmSelection = () => {
             </q-list>
           </div>
 
-          <!-- 步骤3: 任务定性 -->
           <div v-if="currentStep === 'task-qualification' && selectedTask">
             <p class="step-description">
               已选定: <span class="text-weight-bold text-white">{{ selectedSite.name }} / {{ selectedTask.name }}</span>。请选定审查方式（可多选）。
@@ -237,12 +237,10 @@ const confirmSelection = () => {
       </q-page>
     </q-page-container>
 
-    <!-- 3. 固定的底部按钮区 -->
     <q-footer class="bg-dark-page page-footer" bordered>
       <div v-if="currentStep === 'site-selection'" class="text-center">
         <q-btn color="primary" unelevated label="新增/编辑站点" @click="navigateTo('/stationview')" class="shadow-5 bottom-action-button" />
       </div>
-      <!-- [修改] 使用 justify-center 和 gap 增加按钮间距 -->
       <div v-if="currentStep === 'task-selection'" class="row justify-center" style="gap: 60px; width: 100%;">
         <q-btn color="primary" unelevated label="新增任务" @click="openAddTaskDialog" class="shadow-5 bottom-action-button" />
         <q-btn color="primary" unelevated label="修改历史任务" @click="navigateTo('/taskcheck')" class="shadow-5 bottom-action-button" />
@@ -255,7 +253,6 @@ const confirmSelection = () => {
       </div>
     </q-footer>
 
-    <!-- 对话框部分保持不变 -->
     <q-dialog v-model="showAddTaskDialog" persistent>
       <q-card class="bg-dark-content text-white dialog-card">
         <q-card-section class="row items-center">
