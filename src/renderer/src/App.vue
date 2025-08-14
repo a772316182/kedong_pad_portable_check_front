@@ -3,6 +3,8 @@
 function refreshEverything() {
   window.location.reload()
 }
+
+import '../../fonts/globalfont.css'
 </script>
 
 <template>
@@ -16,3 +18,9 @@ function refreshEverything() {
     </q-page-sticky>
   </q-layout>
 </template>
+
+<style scoped>
+  *{
+  font-family: 'HarmonySansRegular', sans-serif;
+  }
+</style>
