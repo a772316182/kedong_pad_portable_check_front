@@ -1170,4 +1170,3 @@ const startLoginlessCheck = () => {
   font-size: 2rem;
 }
 </style>
-I want to know the weather for New York City tomorrow
