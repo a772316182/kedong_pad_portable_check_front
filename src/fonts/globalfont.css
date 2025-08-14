@@ -1,0 +1,18 @@
+/* src/assets/css/global.css */
+
+@font-face {
+  /* 定义一个字体家族名称，后续将在 CSS 中使用这个名字 */
+  font-family: 'HarmonySansRegular';
+  /* 指定字体文件的路径 (相对于 CSS 文件) */
+  src: url('HarmonyOS_Sans_Medium.woff2') format('woff2');
+  /* 定义这个字体文件对应的字重和样式 */
+  font-weight: normal; /* 或者 400 */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'HarmonySansBold';
+  src: url('HarmonyOS_Sans_Bold.woff2') format('woff2');
+  font-weight: bold; /* 或者 700 */
+  font-style: normal;
+}
