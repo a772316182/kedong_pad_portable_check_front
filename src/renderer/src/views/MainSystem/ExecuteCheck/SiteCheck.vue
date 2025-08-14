@@ -69,7 +69,7 @@ const currentCategoryData = computed(() => {
     <q-header class="bg-dark-header q-pa-sm">
       <q-toolbar>
         <div class="flex items-center q-gutter-x-sm">
-          <q-btn color="teal-5" unelevated label="上一步" @click="navigateTo('/techcheckinprogress')" />
+          <q-btn color="primary" unelevated label="上一步" @click="navigateTo('/techcheckinprogress')" />
           <div class="text-caption text-grey-5">2025-06-20 16:54:20</div>
         </div>
         <q-space />
@@ -84,7 +84,7 @@ const currentCategoryData = computed(() => {
           v-model="activeMainCategory"
           @update:model-value="activeSubCategory = currentCategoryData.subCategories[0].id; supervisionPreviewMode = false"
           unelevated
-          toggle-color="teal-5"
+          toggle-color="primary"
           text-color="black"
           class="bg-grey-10"
           :options="[
@@ -99,7 +99,7 @@ const currentCategoryData = computed(() => {
           ]"
         />
         <q-space />
-        <q-btn color="teal-5" unelevated label="切换连接" />
+        <q-btn color="primary" unelevated label="切换连接" />
       </q-toolbar>
     </q-header>
 
@@ -110,7 +110,7 @@ const currentCategoryData = computed(() => {
           <div class="col-3">
             <q-list bordered separator class="bg-dark-content rounded-borders full-height">
               <q-item-label header class="text-weight-bold text-white">{{ currentCategoryData.name }}</q-item-label>
-              <q-item v-for="sub in currentCategoryData.subCategories" :key="sub.id" clickable v-ripple :active="activeSubCategory === sub.id" @click="activeSubCategory = sub.id" active-class="bg-teal-5 text-white">
+              <q-item v-for="sub in currentCategoryData.subCategories" :key="sub.id" clickable v-ripple :active="activeSubCategory === sub.id" @click="activeSubCategory = sub.id" active-class="bg-primary text-white">
                 <q-item-section>{{ sub.label }}</q-item-section>
               </q-item>
               <q-space />
@@ -126,15 +126,15 @@ const currentCategoryData = computed(() => {
               <q-item-label header class="row items-center">
                 <div class="text-weight-bold text-white">检查方法</div>
                 <q-space />
-                <q-btn color="teal-5" dense unelevated label="核查依据" @click="dialogs.basis = true"/>
+                <q-btn color="primary" dense unelevated label="核查依据" @click="dialogs.basis = true"/>
               </q-item-label>
               <q-scroll-area class="fit" style="height: calc(100% - 50px);">
                 <q-item v-for="item in currentCategoryData.items" :key="item.id" class="q-py-md column">
                   <q-item-section><q-item-label class="text-grey-4">{{ item.text }}</q-item-label></q-item-section>
                   <q-item-section side top class="full-width q-mt-sm">
                     <div class="row items-center justify-end full-width q-gutter-x-md">
-                      <q-option-group v-model="item.status" :options="[{ label: '已通过', value: 'confirmed' }, { label: '未通过', value: 'unconfirmed' }]" color="teal-5" inline dense />
-                      <q-btn color="teal-5" unelevated label="取证上传" />
+                      <q-option-group v-model="item.status" :options="[{ label: '已通过', value: 'confirmed' }, { label: '未通过', value: 'unconfirmed' }]" color="primary" inline dense />
+                      <q-btn color="primary" unelevated label="取证上传" />
                     </div>
                   </q-item-section>
                 </q-item>
@@ -144,7 +144,7 @@ const currentCategoryData = computed(() => {
             <!-- 监督管理视图 -->
             <q-card v-else flat class="bg-dark-content full-height">
               <q-card-section class="row items-center q-py-sm">
-                <q-btn color="teal-5" unelevated label="报告导出" />
+                <q-btn color="292a2d" unelevated label="报告导出" />
                 <q-space />
                 <q-btn color="white" text-color="black" unelevated label="切换预览" @click="supervisionPreviewMode = !supervisionPreviewMode" />
               </q-card-section>
@@ -157,8 +157,8 @@ const currentCategoryData = computed(() => {
               >
                 <template v-slot:body-cell-actions="props">
                   <q-td :props="props" class="q-gutter-x-sm">
-                    <q-btn dense color="teal-5" label="核查依据" @click="dialogs.basis = true" />
-                    <q-btn dense color="teal-5" label="详情展开">
+                    <q-btn dense color="primary" label="核查依据" @click="dialogs.basis = true" />
+                    <q-btn dense color="primary" label="详情展开">
                       <q-menu anchor="top right" self="top left">
                         <q-list dense style="min-width: 100px">
                           <q-item clickable v-close-popup><q-item-section>编辑</q-item-section></q-item>
@@ -205,9 +205,9 @@ const currentCategoryData = computed(() => {
 </template>
 
 <style scoped>
-.bg-dark-page { background-color: #2e3c41; }
-.bg-dark-header { background-color: #242f33; }
-.bg-dark-content { background-color: #3a4c52; }
+.bg-dark-page { background-color: #292a2d; }
+.bg-dark-header { background-color: #3f4045; }
+.bg-dark-content { background-color: #36373a; }
 :deep(.q-toolbar) { padding: 8px 12px; }
 :deep(.q-btn-toggle) { border-radius: 4px; }
 :deep(.q-btn-toggle .q-btn) { font-weight: 600; background-color: #fff; color: #333; }

@@ -1,24 +1,33 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
-import ExecuteCheck from '../views/ExecuteCheck.vue'
-import ManageCheck from '../views/ManageCheck.vue'
+import ExecuteCheck from '../views/MainSystem/ExecuteCheck/ExecuteCheck.vue'
+import ManageCheck from '../views/MainSystem/ManageCheck/ManageCheck.vue'
 import ManageStrategy from '../views/ManageStrategy.vue'
-import MainView from '../views/MainView.vue'
+import MainView from '../views/MainSystem/MainView.vue'
 import MustCheck from '../views/MustCheck.vue'
-import CheckReports from '../views/CheckReports.vue'
-import ReportView from '../views/ReportView.vue'
-import StationView from '../views/StationView.vue'
-import ManageAsset from '../views/ManageAsset.vue'
-import CheckInProgress from '../views/CheckInProgress.vue'
-import TaskCheck from '../views/TaskCheck.vue'
-import MultiAsset from '../views/MultiAsset.vue'
-import Checking from '../views/Checking.vue'
-import CheckResult from '../views/CheckResult.vue'
-import LoginCheckInProgress from '../views/LoginCheckInProgress.vue'
-import HistoryLog from '../views/HistoryLog.vue'
-import TechCheck from '../views/Techcheck.vue'
-import TechCheckInProgress from '../views/TechCheckInProgress.vue'
-import SiteCheck from '../views/SiteCheck.vue'
+import CheckReports from '../views/MainSystem/ManageCheck/CheckReports.vue'
+import ReportView from '../views/MainSystem/ManageCheck/ReportView.vue'
+import StationView from '../views/MainSystem/ManageCheck/StationView.vue'
+import ManageAsset from '../views/MainSystem/ManageCheck/ManageAsset.vue'
+import CheckInProgress from '../views/MainSystem/ManageCheck/CheckInProgress.vue'
+import TaskCheck from '../views/MainSystem/ManageCheck/TaskCheck.vue'
+import Checking from '../views/MainSystem/ExecuteCheck/Checking.vue'
+import CheckResult from '../views/MainSystem/ExecuteCheck/CheckResult.vue'
+import LoginCheckInProgress from '../views/MainSystem/ExecuteCheck/LoginCheckInProgress.vue'
+import HistoryLog from '../views/MainSystem/ExecuteCheck/HistoryLog.vue'
+import TechCheck from '../views/MainSystem/ExecuteCheck/TechCheck.vue'
+import TechCheckInProgress from '../views/MainSystem/ExecuteCheck/TechCheckInProgress.vue'
+import SiteCheck from '../views/MainSystem/ExecuteCheck/SiteCheck.vue'
+import BaseSafeCheck from '../views/MainSystem/FactorySafeCheck/BaseSafeCheck.vue'
+import NetMachineCheck from '../views/MainSystem/FactorySafeCheck/NetMachineCheck.vue'
+import FactorySafeCheck from '../views/MainSystem/FactorySafeCheck/FactorySafeCheck.vue'
+import FactoryView from '../views/MainSystem/ManageCheck/FactoryView.vue'
+import SecurityStrategy from '../views/MainSystem/FactorySafeCheck/SecurityStrategy.vue'
+import SecurityAlert from '../views/MainSystem/FactorySafeCheck/SecurityAlert.vue'
+import ManageCustomer from '../views/MainSystem/ManageCustomer.vue'
+import ManageSystem from '../views/MainSystem/ManageSystem.vue'
+import ModeSelect from '../views/MainSystem/ManageCheck/ModeSelect.vue'
+import StationAndTask from '../views/MainSystem/ManageCheck/StationAndTask.vue'
 
 const routes = [
   {
@@ -94,11 +103,6 @@ const routes = [
     component: TaskCheck
   },
   {
-    path:'/multiasset',
-    name:'multiasset',
-    component:MultiAsset
-  },
-  {
     path:'/checking',
     name:'checking',
     component:Checking
@@ -127,6 +131,51 @@ const routes = [
     path: '/sitecheck',
     name: 'sitecheck',
     component: SiteCheck
+  },{
+    path:'/basesafecheck',
+    name:'/basesafecheck',
+    component: BaseSafeCheck
+  },{
+    path:'/netmachinecheck',
+    name:'netmachinecheck',
+    component: NetMachineCheck
+  },{
+    path:'/factorysafecheck',
+    name:'factorysafecheck',
+    component: FactorySafeCheck
+  },
+  {
+    path:'/factoryview',
+    name:'factoryview',
+    component: FactoryView
+  },
+  {
+    path:'/securitystrategy',
+    name:'securitystrategy',
+    component: SecurityStrategy
+  },
+  {
+    path:'/securityalert',
+    name:'securityalert',
+    component: SecurityAlert
+  },{
+    path:'/managecustomer',
+    name:'managecustomer',
+    component: ManageCustomer
+  },{
+    path:'/managesystem',
+    name:'managesystem',
+    component: ManageSystem
+  },
+  {
+    path:'/modeselect',
+    name:'modeselect',
+    component: ModeSelect
+  },
+  {
+    path:'/stationandtask',
+    name:'stationandtask',
+    component: StationAndTask
   }
 ]
 

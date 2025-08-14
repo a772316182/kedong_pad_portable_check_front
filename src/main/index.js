@@ -13,9 +13,10 @@ function createWindow() {
     width: 1600,
     height: 1000,
     show: false,
-    autoHideMenuBar: false,
+    autoHideMenuBar: true,
     icon: join(__dirname, '../../resources/icon.png'),
     webPreferences: {
+      webSecurity: false,
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
       enableRemoteModule: true

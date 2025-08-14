@@ -18,7 +18,7 @@ const navigateTo = (path) => {
       <q-toolbar>
         <q-btn label="返回" color="primary" @click="navigateTo('/mainview')" />
         <q-toolbar-title>
-          核查管理
+          厂站安全检查
         </q-toolbar-title>
         <q-space />
         <div class="text-caption text-grey-5">
@@ -32,36 +32,59 @@ const navigateTo = (path) => {
       <q-page class="flex flex-center">
         <div class="q-pa-md" style="width: 100%; max-width: 600px;">
           <q-list separator>
-            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/stationview")'>
+            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/factoryview")'>
               <q-item-section avatar>
-                <q-icon color="blue-4" name="desktop_windows" />
+                <q-icon color="primary" name="home" />
               </q-item-section>
               <q-item-section>
-                <q-item-label class="text-h6">核查对象管理</q-item-label>
+                <q-item-label class="text-h6">厂站列表管理</q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-icon name="chevron_right" />
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/basesafecheck")'>
+              <q-item-section avatar>
+                <q-icon color="primary" name="home" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label class="text-h6">安全基础检查</q-item-label>
               </q-item-section>
               <q-item-section side>
                 <q-icon name="chevron_right" />
               </q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/inprogress")'>
+            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/netmachinecheck")'>
               <q-item-section avatar>
-                <q-icon color="blue-4" name="folder_open" />
+                <q-icon color="primary" name="desktop_windows" />
               </q-item-section>
               <q-item-section>
-                <q-item-label class="text-h6">核查任务管理</q-item-label>
+                <q-item-label class="text-h6">网络设备检查</q-item-label>
               </q-item-section>
               <q-item-section side>
                 <q-icon name="chevron_right" />
               </q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/checkreports")'>
+            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/securitystrategy")'>
               <q-item-section avatar>
-                <q-icon color="blue-4" name="assignment" />
+                <q-icon color="primary" name="folder_open" />
               </q-item-section>
               <q-item-section>
-                <q-item-label class="text-h6">核查结果管理</q-item-label>
+                <q-item-label class="text-h6">安全策略检查</q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-icon name="chevron_right" />
+              </q-item-section>
+            </q-item>
+
+            <q-item clickable v-ripple class="q-py-lg" @click='navigateTo("/securityalert")'>
+              <q-item-section avatar>
+                <q-icon color="primary" name="assignment" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label class="text-h6">安全告警验证</q-item-label>
               </q-item-section>
               <q-item-section side>
                 <q-icon name="chevron_right" />
@@ -77,10 +100,10 @@ const navigateTo = (path) => {
 <style scoped>
 /* 自定义深色主题 */
 .bg-dark-page {
-  background-color: #242424; /* 一个较深的灰色作为页面背景 */
+  background-color: #292a2d; /* 一个较深的灰色作为页面背景 */
 }
 .bg-dark-header {
-  background-color: #1f1f1f; /* 一个更深的灰色作为头部背景 */
+  background-color: #414853; /* 一个更深的灰色作为头部背景 */
 }
 
 /* 使用 Quasar 的 List 组件来模拟图片中的长按钮效果 */

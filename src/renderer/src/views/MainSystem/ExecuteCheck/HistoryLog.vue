@@ -68,7 +68,7 @@ const compareRecords = () => {
         <q-toggle
           v-model="showIncomplete"
           label="未完成记录"
-          color="green"
+          color="primary"
           checked-icon="check"
           unchecked-icon="clear"
           size="lg"
@@ -77,7 +77,7 @@ const compareRecords = () => {
         <q-toggle
           v-model="showPassed"
           label="核查通过记录"
-          color="green"
+          color="primary"
           checked-icon="check"
           unchecked-icon="clear"
           size="lg"
@@ -101,7 +101,7 @@ const compareRecords = () => {
 /* 整体页面背景 */
 .page-background {
   /* 从原型图提取的精确背景色 */
-  background-color: #2c3e4a;
+  background-color: #292a2d;
 }
 
 /* 顶部栏样式 */
@@ -116,7 +116,7 @@ const compareRecords = () => {
 
 /* 返回按钮 */
 .back-button {
-  background-color: #00796b;
+  background-color: #4c6afc;
   color: white;
   font-weight: bold;
   border-radius: 6px;
@@ -125,7 +125,7 @@ const compareRecords = () => {
 
 /* 信息面板 */
 .info-card {
-  background-color: #68a0a9; /* 从原型图提取的浅青色 */
+  background-color: #3d4a58; /* 从原型图提取的浅青色 */
   color: white;
   border-radius: 8px;
   position: relative; /* 为对比按钮的定位提供锚点 */
@@ -141,7 +141,7 @@ const compareRecords = () => {
 
 /* 对比按钮 */
 .compare-button {
-  background-color: #00796b;
+  background-color: #4c6afc;
   color: white;
   font-weight: bold;
   border-radius: 6px;

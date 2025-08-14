@@ -4,3 +4,11 @@ out
 .DS_Store
 .eslintcache
 *.log*
+electron-builder.yml
+forge.config.js
+electron-builder.yml
+package-lock.json
+package.json
+src/main/index.js
+package.json
+src/main/index.js

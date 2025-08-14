@@ -4,6 +4,9 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
+const navigateTo = (path) => {
+  router.push(path)
+}
 // --- 控制器 ---
 const isMergeDialogOpen = ref(false); // 控制资产合并弹窗
 const selectedAssetId = ref(1); // 当前选中的资产ID
@@ -72,11 +75,11 @@ const selectAsset = (id) => { selectedAssetId.value = id; };
         <div class="text-h4 text-white text-weight-bolder">资产管理</div>
         <q-space />
         <div class="row items-center q-gutter-x-lg">
-          <q-btn flat dense no-caps class="action-btn" icon="o_sync_alt" label="切换"/>
-          <q-btn flat dense no-caps class="action-btn" icon="o_sort" label="排序"/>
-          <q-btn flat dense no-caps class="action-btn" icon="o_filter_alt" label="筛选"/>
-          <span class="text-white">当前电量: 15% <q-icon name="o_battery_2_bar"/></span>
-          <q-btn flat dense no-caps class="action-btn" icon="o_add" label="添加"/>
+          <q-btn flat dense no-caps class="action-btn" icon="o" label="切换" @click="navigateTo('/manageasset')"/>
+          <q-btn flat dense no-caps class="action-btn" icon="o" label="排序"/>
+          <q-btn flat dense no-caps class="action-btn" icon="o" label="筛选"/>
+          <span class="text-white">当前电量: 15% <q-icon name="o"/></span>
+          <q-btn flat dense no-caps class="action-btn" icon="o" label="添加"/>
         </div>
       </div>
 
@@ -87,7 +90,7 @@ const selectAsset = (id) => { selectedAssetId.value = id; };
             <span class="text-body1">当前站点：省调1</span>
           </div>
           <div class="text-red">总记录总数：{{ assetList.length }}</div>
-          <q-btn color="teal" label="资产合并" unelevated @click="isMergeDialogOpen = true"/>
+          <q-btn color="primary" label="资产合并" unelevated @click="isMergeDialogOpen = true"/>
         </div>
       </q-card>
 
@@ -97,7 +100,7 @@ const selectAsset = (id) => { selectedAssetId.value = id; };
         <div class="col-3 left-panel">
           <div class="panel-header">
             <span>资产列表</span>
-            <q-btn unelevated color="teal" label="新增" dense/>
+            <q-btn unelevated color="primary" label="新增" dense/>
           </div>
           <q-list separator>
             <q-item
@@ -111,7 +114,7 @@ const selectAsset = (id) => { selectedAssetId.value = id; };
             >
               <q-item-section>{{ asset.ip }}</q-item-section>
               <q-item-section side>
-                <q-btn round flat dense icon="o_close" size="sm"/>
+                <q-btn round flat dense icon="close" size="sm"/>
               </q-item-section>
             </q-item>
           </q-list>
@@ -122,7 +125,7 @@ const selectAsset = (id) => { selectedAssetId.value = id; };
           <div class="panel-header">
             <div>
               <span>资产详情</span>
-              <q-btn round flat dense icon="o_edit" class="q-ml-sm"/>
+              <q-btn round flat dense icon="o" class="q-ml-sm"/>
             </div>
           </div>
           <div class="detail-grid">
@@ -177,12 +180,12 @@ const selectAsset = (id) => { selectedAssetId.value = id; };
 </template>
 
 <style scoped>
-.page-background { background-color: #313942; }
+.page-background { background-color: #292a2d; }
 .status-bar { position: absolute; top: 10px; left: 0; width: 100%; color: white; z-index: 10; }
-.back-button { background-color: #00796b; color: white; font-weight: bold; border-radius: 6px; padding: 4px 16px; }
+.back-button { background-color: #4c6afc; color: white; font-weight: bold; border-radius: 6px; padding: 4px 16px; }
 .main-content-area { padding: 60px 24px 24px; }
 .top-bar .action-btn { color: white; font-size: 1rem; }
-.info-panel { background-color: #3d4a58; color: #e0e0e0; border-radius: 8px; }
+.info-panel { background-color: #3f3f44; color: #e0e0e0; border-radius: 8px; }
 .main-panel-container { height: calc(100vh - 180px); /* 视口高度减去顶部所有栏的高度 */ }
 
 .left-panel, .right-panel { background-color: #f7f8fa; border: 1px solid #e0e0e0; }

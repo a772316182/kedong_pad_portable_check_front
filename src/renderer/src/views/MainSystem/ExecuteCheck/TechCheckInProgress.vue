@@ -146,10 +146,10 @@
           >
             <template v-slot:body-cell-actions="props">
               <q-td :props="props">
-                <q-btn size="sm" color="teal" label="资产详情" class="q-mr-sm" />
-                <q-btn size="sm" color="teal" label="核查记录" class="q-mr-sm" />
+                <q-btn size="sm" color="primary" label="资产详情" class="q-mr-sm" />
+                <q-btn size="sm" color="primary" label="核查记录" class="q-mr-sm" />
                 <!-- 仅在状态为'登录异常'时显示此按钮 -->
-                <q-btn v-if="props.row.status === '登录异常'" size="sm" color="negative" label="登记核验" @click="showAnomalySheet(props.row)" />
+                <q-btn v-if="props.row.status === '登录异常'" size="sm" color="secondary" label="登记核验" @click="showAnomalySheet(props.row)" />
               </q-td>
             </template>
           </q-table>
@@ -393,7 +393,7 @@ const getChipColor = (status) => {
 
 <style lang="sass">
 .q-layout
-  background: #2c3a45
+  background: #292a2d
 .q-table__container
   border-radius: 8px
 

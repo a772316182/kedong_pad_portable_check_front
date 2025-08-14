@@ -145,10 +145,6 @@ const hideDetailView = () => {
 <template>
   <q-layout view="lHh Lpr lFf" class="page-background">
     <!-- Top Bar -->
-    <div class="top-bar row items-center justify-between q-px-md">
-      <span>2025-06-20 15:25:23</span>
-      <span>当前电量: 22% <q-icon name="o_battery_2_bar"/></span>
-    </div>
 
     <!-- Main Header -->
     <div class="main-header row items-center q-px-md">
@@ -161,6 +157,7 @@ const hideDetailView = () => {
       <div>
         <!-- 修改此处的点击事件，调用我们准备数据的方法 -->
         <q-btn unelevated label="恶意代码结果" @click="showBadCodeResult" class="back-button"/>
+        <q-btn unelevated label="报告导出" @click="showBadCodeResult" class="back-button"  icon="file_download"/>
       </div>
     </div>
 
@@ -205,7 +202,7 @@ const hideDetailView = () => {
               </q-list>
               <q-separator/>
               <q-card-actions class="q-pa-md">
-                <q-btn label="确认核查结果" color="teal" unelevated class="full-width"/>
+                <q-btn label="确认核查结果" color="primary" unelevated class="full-width"/>
               </q-card-actions>
             </q-card>
           </div>
@@ -393,16 +390,16 @@ const hideDetailView = () => {
 </template>
 
 <style scoped>
-.page-background { background-color: #313942; }
+.page-background { background-color: #292a2d; }
 .top-bar, .main-header { color: white; padding: 8px 16px; }
-.back-button { background-color: #00796b; color: white; border-radius: 6px; }
+.back-button { background-color: #4c6afc; color: white; border-radius: 6px; }
 .main-content-area { padding: 10px 24px 24px; position: relative; top: -8px; }
 .info-panel { background-color: #3d4a58; color: #e0e0e0; border-radius: 8px; }
 .info-btn { color: white; background-color: rgba(255,255,255,0.1); border-radius: 16px; padding: 4px 16px; }
 
 .category-item { font-size: 1rem; color: #333; }
 .active-category-item {
-  background-color: #00796b !important;
+  background-color: #2287da !important;
   color: white !important;
 }
 

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive, onUnmounted } from 'vue';
-import router from '../router'
+import router from '../../../router'
 
 const navigateTo = (path) => {
   console.log(`正在跳转到: ${path}`)
@@ -74,7 +74,7 @@ onUnmounted(() => {
   <q-layout view="lHh Lpr lFf" class="bg-dark-page text-white">
     <q-header class="bg-dark-page q-pa-sm">
       <q-toolbar>
-        <q-btn unelevated color="teal-6" label="返回" @click="router.go(-1);" />
+        <q-btn unelevated color="primary" label="返回" @click="router.go(-1);" />
         <q-chip square color="grey-8" text-color="white" class="q-ml-md">
           10.105.71.97
         </q-chip>
@@ -93,7 +93,7 @@ onUnmounted(() => {
       <q-page class="q-pa-md">
         <!-- 进度条 -->
         <div class="q-mb-lg">
-          <q-linear-progress :value="progressBarValue" color="light-blue-6" track-color="grey-7" style="height: 8px" rounded />
+          <q-linear-progress :value="progressBarValue" color="primary" track-color="grey-7" style="height: 8px" rounded />
           <div class="row text-caption text-grey-5 q-mt-xs">
             <div class="col text-left" :class="{'text-white text-weight-bold': progressLabels[0].active}">{{ progressLabels[0].name }}</div>
             <div class="col text-center" :class="{'text-white text-weight-bold': progressLabels[1].active}">{{ progressLabels[1].name }}</div>
@@ -111,7 +111,7 @@ onUnmounted(() => {
               <tbody><tr><td>sf-server...</td><td>主机设备</td><td>unknown</td><td>LinuxOS</td><td>10.51.18.79</td><td>...</td></tr></tbody>
             </q-markup-table>
             <div class="text-center q-mt-lg">
-              <q-btn color="light-blue-6" label="下一步" @click="goToStep(2)" />
+              <q-btn color="primary" label="下一步" @click="goToStep(2)" />
             </div>
           </q-card-section>
 
@@ -123,8 +123,8 @@ onUnmounted(() => {
               <tbody><tr><td>10.105.71.97</td><td>sf-server-01</td><td>主机设备</td><td>unknown</td><td>Linux 3.12</td><td><q-btn flat dense color="primary" label="预览" @click="goToStep(3)" /></td></tr></tbody>
             </q-markup-table>
             <div class="text-center q-mt-lg q-gutter-md">
-              <q-btn color="teal-6" label="选择设备" />
-              <q-btn color="light-blue-6" label="策略确认" @click="startCheck" />
+              <q-btn color="primary" label="选择设备" />
+              <q-btn color="secondary" label="策略确认" @click="startCheck" />
             </div>
           </q-card-section>
 
@@ -175,6 +175,6 @@ onUnmounted(() => {
 
 <style scoped>
 .bg-dark-page {
-  background-color: #2e3c41;
+  background-color: #292a2d;
 }
 </style>
