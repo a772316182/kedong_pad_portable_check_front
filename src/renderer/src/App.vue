@@ -19,7 +19,7 @@ import '../../fonts/globalfont.css'
   </q-layout>
 </template>
 
-<style scoped>
+<style>
   *{
   font-family: 'HarmonySansRegular', sans-serif;
   }
