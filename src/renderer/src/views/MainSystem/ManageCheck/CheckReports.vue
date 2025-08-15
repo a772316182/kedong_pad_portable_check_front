@@ -6,13 +6,18 @@
       <q-header elevated class="text-white q-py-md">
         <q-toolbar>
           <!-- 【样式统一】应用 action-button 样式 -->
-          <q-btn unelevated label="返回" @click="navigateTo('mainView')" class="action-button" icon="arrow_back_ios"/>
+          <q-btn
+            unelevated
+            label="返回"
+            class="action-button"
+            icon="arrow_back_ios"
+            @click="navigateTo('mainView')"
+          />
           <!-- 【样式统一】修改标题颜色和样式 -->
-          <div class="text-h4 text-weight-bolder q-ml-lg" style="color: #4c6afc;">
-            报告管理
-          </div>
+          <div class="text-h4 text-weight-bolder q-ml-lg" style="color: #4c6afc">报告管理</div>
 
-          <q-space /> <!-- 添加一个 q-space 来将右侧按钮推到边缘 -->
+          <q-space />
+          <!-- 添加一个 q-space 来将右侧按钮推到边缘 -->
           <div class="row items-center q-gutter-x-md">
             <!-- 【样式统一】应用 action-button 样式 -->
             <q-btn unelevated label="导入" icon="file_upload" class="action-button" />
@@ -24,7 +29,6 @@
       <!-- 页面主要内容 -->
       <q-page-container>
         <q-page class="q-pa-lg">
-
           <!-- 报告表格 -->
           <q-table
             :rows="reports"
@@ -35,25 +39,52 @@
             dark
             flat
           >
-            <template v-slot:body-cell-actions="props">
+            <template #body-cell-actions="props">
               <q-td :props="props" class="q-gutter-sm">
                 <!-- 【样式统一】修改操作按钮颜色以匹配目标图片 -->
-                <q-btn flat dense round icon="visibility" color="light-blue-3" @click="navigateTo('reportview')">
+                <q-btn
+                  flat
+                  dense
+                  round
+                  icon="visibility"
+                  color="light-blue-3"
+                  @click="navigateTo('reportview')"
+                >
                   <q-tooltip>查看报告详情</q-tooltip>
                 </q-btn>
-                <q-btn flat dense round icon="usb" color="light-blue-3" @click="downloadToUSB(props.row)">
+                <q-btn
+                  flat
+                  dense
+                  round
+                  icon="usb"
+                  color="light-blue-3"
+                  @click="downloadToUSB(props.row)"
+                >
                   <q-tooltip>导出到U盘</q-tooltip>
                 </q-btn>
-                <q-btn flat dense round icon="drive_file_rename_outline" color="light-blue-3" @click="openRenameDialog(props.row)">
+                <q-btn
+                  flat
+                  dense
+                  round
+                  icon="drive_file_rename_outline"
+                  color="light-blue-3"
+                  @click="openRenameDialog(props.row)"
+                >
                   <q-tooltip>重命名报告</q-tooltip>
                 </q-btn>
-                <q-btn flat dense round icon="delete" color="negative" @click="openDeleteDialog(props.row)">
+                <q-btn
+                  flat
+                  dense
+                  round
+                  icon="delete"
+                  color="negative"
+                  @click="openDeleteDialog(props.row)"
+                >
                   <q-tooltip>删除</q-tooltip>
                 </q-btn>
               </q-td>
             </template>
           </q-table>
-
         </q-page>
       </q-page-container>
 
@@ -63,7 +94,7 @@
           <q-card-section class="row items-center">
             <div class="text-h6">重命名报告</div>
             <q-space />
-            <q-btn icon="close" flat round dense v-close-popup />
+            <q-btn v-close-popup icon="close" flat round dense />
           </q-card-section>
           <q-card-section>
             <q-input
@@ -75,7 +106,7 @@
             />
           </q-card-section>
           <q-card-actions align="right">
-            <q-btn flat label="取消" v-close-popup />
+            <q-btn v-close-popup flat label="取消" />
             <q-btn flat label="确认" color="primary" @click="confirmRename" />
           </q-card-actions>
         </q-card>
@@ -87,28 +118,25 @@
           <q-card-section class="row items-center">
             <div class="text-h6">确认删除</div>
             <q-space />
-            <q-btn icon="close" flat round dense v-close-popup />
+            <q-btn v-close-popup icon="close" flat round dense />
           </q-card-section>
-          <q-card-section>
-            您确定要删除报告 “{{ deleteDialog.report?.name }}” 吗？
-          </q-card-section>
+          <q-card-section> 您确定要删除报告 “{{ deleteDialog.report?.name }}” 吗？ </q-card-section>
           <q-card-actions align="right">
-            <q-btn flat label="取消" v-close-popup />
+            <q-btn v-close-popup flat label="取消" />
             <q-btn flat label="删除" color="negative" @click="confirmDelete" />
           </q-card-actions>
         </q-card>
       </q-dialog>
-
     </q-layout>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useQuasar } from 'quasar';
+import { ref, onBeforeMount, onMounted } from 'vue'
+import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
 
-const $q = useQuasar();
+const $q = useQuasar()
 const router = useRouter()
 
 const navigateTo = (path) => {
@@ -120,71 +148,92 @@ const reportColumns = [
   { name: 'creationDate', label: '生成时间', align: 'left', field: 'creationDate', sortable: true },
   { name: 'size', label: '文件大小', align: 'left', field: 'size', sortable: true },
   { name: 'version', label: '版本号', align: 'left', field: 'version' },
-  { name: 'actions', label: '操作', align: 'center', field: 'actions' },
-];
+  { name: 'actions', label: '操作', align: 'center', field: 'actions' }
+]
 
-const reports = ref([
-  { id: 1, name: '安全巡检报告', creationDate: '2025-06-20 15:47:30', size: '2.5 MB', version: 'v1.0' },
-  { id: 2, name: '季度安全审计报告', creationDate: '2025-05-15 11:28:00', size: '4.1 MB', version: 'v1.2' },
-]);
+const reports = ref([])
 
 const renameDialog = ref({
   isOpen: false,
   report: null,
   newName: ''
-});
+})
 const deleteDialog = ref({
   isOpen: false,
   report: null
-});
+})
 
 const downloadToUSB = (report) => {
   $q.notify({
     message: `已将报告 “${report.name}” 发送到U盘`,
     color: 'positive',
     icon: 'usb'
-  });
-};
+  })
+}
 
 const openRenameDialog = (report) => {
-  renameDialog.value.report = report;
-  renameDialog.value.newName = report.name;
-  renameDialog.value.isOpen = true;
-};
+  renameDialog.value.report = report
+  renameDialog.value.newName = report.name
+  renameDialog.value.isOpen = true
+}
 
 const confirmRename = () => {
-  const { report, newName } = renameDialog.value;
+  const { report, newName } = renameDialog.value
   if (newName && newName.trim() !== '') {
-    const index = reports.value.findIndex(r => r.id === report.id);
+    const index = reports.value.findIndex((r) => r.id === report.id)
     if (index !== -1) {
-      reports.value[index].name = newName;
+      reports.value[index].name = newName
       $q.notify({
         color: 'positive',
         message: '报告已成功重命名'
-      });
+      })
     }
   }
-  renameDialog.value.isOpen = false;
-};
+  renameDialog.value.isOpen = false
+}
 
 const openDeleteDialog = (report) => {
-  deleteDialog.value.report = report;
-  deleteDialog.value.isOpen = true;
-};
+  deleteDialog.value.report = report
+  deleteDialog.value.isOpen = true
+}
 
 const confirmDelete = () => {
-  const { report } = deleteDialog.value;
-  const index = reports.value.findIndex(r => r.id === report.id);
+  const { report } = deleteDialog.value
+  const index = reports.value.findIndex((r) => r.id === report.id)
   if (index > -1) {
-    reports.value.splice(index, 1);
+    reports.value.splice(index, 1)
     $q.notify({
       color: 'positive',
       message: '报告删除成功'
-    });
+    })
   }
-  deleteDialog.value.isOpen = false;
-};
+  deleteDialog.value.isOpen = false
+}
 
+onMounted(() => {
+  console.log('onMounted')
+})
+
+onBeforeMount(() => {
+  // let res = await api(xxxxx)
+  // reports.value = res
+  reports.value = [
+    {
+      id: 1,
+      name: '安全巡检报告',
+      creationDate: '2025-06-20 15:47:30',
+      size: '2.5 MB',
+      version: 'v1.0'
+    },
+    {
+      id: 2,
+      name: '季度安全审计报告',
+      creationDate: '2025-05-15 11:28:00',
+      size: '4.1 MB',
+      version: 'v1.2'
+    }
+  ]
+})
 </script>
 
 <!-- 全局样式 (无 scoped) -->

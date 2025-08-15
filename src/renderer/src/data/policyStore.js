@@ -11,7 +11,44 @@ export const policies = reactive([
     owned: false,
     enabled: true,
     // 预制策略可以没有详细的 checkItems 或为空
-    details: { checkItems: [] }
+    details: { checkItems: [
+        {
+          id: 1,
+          label: '身份鉴别',
+          selected: true,
+          details: {
+            checkPoints: [
+              {
+                id: 'cp1-1',
+                name: '配置口令复杂度策略',
+                requirement: '口令由字母、数字和特殊字符组成',
+                minLength: 8,
+                isAuto: true,
+                basis: [{ id: 'b1', text: '《信息安全技术网络安全等级保护》' }],
+                priority: '必选项',
+                selected: true,
+              },
+              {
+                id: 'cp1-2',
+                name: '用户登录失败锁定',
+                requirement: '连续登录失败5次后，账户锁定',
+                minLength: null,
+                isAuto: true,
+                basis: [],
+                priority: '必选项',
+                selected: true,
+              }
+            ]
+          },
+        },
+        { id: 2, label: '访问控制', selected: true, details: { checkPoints: [{ id: 'cp2-1', name: '访问控制策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+        { id: 3, label: '入侵防范', selected: true, details: { checkPoints: [{ id: 'cp3-1', name: '入侵防范策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '可选项', selected: true }] } },
+        { id: 4, label: '网络配置', selected: true, details: { checkPoints: [{ id: 'cp4-1', name: '网络配置策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+        { id: 5, label: '安全管理', selected: true, details: { checkPoints: [{ id: 'cp5-1', name: '安全管理策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '可选项', selected: true }] } },
+        { id: 6, label: '日志审计', selected: true, details: { checkPoints: [{ id: 'cp6-1', name: '日志审计策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '随机项', selected: true }] } },
+        { id: 7, label: '违规行为', selected: true, details: { checkPoints: [{ id: 'cp7-1', name: '违规行为策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+        { id: 8, label: '恶意代码检查', selected: true, details: { checkPoints: [{ id: 'cp8-1', name: '恶意代码检查策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+      ] }
   },
   {
     name: '主机设备-Windows',
@@ -21,7 +58,44 @@ export const policies = reactive([
     preset_strategy: true,
     owned: false,
     enabled: true,
-    details: { checkItems: [] }
+    details: { checkItems: [
+        {
+          id: 1,
+          label: '身份鉴别',
+          selected: true,
+          details: {
+            checkPoints: [
+              {
+                id: 'cp1-1',
+                name: '配置口令复杂度策略',
+                requirement: '口令由字母、数字和特殊字符组成',
+                minLength: 8,
+                isAuto: true,
+                basis: [{ id: 'b1', text: '《信息安全技术网络安全等级保护》' }],
+                priority: '必选项',
+                selected: true,
+              },
+              {
+                id: 'cp1-2',
+                name: '用户登录失败锁定',
+                requirement: '连续登录失败5次后，账户锁定',
+                minLength: null,
+                isAuto: true,
+                basis: [],
+                priority: '必选项',
+                selected: true,
+              }
+            ]
+          },
+        },
+        { id: 2, label: '访问控制', selected: true, details: { checkPoints: [{ id: 'cp2-1', name: '访问控制策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+        { id: 3, label: '入侵防范', selected: true, details: { checkPoints: [{ id: 'cp3-1', name: '入侵防范策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '可选项', selected: true }] } },
+        { id: 4, label: '网络配置', selected: true, details: { checkPoints: [{ id: 'cp4-1', name: '网络配置策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+        { id: 5, label: '安全管理', selected: true, details: { checkPoints: [{ id: 'cp5-1', name: '安全管理策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '可选项', selected: true }] } },
+        { id: 6, label: '日志审计', selected: true, details: { checkPoints: [{ id: 'cp6-1', name: '日志审计策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '随机项', selected: true }] } },
+        { id: 7, label: '违规行为', selected: true, details: { checkPoints: [{ id: 'cp7-1', name: '违规行为策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+        { id: 8, label: '恶意代码检查', selected: true, details: { checkPoints: [{ id: 'cp8-1', name: '恶意代码检查策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+      ] }
   },
   {
     name: '网络设备',
@@ -31,7 +105,44 @@ export const policies = reactive([
     preset_strategy: true,
     owned: false,
     enabled: true,
-    details: { checkItems: [] }
+    details: { checkItems: [
+        {
+          id: 1,
+          label: '身份鉴别',
+          selected: true,
+          details: {
+            checkPoints: [
+              {
+                id: 'cp1-1',
+                name: '配置口令复杂度策略',
+                requirement: '口令由字母、数字和特殊字符组成',
+                minLength: 8,
+                isAuto: true,
+                basis: [{ id: 'b1', text: '《信息安全技术网络安全等级保护》' }],
+                priority: '必选项',
+                selected: true,
+              },
+              {
+                id: 'cp1-2',
+                name: '用户登录失败锁定',
+                requirement: '连续登录失败5次后，账户锁定',
+                minLength: null,
+                isAuto: true,
+                basis: [],
+                priority: '必选项',
+                selected: true,
+              }
+            ]
+          },
+        },
+        { id: 2, label: '访问控制', selected: true, details: { checkPoints: [{ id: 'cp2-1', name: '访问控制策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+        { id: 3, label: '入侵防范', selected: true, details: { checkPoints: [{ id: 'cp3-1', name: '入侵防范策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '可选项', selected: true }] } },
+        { id: 4, label: '网络配置', selected: true, details: { checkPoints: [{ id: 'cp4-1', name: '网络配置策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+        { id: 5, label: '安全管理', selected: true, details: { checkPoints: [{ id: 'cp5-1', name: '安全管理策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '可选项', selected: true }] } },
+        { id: 6, label: '日志审计', selected: true, details: { checkPoints: [{ id: 'cp6-1', name: '日志审计策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '随机项', selected: true }] } },
+        { id: 7, label: '违规行为', selected: true, details: { checkPoints: [{ id: 'cp7-1', name: '违规行为策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+        { id: 8, label: '恶意代码检查', selected: true, details: { checkPoints: [{ id: 'cp8-1', name: '恶意代码检查策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+      ] }
   },
   {
     name: '网络安全',
@@ -41,7 +152,44 @@ export const policies = reactive([
     preset_strategy: true,
     owned: false,
     enabled: true,
-    details: { checkItems: [] }
+    details: { checkItems: [
+        {
+          id: 1,
+          label: '身份鉴别',
+          selected: true,
+          details: {
+            checkPoints: [
+              {
+                id: 'cp1-1',
+                name: '配置口令复杂度策略',
+                requirement: '口令由字母、数字和特殊字符组成',
+                minLength: 8,
+                isAuto: true,
+                basis: [{ id: 'b1', text: '《信息安全技术网络安全等级保护》' }],
+                priority: '必选项',
+                selected: true,
+              },
+              {
+                id: 'cp1-2',
+                name: '用户登录失败锁定',
+                requirement: '连续登录失败5次后，账户锁定',
+                minLength: null,
+                isAuto: true,
+                basis: [],
+                priority: '必选项',
+                selected: false,
+              }
+            ]
+          },
+        },
+        { id: 2, label: '访问控制', selected: true, details: { checkPoints: [{ id: 'cp2-1', name: '访问控制策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+        { id: 3, label: '入侵防范', selected: true, details: { checkPoints: [{ id: 'cp3-1', name: '入侵防范策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '可选项', selected: true }] } },
+        { id: 4, label: '网络配置', selected: true, details: { checkPoints: [{ id: 'cp4-1', name: '网络配置策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+        { id: 5, label: '安全管理', selected: true, details: { checkPoints: [{ id: 'cp5-1', name: '安全管理策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '可选项', selected: true }] } },
+        { id: 6, label: '日志审计', selected: true, details: { checkPoints: [{ id: 'cp6-1', name: '日志审计策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '随机项', selected: true }] } },
+        { id: 7, label: '违规行为', selected: true, details: { checkPoints: [{ id: 'cp7-1', name: '违规行为策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+        { id: 8, label: '恶意代码检查', selected: true, details: { checkPoints: [{ id: 'cp8-1', name: '恶意代码检查策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+      ] }
   },
   {
     name: '网络安全告警检查',
@@ -51,7 +199,44 @@ export const policies = reactive([
     preset_strategy: true,
     owned: false,
     enabled: true,
-    details: { checkItems: [] }
+    details: { checkItems: [
+  {
+    id: 1,
+    label: '身份鉴别',
+    selected: true,
+    details: {
+      checkPoints: [
+        {
+          id: 'cp1-1',
+          name: '配置口令复杂度策略',
+          requirement: '口令由字母、数字和特殊字符组成',
+          minLength: 8,
+          isAuto: true,
+          basis: [{ id: 'b1', text: '《信息安全技术网络安全等级保护》' }],
+          priority: '必选项',
+          selected: true,
+        },
+        {
+          id: 'cp1-2',
+          name: '用户登录失败锁定',
+          requirement: '连续登录失败5次后，账户锁定',
+          minLength: null,
+          isAuto: true,
+          basis: [],
+          priority: '必选项',
+          selected: false,
+        }
+      ]
+    },
+  },
+  { id: 2, label: '访问控制', selected: true, details: { checkPoints: [{ id: 'cp2-1', name: '访问控制策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+  { id: 3, label: '入侵防范', selected: true, details: { checkPoints: [{ id: 'cp3-1', name: '入侵防范策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '可选项', selected: true }] } },
+  { id: 4, label: '网络配置', selected: true, details: { checkPoints: [{ id: 'cp4-1', name: '网络配置策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+  { id: 5, label: '安全管理', selected: true, details: { checkPoints: [{ id: 'cp5-1', name: '安全管理策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '可选项', selected: true }] } },
+  { id: 6, label: '日志审计', selected: true, details: { checkPoints: [{ id: 'cp6-1', name: '日志审计策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '随机项', selected: true }] } },
+  { id: 7, label: '违规行为', selected: true, details: { checkPoints: [{ id: 'cp7-1', name: '违规行为策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+  { id: 8, label: '恶意代码检查', selected: true, details: { checkPoints: [{ id: 'cp8-1', name: '恶意代码检查策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+] }
   },
   {
     name: '弱密码核查',
@@ -63,7 +248,42 @@ export const policies = reactive([
     enabled: true,
     details: {
       checkItems: [
-        { id: 1, label: '弱口令扫描', selected: true, details: { checkPoints: [{ id: 'wc-1', name: '系统账户弱口令', requirement: '...', selected: true, priority: '必选项', basis: [] }] } }
+        {
+          id: 1,
+          label: '身份鉴别',
+          selected: true,
+          details: {
+            checkPoints: [
+              {
+                id: 'cp1-1',
+                name: '配置口令复杂度策略',
+                requirement: '口令由字母、数字和特殊字符组成',
+                minLength: 8,
+                isAuto: true,
+                basis: [{ id: 'b1', text: '《信息安全技术网络安全等级保护》' }],
+                priority: '必选项',
+                selected: true,
+              },
+              {
+                id: 'cp1-2',
+                name: '用户登录失败锁定',
+                requirement: '连续登录失败5次后，账户锁定',
+                minLength: null,
+                isAuto: true,
+                basis: [],
+                priority: '必选项',
+                selected: true,
+              }
+            ]
+          },
+        },
+        { id: 2, label: '访问控制', selected: true, details: { checkPoints: [{ id: 'cp2-1', name: '访问控制策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+        { id: 3, label: '入侵防范', selected: true, details: { checkPoints: [{ id: 'cp3-1', name: '入侵防范策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '可选项', selected: true }] } },
+        { id: 4, label: '网络配置', selected: true, details: { checkPoints: [{ id: 'cp4-1', name: '网络配置策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+        { id: 5, label: '安全管理', selected: true, details: { checkPoints: [{ id: 'cp5-1', name: '安全管理策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '可选项', selected: true }] } },
+        { id: 6, label: '日志审计', selected: true, details: { checkPoints: [{ id: 'cp6-1', name: '日志审计策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '随机项', selected: true }] } },
+        { id: 7, label: '违规行为', selected: true, details: { checkPoints: [{ id: 'cp7-1', name: '违规行为策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
+        { id: 8, label: '恶意代码检查', selected: true, details: { checkPoints: [{ id: 'cp8-1', name: '恶意代码检查策略', requirement: '...', minLength: null, isAuto: false, basis: [], priority: '必选项', selected: true }] } },
       ]
     }
   },

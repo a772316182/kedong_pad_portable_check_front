@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import { lastValidReferrer } from '../router/aaanavigation.js';
 import LoginView from '../views/LoginView.vue'
 import ExecuteCheck from '../views/MainSystem/ExecuteCheck/ExecuteCheck.vue'
 import ManageCheck from '../views/MainSystem/ManageCheck/ManageCheck.vue'
@@ -28,8 +29,15 @@ import ManageCustomer from '../views/MainSystem/ManageCustomer.vue'
 import ManageSystem from '../views/MainSystem/ManageSystem.vue'
 import ModeSelect from '../views/MainSystem/ManageCheck/ModeSelect.vue'
 import StationAndTask from '../views/MainSystem/ManageCheck/StationAndTask.vue'
+import ManManageStrategy from '../views/MainSystem/ManManageStrategy.vue'
+import ManChecking from '../views/MainSystem/ExecuteCheck/ManChecking.vue'
 
 const routes = [
+  {
+    path:'/manchecking',
+    name:'manchecking',
+    component: ManChecking
+  },
   {
     path: '/',
     name: 'home',
@@ -87,9 +95,10 @@ const routes = [
     component: StationView
   },
   {
-    path: '/manageasset',
+    path: '/manageasset/:siteId',
     name: 'manageasset',
-    component: ManageAsset
+    component: ManageAsset,
+    props: true
   }
   ,
   {
@@ -176,12 +185,25 @@ const routes = [
     path:'/stationandtask',
     name:'stationandtask',
     component: StationAndTask
+  },
+  {
+    path:'/manmanagestrategy',
+    name:'manmanagestrategy',
+    component: ManManageStrategy
   }
 ]
-
+const allowedReferrerPaths = ['/executecheck', '/stationandtask'];
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes
 })
+router.beforeEach((to, from) => {
+  // 如果来源页面是“特定页面”之一，就更新 ref 的值
+  if (allowedReferrerPaths.includes(from.path)) {
+    lastValidReferrer.value = from.path;
+  }
+  return true;
+});
+
 
 export default router

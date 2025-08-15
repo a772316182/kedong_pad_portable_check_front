@@ -9,7 +9,7 @@ const navigateTo = (path) => {
   router.push(path);
 }
 
-// --- 响应式数据 (增加了数据以演示滚动) ---
+// --- 响应式数据 ---
 const currentStep = ref('site-selection');
 
 const sites = reactive([
@@ -23,15 +23,35 @@ const sites = reactive([
 ]);
 
 const tasks = reactive([
-  { id: 1, name: "主机设备-Linux-安全检查", policy: "主机设备-Linux", lastUpdate: "2025-07-03" },
-  { id: 2, name: "主机设备-Windows-安全检查", policy: "主机设备-Windows", lastUpdate: "2025-07-03" },
-  { id: 3, name: "网络安全-月度检查", policy: "网络安全", lastUpdate: "2025-07-03" },
-  { id: 4, name: "弱密码专项排查", policy: "否", lastUpdate: "2025-04-18" },
-  { id: 5, name: "数据库安全审计", policy: "数据库安全策略", lastUpdate: "2025-06-15" },
-  { id: 6, name: "应用系统漏洞扫描", policy: "应用安全规范", lastUpdate: "2025-07-01" },
-  { id: 7, name: "物理环境安全巡检", policy: "机房管理制度", lastUpdate: "2025-05-30" },
-  { id: 8, name: "数据备份与恢复演练", policy: "灾备预案", lastUpdate: "2025-06-20" },
+  {
+    id: 250708,
+    name: "250708_250711",
+    site: "四川省调",
+    startTime: "2025-07-08",
+    endTime: "2025-07-31",
+    executor: "全部",
+    remarks: "operator"
+  },
+  {
+    id: 250601,
+    name: "250601_250630",
+    site: "总部数据中心",
+    startTime: "2025-06-01",
+    endTime: "2025-06-30",
+    executor: "网络安全组",
+    remarks: "月度常规检查"
+  },
+  {
+    id: 250515,
+    name: "250515_250520",
+    site: "华东区域节点",
+    startTime: "2025-05-15",
+    endTime: "2025-05-20",
+    executor: "李四",
+    remarks: "漏洞专项复查"
+  },
 ]);
+
 
 const qualificationTypes = reactive([
   { id: 'auto', name: '自动审查', icon: 'smart_toy' },
@@ -46,10 +66,16 @@ const selectedQualifications = reactive({
   auto: []
 });
 
+// *** 修改点: 更新人工审查的选项 ***
 const qualificationOptions = {
   manual: [
-    { label: '检查大纲自查', value: '检查大纲自查' },
-    { label: '远程登录检查', value: '远程登录检查' },
+    { label: '运行管理', value: '运行管理' },
+    { label: '监督管理', value: '监督管理' },
+    { label: '人员管理', value: '人员管理' },
+    { label: '基础设施安全', value: '基础设施安全' },
+    { label: '体系结构安全', value: '体系结构安全' },
+    { label: '系统本体安全', value: '系统本体安全' },
+    { label: '监测应急', value: '监测应急' },
   ],
   auto: [
     { label: '免登录检查', value: '免登录检查' },
@@ -60,11 +86,16 @@ const qualificationOptions = {
 };
 
 const showAddTaskDialog = ref(false);
-const newTaskForm = reactive({
+
+const taskDialogForm = reactive({
   name: '',
-  policy: '',
-  lastUpdate: ''
+  site: '',
+  startTime: '',
+  endTime: '',
+  executor: '',
+  remarks: ''
 });
+
 
 const showQualificationDialog = ref(false);
 const currentQualificationType = ref(null);
@@ -81,19 +112,6 @@ const qualificationDialogTitle = computed(() => {
 });
 
 // --- 方法 ---
-const goBack = () => {
-  if (currentStep.value === 'site-selection') {
-    navigateTo('/managecheck');
-  } else if (currentStep.value === 'task-selection') {
-    selectedTask.value = null;
-    currentStep.value = 'site-selection';
-  } else if (currentStep.value === 'task-qualification') {
-    selectedQualifications.manual = [];
-    selectedQualifications.auto = [];
-    currentStep.value = 'task-selection';
-  }
-};
-
 const selectSiteAndProceed = (site) => {
   selectedSite.value = site;
   currentStep.value = 'task-selection';
@@ -105,25 +123,38 @@ const selectTaskAndProceed = (task) => {
 };
 
 const openAddTaskDialog = () => {
-  newTaskForm.name = '';
-  newTaskForm.policy = '';
-  newTaskForm.lastUpdate = new Date().toISOString().split('T')[0];
+  const today = new Date();
+  const futureDate = new Date();
+  futureDate.setDate(today.getDate() + 14);
+
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}/${month}/${day}`;
+  };
+
+  taskDialogForm.name = `TASK_${Date.now().toString().slice(-6)}`;
+  taskDialogForm.site = selectedSite.value?.name || '';
+  taskDialogForm.startTime = formatDate(today);
+  taskDialogForm.endTime = formatDate(futureDate);
+  taskDialogForm.executor = '全部';
+  taskDialogForm.remarks = '';
   showAddTaskDialog.value = true;
 };
 
 const saveNewTask = () => {
-  if (!newTaskForm.name.trim()) {
-    alert("任务名称不能为空");
+  if (!taskDialogForm.name.trim()) {
+    alert("任务名称(ID)不能为空");
     return;
   }
   tasks.push({
     id: Date.now(),
-    name: newTaskForm.name,
-    policy: newTaskForm.policy || '无',
-    lastUpdate: newTaskForm.lastUpdate
+    ...taskDialogForm
   });
   showAddTaskDialog.value = false;
 };
+
 
 const openQualificationDialog = (typeId) => {
   currentQualificationType.value = typeId;
@@ -147,12 +178,9 @@ const confirmSelection = () => {
   console.log("定性方式详情:", selectedDetails.join('; '));
   alert(`已选定站点: "${selectedSite.value.name}"\n已选定任务 "${selectedTask.value.name}"\n审查方式:\n${selectedDetails.join('\n')}`);
 
-  // --- 新增：将选定数据存储到 sessionStorage ---
-  // 下一个页面可以通过 sessionStorage.getItem('key') 和 JSON.parse() 来获取这些对象
   sessionStorage.setItem('selectedSite', JSON.stringify(selectedSite.value));
   sessionStorage.setItem('selectedTask', JSON.stringify(selectedTask.value));
   sessionStorage.setItem('selectedQualifications', JSON.stringify(selectedQualifications));
-  // -----------------------------------------
 
   navigateTo('/checking');
 };
@@ -162,7 +190,7 @@ const confirmSelection = () => {
   <q-layout view="lHh LpR lFf" class="bg-dark-page text-white">
     <q-header class="bg-dark-page" bordered>
       <q-toolbar class="q-pt-sm q-pb-sm">
-        <q-btn unelevated color="primary" :label="backButtonLabel" @click="goBack" icon="arrow_back" class="header-button" />
+        <q-btn unelevated color="primary" :label="backButtonLabel" @click="navigateTo('/modeselect')" icon="arrow_back" class="header-button" />
         <q-space />
         <q-toolbar-title class="text-center text-weight-bold header-title">
           启动核查
@@ -189,7 +217,7 @@ const confirmSelection = () => {
               <q-item v-for="site in sites" :key="site.id" clickable v-ripple class="list-item-hover" @click="selectSiteAndProceed(site)">
                 <q-item-section>
                   <q-item-label class="item-title">{{ site.name }}</q-item-label>
-                  <q-item-label caption class="item-caption">位置: {{ site.location }} | 负责人: {{ site.manager }}</q-item-label>
+                  <q-item-label caption class="item-caption">所属公司: {{ site.location }} | 负责人: {{ site.manager }}</q-item-label>
                 </q-item-section>
                 <q-item-section side>
                   <q-icon name="chevron_right" color="grey-6" size="lg"/>
@@ -206,7 +234,9 @@ const confirmSelection = () => {
               <q-item v-for="task in tasks" :key="task.id" clickable v-ripple class="list-item-hover" @click="selectTaskAndProceed(task)">
                 <q-item-section>
                   <q-item-label class="item-title">{{ task.name }}</q-item-label>
-                  <q-item-label caption class="item-caption">关联策略: {{ task.policy }} | 最后更新: {{ task.lastUpdate }}</q-item-label>
+                  <q-item-label caption class="item-caption">
+                    站点: {{ task.site }} | 开始时间: {{ task.startTime }} | 结束时间: {{ task.endTime }} | 执行人: {{ task.executor }}
+                  </q-item-label>
                 </q-item-section>
                 <q-item-section side>
                   <q-icon name="chevron_right" color="grey-6" size="lg"/>
@@ -256,15 +286,39 @@ const confirmSelection = () => {
     <q-dialog v-model="showAddTaskDialog" persistent>
       <q-card class="bg-dark-content text-white dialog-card">
         <q-card-section class="row items-center">
-          <div class="dialog-title">新增任务</div>
+          <div class="dialog-title">新增/编辑任务</div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
+
         <q-card-section>
-          <q-input dark color="primary" v-model="newTaskForm.name" label="任务名称" outlined class="q-mb-lg" />
-          <q-input dark color="primary" v-model="newTaskForm.policy" label="关联策略" outlined class="q-mb-lg" />
-          <q-input dark color="primary" v-model="newTaskForm.lastUpdate" label="最后更新日期" type="date" outlined />
+          <q-input dark color="primary" v-model="taskDialogForm.name" label="任务名称(ID)" outlined class="q-mb-lg"/>
+          <q-input dark color="primary" v-model="taskDialogForm.site" label="站点" outlined readonly hint="新增时自动填充" class="q-mb-lg"/>
+
+          <div class="row q-gutter-md q-mb-lg">
+            <q-input dark color="primary" v-model="taskDialogForm.startTime" label="开始时间" outlined class="col" mask="date" :rules="['date']">
+              <template v-slot:append>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-date v-model="taskDialogForm.startTime" dark color="primary"><div class="row items-center justify-end"><q-btn v-close-popup label="关闭" color="primary" flat /></div></q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+            <q-input dark color="primary" v-model="taskDialogForm.endTime" label="结束时间" outlined class="col" mask="date" :rules="['date']">
+              <template v-slot:append>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-date v-model="taskDialogForm.endTime" dark color="primary"><div class="row items-center justify-end"><q-btn v-close-popup label="关闭" color="primary" flat /></div></q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
+
+          <q-input dark color="primary" v-model="taskDialogForm.executor" label="执行人" outlined class="q-mb-lg"/>
         </q-card-section>
+
         <q-card-actions class="bg-dark-page q-pa-md" align="center">
           <q-btn label="取消" color="grey" v-close-popup class="dialog-action-btn" />
           <q-btn label="保存" color="primary" @click="saveNewTask" class="dialog-action-btn" />

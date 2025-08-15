@@ -8,6 +8,9 @@ const $q = useQuasar();
 const router = useRouter();
 const route = useRoute();
 
+// 控制编辑模式
+const isEditMode = ref(false);
+
 const editDrawerOpen = ref(false);
 const isDetailDialogOpen = ref(false);
 
@@ -19,14 +22,23 @@ const checkItems = ref([]);
 const isTitleEditing = ref(false);
 const tempPolicyName = ref('');
 
-const priorityOptions = ['必选项', '可选项', '随机项'];
+// 定义加固优先级的选项
+const priorityOptions = [
+  { label: '必查项', value: '必查项' },
+  { label: '可选项', value: '可选项' },
+  { label: '建议项', value: '建议项' }
+];
 
-// 【关键新增】用于弹窗和抽屉的数据模型
+// 用于弹窗和抽屉的数据模型
 const currentDetailItem = ref(null);
 const editingItem = ref(null);
 
 
 onMounted(() => {
+  // 从路由查询参数中确定模式
+  const modeFromRoute = route.query.mode;
+  isEditMode.value = (modeFromRoute === 'edit'); // 如果 mode 是 'edit'，则为 true，否则为 false
+
   const policyNameFromRoute = route.query.name;
   if (policyNameFromRoute) {
     originalPolicyName.value = policyNameFromRoute;
@@ -38,7 +50,18 @@ onMounted(() => {
       if (!policyData.details) policyData.details = {};
       if (!policyData.details.checkItems) policyData.details.checkItems = [];
 
-      checkItems.value = JSON.parse(JSON.stringify(policyData.details.checkItems));
+      const processedCheckItems = JSON.parse(JSON.stringify(policyData.details.checkItems));
+      processedCheckItems.forEach(item => {
+        if (item.details && item.details.checkPoints) {
+          item.details.checkPoints.forEach(cp => {
+            if (!cp.priority) {
+              cp.priority = '可选项';
+            }
+          });
+        }
+      });
+      checkItems.value = processedCheckItems;
+
       currentPolicyInfo.value.object = policyData.object;
       currentPolicyInfo.value.updated = policyData.updated;
     } else {
@@ -86,7 +109,19 @@ const selectedCheckItems = computed(() => {
 
 const goBack = () => { router.go(-1); };
 const openDetailDialog = (item) => { currentDetailItem.value = item; isDetailDialogOpen.value = true; };
-const openEditDrawer = (item) => { editingItem.value = JSON.parse(JSON.stringify(item)); editDrawerOpen.value = true; };
+
+const openEditDrawer = (item) => {
+  const clonedItem = JSON.parse(JSON.stringify(item));
+  if (clonedItem.details && clonedItem.details.checkPoints) {
+    clonedItem.details.checkPoints.forEach(cp => {
+      if (!cp.priority) {
+        cp.priority = '可选项';
+      }
+    });
+  }
+  editingItem.value = clonedItem;
+  editDrawerOpen.value = true;
+};
 
 const saveChanges = () => {
   if (!editingItem.value) return;
@@ -106,11 +141,9 @@ const saveAndGoBack = () => {
   const policyToUpdate = policies.find(p => p.name === originalPolicyName.value);
   if (policyToUpdate) {
     $q.loading.show({ message: '正在保存...' });
-
     policyToUpdate.name = editablePolicyName.value;
     policyToUpdate.details.checkItems = checkItems.value;
     policyToUpdate.updated = new Date().toISOString().split('T')[0];
-
     setTimeout(() => {
       $q.loading.hide();
       $q.notify({ color: 'positive', icon: 'check_circle', message: '保存成功！' });
@@ -129,27 +162,38 @@ const saveAndGoBack = () => {
         <div class="row items-center no-wrap q-mb-md">
           <q-btn unelevated label="返回" @click="goBack" class="action-button" icon="arrow_back" />
           <div class="row items-center no-wrap q-ml-lg">
-            <div v-if="!isTitleEditing" class="row items-center no-wrap cursor-pointer" @click="startTitleEdit">
-              <div class="text-h4 text-weight-bolder" style="color: #E0E0E0;">{{ editablePolicyName }}</div>
-              <q-icon name="edit" size="sm" class="q-ml-sm" color="primary" />
+
+            <!-- 编辑模式 -->
+            <div v-if="isEditMode">
+              <!-- 可编辑的标题 -->
+              <div v-if="!isTitleEditing" class="row items-center no-wrap cursor-pointer" @click="startTitleEdit">
+                <!-- 【颜色修正】 -->
+                <div class="text-h4 text-weight-bolder" style="color: #4c6afc;">{{ editablePolicyName }}</div>
+                <q-icon name="edit" size="sm" class="q-ml-sm" color="primary" />
+              </div>
+              <!-- 标题输入框 -->
+              <div v-else class="row items-center no-wrap q-gutter-x-sm">
+                <q-input
+                  v-model="editablePolicyName"
+                  outlined dense dark autofocus class="title-edit-input"
+                  @keyup.enter="confirmTitleEdit" @keyup.esc="cancelTitleEdit"
+                />
+                <q-btn flat dense round icon="check" color="positive" @click="confirmTitleEdit" />
+                <q-btn flat dense round icon="close" color="negative" @click="cancelTitleEdit" />
+              </div>
             </div>
-            <div v-else class="row items-center no-wrap q-gutter-x-sm">
-              <q-input
-                v-model="editablePolicyName"
-                outlined
-                dense
-                dark
-                autofocus
-                class="title-edit-input"
-                @keyup.enter="confirmTitleEdit"
-                @keyup.esc="cancelTitleEdit"
-              />
-              <q-btn flat dense round icon="check" color="positive" @click="confirmTitleEdit" />
-              <q-btn flat dense round icon="close" color="negative" @click="cancelTitleEdit" />
+
+            <!-- 查看模式 -->
+            <!-- 【颜色修正】 -->
+            <div v-else class="text-h4 text-weight-bolder" style="color: #4c6afc;">
+              {{ editablePolicyName }}
             </div>
+
           </div>
           <q-space />
-          <q-btn unelevated label="保存" @click="saveAndGoBack" class="action-button" icon="save"/>
+
+          <!-- 保存按钮，仅在编辑模式下显示 -->
+          <q-btn v-if="isEditMode" unelevated label="保存" @click="saveAndGoBack" class="action-button" icon="save"/>
         </div>
 
         <q-card class="info-panel q-pa-md q-mb-lg" flat>
@@ -178,14 +222,15 @@ const saveAndGoBack = () => {
                   {{ item.label }}
                 </div>
                 <div class="item-info">
-                  <span>核查点数：</span>
+                  <span>核查项数：</span>
                   {{ item.details.checkPoints.filter(cp => cp.selected).length }} / {{ item.details.checkPoints.length }}
                 </div>
               </q-card-section>
               <q-separator color="rgba(255,255,255,0.1)"/>
               <q-card-actions align="right" class="q-pa-sm q-gutter-x-sm">
                 <q-btn flat dense no-caps label="详情" color="light-blue-3" @click="openDetailDialog(item)"/>
-                <q-btn flat dense no-caps label="编辑" color="teal-3" @click="openEditDrawer(item)"/>
+                <!-- 编辑按钮，仅在编辑模式下显示 -->
+                <q-btn v-if="isEditMode" flat dense no-caps label="编辑" color="teal-3" @click="openEditDrawer(item)"/>
               </q-card-actions>
             </q-card>
           </div>
@@ -197,7 +242,7 @@ const saveAndGoBack = () => {
       </q-page-sticky>
     </q-page>
 
-    <!-- 【关键】恢复完整的弹窗和抽屉代码 -->
+    <!-- 详情弹窗 -->
     <q-dialog v-model="isDetailDialogOpen">
       <q-card v-if="currentDetailItem" class="dialog-detail" style="width: 700px; max-width: 90vw;">
         <q-card-section class="row items-center q-pb-none">
@@ -210,7 +255,12 @@ const saveAndGoBack = () => {
             <div class="q-pr-md">
               <q-card v-for="cp in currentDetailItem.details.checkPoints" :key="cp.id" flat bordered class="q-mb-md">
                 <q-card-section>
-                  <div class="text-h6 text-weight-bold">{{ cp.name }} <q-chip v-if="cp.isAuto" dense color="cyan" text-color="white" label="自动核查"/></div>
+                  <div class="text-h6 text-weight-bold">
+                    {{ cp.name }}
+                    <q-badge v-if="cp.selected" color="positive" text-color="white" label="已选用" class="q-ml-sm" />
+                    <q-badge v-else color="grey" text-color="white" label="未选用" class="q-ml-sm" />
+                    <q-chip v-if="cp.isAuto" dense color="cyan" text-color="white" label="自动核查" class="q-ml-sm"/>
+                  </div>
                 </q-card-section>
                 <q-card-section class="q-pt-none">
                   <div class="text-subtitle1 q-mb-md">
@@ -232,6 +282,7 @@ const saveAndGoBack = () => {
       </q-card>
     </q-dialog>
 
+    <!-- 编辑抽屉 -->
     <q-drawer v-model="editDrawerOpen" side="right" overlay bordered :width="500" class="drawer-edit bg-white">
       <div v-if="editingItem" class="column full-height">
         <q-toolbar class="bg-blue-1 text-primary">
@@ -243,10 +294,26 @@ const saveAndGoBack = () => {
         </q-toolbar>
         <q-scroll-area class="col">
           <div class="q-pa-md">
-            <div class="text-caption text-grey-7">核查项 *</div>
+            <div class="text-caption text-grey-7">核查类别 *</div>
             <q-input v-model="editingItem.label" outlined dense class="q-mb-md" />
             <div v-for="(cp) in editingItem.details.checkPoints" :key="cp.id" class="q-mb-lg q-pa-md rounded-borders" style="border: 1px solid #e0e0e0;">
-              <div class="text-caption text-grey-7">核查点 *</div>
+
+              <q-checkbox v-model="cp.selected" label="选用此核查项" color="primary" class="q-mb-md" />
+
+              <!-- 加固优先级设置 -->
+              <div class="text-caption text-grey-7">加固优先级</div>
+              <q-btn-toggle
+                v-model="cp.priority"
+                :options="priorityOptions"
+                unelevated
+                toggle-color="primary"
+                color="grey-6"
+                text-color="white"
+                no-caps
+                class="q-mb-md full-width"
+              />
+
+              <div class="text-caption text-grey-7">核查项 *</div>
               <q-input v-model="cp.name" outlined dense class="q-mb-md" />
               <div class="text-caption text-grey-7">核查要求 *</div>
               <q-input v-model="cp.requirement" outlined dense type="textarea" autogrow class="q-mb-md" />
@@ -266,7 +333,6 @@ const saveAndGoBack = () => {
   </q-layout>
 </template>
 
-<!-- 全局样式 (无 scoped) -->
 <style>
 /* --- 详情弹窗 --- */
 .dialog-detail .text-h6 { font-size: 1.5rem; }
@@ -280,12 +346,13 @@ const saveAndGoBack = () => {
 .drawer-edit .text-caption { font-size: 0.85rem; }
 .drawer-edit .q-field__native, .drawer-edit .q-field__label { font-size: 1rem; }
 .drawer-edit .q-btn .q-btn__content { font-size: 0.9rem; }
+.drawer-edit .q-checkbox__label { font-size: 1rem; }
+
 
 /* --- 全局: 工具提示 --- */
 .q-tooltip { font-size: 13px; }
 </style>
 
-<!-- 局部样式 (有 scoped) -->
 <style scoped>
 .page-background { background-color: #292a2d; }
 .main-content-area { padding-top: 20px; }
