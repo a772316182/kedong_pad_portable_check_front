@@ -3,7 +3,7 @@
     <!-- 顶部主工具栏 (已放大) -->
     <q-header elevated class="bg-dark-header text-white">
       <q-toolbar style="min-height: 80px;">
-        <q-btn unelevated label="返回上一级" @click="navigateTo('/stationandtask')" class="action-button" icon="arrow_back" size="lg" />
+        <q-btn unelevated label="返回上一级" @click="goBack" class="action-button" icon="arrow_back" size="lg" />
         <q-toolbar-title class="q-ml-lg text-h4 text-weight-bolder">
           站点管理
         </q-toolbar-title>
@@ -35,7 +35,7 @@
             <!-- 自定义操作列 -->
             <template v-slot:body-cell-actions="props">
               <q-td :props="props" class="q-gutter-x-sm text-center">
-                <q-btn flat dense round @click="navigateTo('/manageasset')" icon="visibility" color="light-blue-3">
+                <q-btn flat dense round @click="navigateTo('/manageasset/' + props.row.id)" icon="visibility" color="light-blue-3">
                   <q-tooltip>查看</q-tooltip>
                 </q-btn>
                 <q-btn flat dense round @click="openEditDialog(props.row.id)" icon="edit" color="light-blue-3">
@@ -137,8 +137,24 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { lastValidReferrer } from '../../../router/aaanavigation.js';
 
 const router = useRouter();
+const allowedReferrerPaths = ['/stationandtask', '/executecheck'];
+// 返回上一页
+const goBack = () => {
+  const previousPath = router.options.history.state.back;
+
+  // 判断上一个页面是否在允许的列表中
+  if (previousPath && allowedReferrerPaths.includes(previousPath)) {
+    console.log(`正在返回上一页: ${previousPath}`);
+    router.back();
+  } else {
+    // 如果不是，则跳转到我们记录的最后一个有效页面
+    console.log(`来源页无效，正在返回到上次记录的有效页面: ${lastValidReferrer.value}`);
+    router.push(lastValidReferrer.value);
+  }
+};
 
 // 站点数据列表
 const sites = ref([
@@ -198,6 +214,7 @@ const sites = ref([
 // 表格列定义
 const columns = [
   { name: 'name', required: true, label: '站点名称', align: 'left', field: row => row.name, sortable: true },
+  { name: 'type', align: 'left', label: '站点类型', field: 'type', sortable: true },
   { name: 'company', align: 'left', label: '所属公司', field: 'company', sortable: true },
   { name: 'lastCheck', align: 'left', label: '最近核查', field: 'lastCheck' },
   { name: 'personInCharge', align: 'left', label: '负责人', field: 'personInCharge' },

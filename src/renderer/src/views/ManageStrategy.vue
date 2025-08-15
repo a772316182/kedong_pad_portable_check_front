@@ -8,19 +8,31 @@ import { policies } from '../data/policyStore' // 请确保这个路径是正确
 const $q = useQuasar();
 const router = useRouter()
 
-// 【关键修正】修改 `columns` 定义，使“检查项数”动态计算
+// 【关键修正】修改 `columns` 定义，使其与正确的数据结构匹配
 const columns = [
   { name: 'name', label: '策略名称', align: 'left', field: 'name', sortable: true },
   { name: 'preset_strategy', label: '预制策略', align: 'center', field: 'preset_strategy' },
   { name: 'enabled', label: '启用状态', align: 'center' },
   {
     name: 'items',
-    label: '检查项数',
+    label: '核查项数', // 列表头保持不变
     align: 'center',
-    // 使用函数动态计算每个策略的实际核查项数量
-    field: row => (row.details && row.details.checkItems) ? row.details.checkItems.length : 0,
+    // 【核心修改】使用正确的路径 item.details.checkPoints
+    field: row => {
+      // 安全检查
+      if (!row.details || !Array.isArray(row.details.checkItems)) {
+        return 0;
+      }
+      // 使用 reduce 方法，并用正确的路径累加
+      return row.details.checkItems.reduce((total, item) => {
+        // 正确的路径应该是 item.details.checkPoints
+        const pointsCount = (item && item.details && Array.isArray(item.details.checkPoints))
+          ? item.details.checkPoints.length
+          : 0;
+        return total + pointsCount;
+      }, 0); // 初始总数为 0
+    },
     sortable: true,
-    // 提供一个自定义的排序函数以确保排序功能正常
     sort: (a, b) => a - b
   },
   { name: 'object', label: '适用对象', align: 'left', field: 'object' },
@@ -48,7 +60,7 @@ const navigateTo = (path, mode, policyName) => {
   router.push({ path: finalPath, query });
 }
 
-const handleCardClick = () => { isAlertDialogVisible.value = true }
+//const handleCardClick = () => { isAlertDialogVisible.value = true }
 
 const handleAddNewPolicy = () => {
   if (!newPolicy.name || !newPolicy.object || newPolicy.items === null) {
@@ -112,7 +124,7 @@ const deletePolicy = (policyToDelete) => {
           <div class="text-h4 text-weight-bolder q-ml-lg" style="color: #4c6afc;">策略管理</div>
           <q-space />
           <div class="row items-center q-gutter-x-md">
-            <q-btn unelevated label="人工策略管理" class="action-button" icon="engineering" />
+            <q-btn unelevated label="人工策略管理" class="action-button" icon="engineering" @click="navigateTo('/manmanagestrategy')" />
             <q-btn unelevated label="新增" @click="isAddDialogVisible = true" class="action-button" icon="add" />
           </div>
         </div>
@@ -181,7 +193,6 @@ const deletePolicy = (policyToDelete) => {
           <q-form class="q-gutter-md" @submit.prevent="handleAddNewPolicy">
             <q-input v-model="newPolicy.name" outlined label="策略名称" />
             <q-input v-model="newPolicy.object" outlined label="适用对象" />
-            <q-input v-model.number="newPolicy.items" outlined type="number" label="检查项数 (初始占位)" />
             <div class="row justify-end q-mt-lg">
               <q-btn v-close-popup label="取消" type="reset" color="grey-6" flat class="q-mr-sm" />
               <q-btn label="确认新增" type="submit" color="primary" />
@@ -229,7 +240,7 @@ const deletePolicy = (policyToDelete) => {
   </q-layout>
 </template>
 
-<!-- 全局样式 (无 scoped) -->
+<!-- ... 样式代码保持不变 ... -->
 <style>
 :root {
   --font-scale-factor: 1.5;
@@ -265,7 +276,6 @@ const deletePolicy = (policyToDelete) => {
 }
 </style>
 
-<!-- 局部样式 (有 scoped) -->
 <style scoped>
 .page-background {
   background-color: #292a2d;
